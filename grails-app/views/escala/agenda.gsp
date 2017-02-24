@@ -3,6 +3,7 @@
 <head>
     <meta name="layout" content="main" />
     <asset:javascript src="jquery-2.2.0.min.js"/>
+    <asset:javascript src="sobreaviso.js"/>
 </head>
 <body>
 <g:form action="sobreaviso">
@@ -88,16 +89,34 @@
 
 </g:form>
 <g:javascript>
-    $(document).ready(function() {
-        $("#allI1").on('click', function () {
-            if (this.checked) {
-                $("input[value|='I-1']").prop('checked', true)
-            }else{
-                $("input[value|='I-1']").prop('checked', false)
-            }
-
-        });
-    });
+    // $(document).ready(function() {
+    //     for(i = 1;i<=7;i++) {
+    //         $("#allI"+i).on('click', function () {
+    //             if (this.checked) {
+    //                 $("input[value|='I-"+i+"']").prop('checked', true)
+    //             } else {
+    //                 $("input[value|='I-"+i+"']").prop('checked', false)
+    //             }
+    //
+    //         });
+    //         $("#allT"+i).on('click', function () {
+    //             if (this.checked) {
+    //                 $("input[value|='T-"+i+"']").prop('checked', true)
+    //             } else {
+    //                 $("input[value|='T-"+i+"']").prop('checked', false)
+    //             }
+    //
+    //         });
+    //         $("#allR"+i).on('click', function () {
+    //             if (this.checked) {
+    //                 $("input[value|='R-"+i+"']").prop('checked', true)
+    //             } else {
+    //                 $("input[value|='R-"+i+"']").prop('checked', false)
+    //             }
+    //
+    //         });
+    //     }
+    // });
 </g:javascript>
 </body>
 </html>
