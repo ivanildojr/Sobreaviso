@@ -92,22 +92,22 @@ dataSource:
     pooled: true
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
-    username: asteriskuser
-    password: qwe123
+    username:
+    password:
 
 environments:
     development:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.15.0.6:3306/sobreaviso
+            url: jdbc:mysql://:3306/sobreaviso
     test:
         dataSource:
             dbCreate: update
-            url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:mysql://:3306/sobreaviso
     production:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.15.0.6:3306/sobreaviso
+            url: jdbc:mysql://:3306/sobreaviso
             properties:
                 jmxEnabled: true
                 initialSize: 5
