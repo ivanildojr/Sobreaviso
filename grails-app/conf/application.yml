@@ -99,15 +99,15 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://:3306/sobreaviso
+            url: jdbc:mysql://
     test:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://:3306/sobreaviso
+            url: jdbc:mysql://
     production:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://:3306/sobreaviso
+            url: jdbc:mysql://
             properties:
                 jmxEnabled: true
                 initialSize: 5
