@@ -6,7 +6,8 @@ build/
 *.iml
 *.ipr
 *.iws
+*.yml
 .project
 .settings
 .classpath
-application.yml
+
