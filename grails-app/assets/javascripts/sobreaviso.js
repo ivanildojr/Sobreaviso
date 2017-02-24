@@ -14,7 +14,6 @@ $(document).ready(function(event) {
         }else{
             $("input[value|="+pessoa+'-'+dia+']').prop('checked', false)
         }
-        console.log(elemento + '-' + $(elemento).prop('checked'))
     });
 
 });
