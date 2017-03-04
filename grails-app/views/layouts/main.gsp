@@ -8,44 +8,48 @@
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <asset:stylesheet src="application.css"/>
+    %{--<asset:stylesheet src="application.css"/>--}%
+    <asset:stylesheet src="prf/prf-sistemas-internos.css"/>
+    <asset:stylesheet src="prf/bootstrap.css"/>
+    <asset:javascript src="prf/jquery.js"/>
+    <asset:javascript src="prf/bootstrap.js"/>
+    <asset:javascript src="prf/bootstrap-inputmask.min.js"/>
+    <asset:javascript src="prf/alertify.min.js"/>
+    <asset:javascript src="prf/prf.js"/>
+
 
     <g:layoutHead/>
 </head>
 <body>
 
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/#">
-                    <i class="fa grails-icon">
-                        <asset:image src="grails-cupsonly-logo-white.svg"/>
-                    </i> Grails
-                </a>
-            </div>
-            <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
-                <ul class="nav navbar-nav navbar-right">
-                    <g:pageProperty name="page.nav" />
-                </ul>
+
+    <div class="navbar navbar-inverse fixed">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="brand-content"><a class="brand" href="https://10.15.0.8:8080/sobreaviso"> </a></div>
+                <span class="nome-sistema">Sobreaviso NUTEL-RN</span>
+
+                <div class="login-sistema">
+                </div>
             </div>
         </div>
     </div>
 
+
     <g:layoutBody/>
 
-    <div class="footer" role="contentinfo"></div>
 
-    <div id="spinner" class="spinner" style="display:none;">
-        <g:message code="spinner.alt" default="Loading&hellip;"/>
-    </div>
+    <footer class="footer">
+        <div class="container">
 
-    <asset:javascript src="application.js"/>
+            <ul class="footer-links"><li><a href="#">Topo</a></li><li><a href="#modalContato" data-toggle="modal"> Fale Conosco</a></li></ul>
+            <p class="inline">Sobreaviso NUTEL-RN
+                <small>1.0</small>
+            </p>
+        </div>
+    </footer>
+
+
 
 </body>
 </html>

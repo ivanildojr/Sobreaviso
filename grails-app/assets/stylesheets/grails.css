@@ -118,12 +118,12 @@ a.navbar-brand {
 }
 
 .svg #band {
-    background-image: url(../img/grails-cupsonly-logo-white.svg);
+    background-image: url(../images/grails-cupsonly-logo-white.svg);
 }
 
-.no-svg #band {
-    background-image: url(../img/groovy-logo-white.png);
-}
+/*.no-svg #band {*/
+    /*background-image: url(../images/groovy-logo-white.png);*/
+/*}*/
 
 @media (max-width: 1010px) {
     #band {
@@ -233,12 +233,12 @@ a.navbar-brand {
     float: right;
 }
 
-@media (max-width: 1010px) {
-    .event-logo {
-        height: ;
-    }
+/*@media (max-width: 1010px) {*/
+    /*.event-logo {*/
+        /*height: ;*/
+    /*}*/
 
-}
+/*}*/
 
 @media (max-width: 690px) {
     .event-logo {

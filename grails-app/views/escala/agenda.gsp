@@ -2,92 +2,158 @@
 <html>
 <head>
     <meta name="layout" content="main" />
-    <asset:javascript src="jquery-2.2.0.min.js"/>
+    <asset:javascript src="prf/jquery.js"/>
     <asset:javascript src="sobreaviso.js"/>
 </head>
 <body>
-<g:form action="sobreaviso">
+<div class="container-fluid" id="main-container">
+    <!-- Menú principal lateral ================================================== -->
+    <div id="sidebar" class="fixed">
+        <ul class="nav nav-list nav-open">
+            <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Fechar menu </a></li>
 
-    <fieldset class="form">
-        <div align="center">
-                <table id="tabelaSobreaviso" class=".table-condensed">
-                    <tr>
-                        <th>Horas/Dias</th>
-                        <g:each var="dia" status="i" in="${diasListNum}">
-                            <th>
-                                <g:if test="${dia == '1'}">
-                                    Domingo<br>
-                                    I: <g:checkBox name="allI1" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT1" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR1" value="R" checked="false"/>
-                                </g:if>
-                                <g:elseif test="${dia == '2'}">
-                                    Segunda-feira
-                                    <br>
-                                    I: <g:checkBox name="allI2" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT2" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR2" value="R" checked="false"/>
-                                </g:elseif>
-                                <g:elseif test="${dia == '3'}">
-                                    Terça-feira
-                                    <br>
-                                    I: <g:checkBox name="allI3" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT3" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR3" value="R" checked="false"/>
-                                </g:elseif>
-                                <g:elseif test="${dia == '4'}">
-                                    Quarta-feira
-                                    <br>
-                                    I: <g:checkBox name="allI4" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT4" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR4" value="R" checked="false"/>
-                                </g:elseif>
-                                <g:elseif test="${dia == '5'}">
-                                    Quinta-feira
-                                    <br>
-                                    I: <g:checkBox name="allI5" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT5" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR5" value="R" checked="false"/>
-                                </g:elseif>
-                                <g:elseif test="${dia == '6'}">
-                                    Sexta-feira
-                                    <br>
-                                    I: <g:checkBox name="allI6" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT6" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR6" value="R" checked="false"/>
-                                </g:elseif>
-                                <g:elseif test="${dia == '7'}">
-                                    Sábado
-                                    <br>
-                                    I: <g:checkBox name="allI7" value="I" checked="false"/>
-                                    T: <g:checkBox name="allT7" value="T" checked="false"/>
-                                    R: <g:checkBox name="allR7" value="R" checked="false"/>
-                                </g:elseif>
 
-                            </th>
-                        </g:each>
+            <li id="menuInicio" class="ativo"><a href="${createLink(uri: '/')}"><i class="icon-home"></i> Início</a></li>
 
-                    </tr>
-                    <g:each var="hora" status="j" in="${horasListNum}">
-                        <tr>
-                            <td>${hora}:00</td>
-                            <g:each var="dia" status="i" in="${diasListNum}">
-                                <td>
-                                    I: <g:checkBox name="checkList" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
-                                    T: <g:checkBox name="checkList" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
-                                    R: <g:checkBox name="checkList" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
-                                </td>
-                            </g:each>
-                        </tr>
-                    </g:each>
-                </table>
+
+            <li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>
+
+
+
+
+        </ul>
+        <ul class="nav nav-list nav-close" style="display:none">
+            <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Abrir menu</a></li>
+        </ul>
+    </div>        <div id="main-content" class="clearfix">
+    <!-- Breadcrumb    ================================================== -->
+    <!-- Navegação secundária    ================================================== -->
+    <div class="menu-nav fixed">
+        <ul class="nav inline">
+            <li class="active"><a href="#modalContato" data-toggle="modal">Fale Conosco</a></li>
+        </ul>
+    </div>
+
+
+    <!-- Conteúdo da página    ================================================== -->
+    <div id="page-content" class="clearfix fixed">
+        ﻿
+        <div class="page-header">
+            <h1> Sobreaviso
+                <small><i class="icon-double-angle-right"></i> Sistema de Abertura e Acompanhamento de Chamados - NUTEL-RN</small>
+            </h1>
         </div>
-    </fieldset>
-    <fieldset class="buttons">
-        <div align="center"><g:submitButton name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
-    </fieldset>
+        <div class="box">
+            <g:form action="sobreaviso">
 
-</g:form>
+                <fieldset class="form">
+                    <div align="center">
+                        <table id="tabelaSobreaviso" class=".table-condensed">
+                            <tr>
+                                <th>Horas/Dias</th>
+                                <g:each var="dia" status="i" in="${diasListNum}">
+                                    <th>
+                                        <g:if test="${dia == '1'}">
+                                            Domingo<br>
+                                            I: <g:checkBox name="allI1" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT1" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR1" value="R" checked="false"/>
+                                        </g:if>
+                                        <g:elseif test="${dia == '2'}">
+                                            Segunda-feira
+                                            <br>
+                                            I: <g:checkBox name="allI2" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT2" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR2" value="R" checked="false"/>
+                                        </g:elseif>
+                                        <g:elseif test="${dia == '3'}">
+                                            Terça-feira
+                                            <br>
+                                            I: <g:checkBox name="allI3" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT3" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR3" value="R" checked="false"/>
+                                        </g:elseif>
+                                        <g:elseif test="${dia == '4'}">
+                                            Quarta-feira
+                                            <br>
+                                            I: <g:checkBox name="allI4" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT4" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR4" value="R" checked="false"/>
+                                        </g:elseif>
+                                        <g:elseif test="${dia == '5'}">
+                                            Quinta-feira
+                                            <br>
+                                            I: <g:checkBox name="allI5" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT5" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR5" value="R" checked="false"/>
+                                        </g:elseif>
+                                        <g:elseif test="${dia == '6'}">
+                                            Sexta-feira
+                                            <br>
+                                            I: <g:checkBox name="allI6" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT6" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR6" value="R" checked="false"/>
+                                        </g:elseif>
+                                        <g:elseif test="${dia == '7'}">
+                                            Sábado
+                                            <br>
+                                            I: <g:checkBox name="allI7" value="I" checked="false"/>
+                                            T: <g:checkBox name="allT7" value="T" checked="false"/>
+                                            R: <g:checkBox name="allR7" value="R" checked="false"/>
+                                        </g:elseif>
+
+                                    </th>
+                                </g:each>
+
+                            </tr>
+                            <g:each var="hora" status="j" in="${horasListNum}">
+                                <tr>
+                                    <td>${hora}:00</td>
+                                    <g:each var="dia" status="i" in="${diasListNum}">
+                                        <td>
+                                            I: <g:checkBox name="checkList" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
+                                            T: <g:checkBox name="checkList" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
+                                            R: <g:checkBox name="checkList" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                        </td>
+                                    </g:each>
+                                </tr>
+                            </g:each>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset class="buttons">
+                    <div align="center"><g:submitButton name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
+                </fieldset>
+
+            </g:form>
+        </div>
+
+    </div>
+    <!-- Fim do conteúdo da página ================================================== -->
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <g:javascript>
     // $(document).ready(function() {
     //     for(i = 1;i<=7;i++) {
