@@ -216,7 +216,7 @@ padding:5px 25px;
 }
 
 .navbar-inverse .brand {
-background-image: url(/assets/PRF-small.png)!important;
+background-image: url(../PRF-small.png)!important;
 background-repeat:no-repeat;
 width:120px;
 height:40px;
@@ -356,7 +356,7 @@ padding:0 16px 0 7px;
 }
 
 .nav-list>li>a>[class*=icon-]:first-child {
-display:inline-block;
+display:inline;
 vertical-align:middle;
 min-width:30px;
 text-align:center;

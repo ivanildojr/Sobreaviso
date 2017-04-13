@@ -1,5 +1,8 @@
-//= require jquery-2.2.0.min
-//= require bootstrap
+/*
+* Removido por dar conflito com o menu de usuário
+* //= require jquery-2.2.0.min
+* //= require bootstrap
+* */
 
 $(document).ready(function(event) {
 

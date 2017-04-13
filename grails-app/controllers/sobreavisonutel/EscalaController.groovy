@@ -1,9 +1,12 @@
 package sobreavisonutel
 
+import grails.plugin.springsecurity.annotation.Secured
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
+@Secured('ROLE_ADMIN')
 class EscalaController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
@@ -66,8 +69,8 @@ class EscalaController {
 
             }
         }
-//        println escalaSobreaviso
-        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso])
+        String usuario = "IVANILDO DE OLIVEIRA DA SILVA JR"
+        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso,usuarioLogado:usuario])
 
 
 

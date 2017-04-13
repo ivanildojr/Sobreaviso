@@ -1,9 +1,30 @@
 package sobreavisonutel
 
+import sobreavisonutel.seguranca.Perfil
+import sobreavisonutel.seguranca.Usuario
+import sobreavisonutel.seguranca.UsuarioPerfil
+
 class BootStrap {
 
     def init = { servletContext ->
 
+//        def adminRole = new Perfil(authority: 'ROLE_ADMIN').save()
+//        def userRole = new Perfil(authority: 'ROLE_USER').save()
+//
+//        def testUser = new Usuario(username: 'ivanildo', password: 'senha').save()
+//
+//        UsuarioPerfil.create testUser, adminRole
+//
+//        UsuarioPerfil.withSession {
+//            it.flush()
+//            it.clear()
+//        }
+//
+//        assert Usuario.count() == 1
+//        assert Perfil.count() == 2
+//        assert UsuarioPerfil.count() == 1
+//
+//
 //        for (int i = 1; i < 8; i++) {
 //            for (int j = 0; j < 24; j++) {
 //                Escala escala = new Escala()

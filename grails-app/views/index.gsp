@@ -2,24 +2,25 @@
 <html>
 <head>
     <meta name="layout" content="main"/>
-    <title>Welcome to Grails</title>
+    <title>Sobreaviso NUTEL-RN</title>
 
     %{--<asset:link rel="icon" href="favicon.ico" type="image/x-ico" />--}%
 </head>
 <body>
+
+
+
 <div class="container-fluid" id="main-container">
     <!-- Menú principal lateral ================================================== -->
     <div id="sidebar" class="fixed">
         <ul class="nav nav-list nav-open">
             <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Fechar menu </a></li>
 
-
-            <li id="menuInicio" class="ativo"><a href="https://localhost:8080"><i class="icon-home"></i> Início</a></li>
-
+            <li id="menuInicio" class="ativo"><a href="/sobreaviso"><i class="icon-home"></i> Início</a></li>
 
             <li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>
 
-
+            %{--<li id="nutelRobot"><g:link controller="escala" action="agenda"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>--}%
 
 
         </ul>
@@ -65,6 +66,7 @@
                     <tr>
                         <td>
                             Nenhuma Mensagem Cadastrada.
+
                         </td>
                     </tr>
                     </tbody>

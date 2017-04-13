@@ -2,10 +2,13 @@
 <html>
 <head>
     <meta name="layout" content="main" />
-    <asset:javascript src="prf/jquery.js"/>
+    %{--<asset:javascript src="prf/jquery.js"/>   Removido pois já está inserido no sistema  --}%
     <asset:javascript src="sobreaviso.js"/>
 </head>
 <body>
+
+
+
 <div class="container-fluid" id="main-container">
     <!-- Menú principal lateral ================================================== -->
     <div id="sidebar" class="fixed">
