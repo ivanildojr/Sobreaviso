@@ -47,7 +47,7 @@ dependencies {
     compile "org.hibernate:hibernate-ehcache:5.1.2.Final"
 
     compile "org.grails.plugins:spring-security-core:3.1.1"
-//    compile 'org.grails.plugins:spring-security-ldap:3.0.1'
+    compile fileTree(dir: './lib', include: ['*.jar'])
     console "org.grails:grails-console"
     profile "org.grails.profiles:web"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.11.6"

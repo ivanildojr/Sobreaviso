@@ -20,7 +20,11 @@
 
             <li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>
 
-            %{--<li id="nutelRobot"><g:link controller="escala" action="agenda"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>--}%
+            <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-calendar"></i>Histórico Escala</g:link></li>
+
+            <li id="menuTopPontoREP"><g:link controller="topPontoREP" action="pegaMarcacoes"><i class="icon-calendar"></i>Pegar Marcações</g:link></li>
+
+            <li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>
 
 
         </ul>
@@ -34,6 +38,30 @@
         <ul class="nav inline">
             <li class="active"><a href="#modalContato" data-toggle="modal">Fale Conosco</a></li>
         </ul>
+    </div>
+
+    <div class="modal fade" id="modalContato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Digite aqui sua mensagem</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="email">E-mail:</label><input id="email" type="email"/>
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem:</label>
+                        <textarea class="form-control" rows="5" id="mensagem"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 

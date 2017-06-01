@@ -17,7 +17,7 @@
 
 
             <li id="menuInicio" class="ativo"><a href="${createLink(uri: '/')}"><i class="icon-home"></i> Início</a></li>
-
+            <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-calendar"></i>Histórico Escala</g:link></li>
 
             <li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>
 
@@ -47,6 +47,7 @@
             </h1>
         </div>
         <div class="box">
+
             <g:form action="sobreaviso">
 
                 <fieldset class="form">
