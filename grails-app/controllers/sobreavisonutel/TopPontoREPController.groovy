@@ -15,17 +15,38 @@ class TopPontoREPController {
 
     def topPontoRepService
 
+    def pegaFuncionario(String funcionario){
+        switch (funcionario) {
+            case "Ivanildo": funcionario = "31"
+                break;
+            case "Torres": funcionario = "3"
+                break;
+            case "Rudsom": funcionario = "64"
+                break;
+            default: throw new Exception("Funcionario inexistente");
+        }
+        return funcionario
+    }
+
     def pegaMarcacoes(){
         /*Está somando os minutos além de 60.*/
-//        Date partida = Date.parse("yyyy-MM-dd","2017-05-09")
-//
-//        while(partida.before(Date.parse("yyyy-MM-dd","2017-05-10"))){
-//            pegaHorarios(partida, "Ivanildo")
-//            partida = partida.plus(1)
-//            println partida
-//        }
+        Date partida = Date.parse("yyyy-MM-dd","2013-01-01")
 
-        topPontoRepService.pegaJornadaFunc("Ivanildo")
+        while(partida.before(Date.parse("yyyy-MM-dd","2017-06-01"))){
+            pegaHorarios(partida, "Ivanildo")
+
+            partida = partida.plus(1)
+        }
+
+
+        /*Pega as Jornadas e inseri no banco*/
+//        List horarios = topPontoRepService.pegaJornadaFunc("Ivanildo")
+//
+//        horarios.each{
+//            Jornada jor = new Jornada()
+//            jor = it
+//            jor.save flush:true
+//        }
 
 
 
@@ -50,33 +71,35 @@ class TopPontoREPController {
 
                 switch (horarios.size()) {
                     case 2:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
                         break;
                     case 4:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
-                        registro.marcacao3 = horarios.get(2).replace(":00.0000000", "")
-                        registro.marcacao4 = horarios.get(3).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
+                        registro.marcacao3 = horarios.get(2)
+                        registro.marcacao4 = horarios.get(3)
                         break;
                     case 6:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
-                        registro.marcacao3 = horarios.get(2).replace(":00.0000000", "")
-                        registro.marcacao4 = horarios.get(3).replace(":00.0000000", "")
-                        registro.marcacao5 = horarios.get(4).replace(":00.0000000", "")
-                        registro.marcacao6 = horarios.get(5).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
+                        registro.marcacao3 = horarios.get(2)
+                        registro.marcacao4 = horarios.get(3)
+                        registro.marcacao5 = horarios.get(4)
+                        registro.marcacao6 = horarios.get(5)
                         break;
 
                 }
 
+
+
                 TimeDuration duracao
                 TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                for (int j = 0; j <= qtdeHorariosIndex; j += 2) {
+                for (int j = 0; j < qtdeHorariosIndex; j += 2) {
 
 
-                    def start = Date.parse("HH:mm", horarios.get(j).replace(":00.0000000", ""))
-                    def end = Date.parse("HH:mm", horarios.get(j + 1).replace(":00.0000000", ""))
+                    def start = horarios.get(j)
+                    def end = horarios.get(j + 1)
                     duracao = TimeCategory.minus(end, start)
                     horasDia += duracao.getHours()
                     minutosDia += duracao.getMinutes()
@@ -90,6 +113,16 @@ class TopPontoREPController {
                 registro.cargaHorariaDia = cargaHoras
                 registro.nomeFuncionario = nomeFuncioario
                 registro.dataMarcacao = dataPartida
+
+                List<Jornada> jornadaDia = Jornada.findAllByCodFuncAndDataInicio(pegaFuncionario(nomeFuncioario),dataPartida)
+                if(jornadaDia.size()>0){
+                    Double cargaHorasJornada = pegaJornadaHoraria(jornadaDia, horasDia, minutosDia).toMilliseconds() / 1000
+                    cargaHorasJornada = cargaHorasJornada / 60 / 60
+
+                    registro.jornadaHorariaDia = cargaHorasJornada
+                }else{
+                    registro.jornadaHorariaDia = 8
+                }
 
 
                 registro.save flush: true
@@ -104,33 +137,33 @@ class TopPontoREPController {
 
                 switch (horarios.size()) {
                     case 2:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
                         break;
                     case 4:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
-                        registro.marcacao3 = horarios.get(2).replace(":00.0000000", "")
-                        registro.marcacao4 = horarios.get(3).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
+                        registro.marcacao3 = horarios.get(2)
+                        registro.marcacao4 = horarios.get(3)
                         break;
                     case 6:
-                        registro.marcacao1 = horarios.get(0).replace(":00.0000000", "")
-                        registro.marcacao2 = horarios.get(1).replace(":00.0000000", "")
-                        registro.marcacao3 = horarios.get(2).replace(":00.0000000", "")
-                        registro.marcacao4 = horarios.get(3).replace(":00.0000000", "")
-                        registro.marcacao5 = horarios.get(4).replace(":00.0000000", "")
-                        registro.marcacao6 = horarios.get(5).replace(":00.0000000", "")
+                        registro.marcacao1 = horarios.get(0)
+                        registro.marcacao2 = horarios.get(1)
+                        registro.marcacao3 = horarios.get(2)
+                        registro.marcacao4 = horarios.get(3)
+                        registro.marcacao5 = horarios.get(4)
+                        registro.marcacao6 = horarios.get(5)
                         break;
 
                 }
 
                 TimeDuration duracao
                 TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                for (int j = 0; j <= qtdeHorariosIndex; j += 2) {
+                for (int j = 0; j < qtdeHorariosIndex; j += 2) {
 
 
-                    def start = Date.parse("HH:mm", horarios.get(j).replace(":00.0000000", ""))
-                    def end = Date.parse("HH:mm", horarios.get(j + 1).replace(":00.0000000", ""))
+                    def start = horarios.get(j)
+                    def end = horarios.get(j + 1)
                     duracao = TimeCategory.minus(end, start)
                     horasDia += duracao.getHours()
                     minutosDia += duracao.getMinutes()
@@ -145,10 +178,36 @@ class TopPontoREPController {
                 registro.nomeFuncionario = nomeFuncioario
                 registro.dataMarcacao = dataPartida
 
+                List<Jornada> jornadaDia = Jornada.findAllByCodFuncAndDataInicio(pegaFuncionario(nomeFuncioario),dataPartida)
+                if(jornadaDia.size()>0){
+                    Double cargaHorasJornada = pegaJornadaHoraria(jornadaDia, horasDia, minutosDia).toMilliseconds() / 1000
+                    cargaHorasJornada = cargaHorasJornada / 60 / 60
+
+                    registro.jornadaHorariaDia = cargaHorasJornada
+                }else{
+                    registro.jornadaHorariaDia = 8
+                }
+
 
                 registro.save flush: true
             }
         }
+    }
+
+    private TimeDuration pegaJornadaHoraria(List<Jornada> jornadaDia, int horasDia, int minutosDia) {
+        TimeDuration duracao
+        TimeDuration cargaHorariaJornada = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+        for (int j = 0; j < jornadaDia.size(); j += 2) {
+            def start = jornadaDia.get(j).marcacao
+            def end = jornadaDia.get(j + 1).marcacao
+            duracao = TimeCategory.minus(end, start)
+            horasDia += duracao.getHours()
+            minutosDia += duracao.getMinutes()
+
+            cargaHorariaJornada = cargaHorariaJornada.plus(duracao)
+
+        }
+        return cargaHorariaJornada
     }
 
 

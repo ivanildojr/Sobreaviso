@@ -1,15 +1,17 @@
 package sobreavisonutel
 
+import java.sql.Time
+
 class TopPontoREP {
 
     String nomeFuncionario
     Date dataMarcacao
-    String marcacao1
-    String marcacao2
-    String marcacao3
-    String marcacao4
-    String marcacao5
-    String marcacao6
+    Time marcacao1
+    Time marcacao2
+    Time marcacao3
+    Time marcacao4
+    Time marcacao5
+    Time marcacao6
     /*Carga horaria das marcacoes no dia*/
     Double cargaHorariaDia
     /*Deve ser inserido o valor da jornada a ser considerado

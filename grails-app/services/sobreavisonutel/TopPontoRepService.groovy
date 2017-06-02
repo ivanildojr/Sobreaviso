@@ -5,6 +5,7 @@ import grails.transaction.Transactional
 
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
 import java.sql.Time
@@ -12,6 +13,58 @@ import java.time.LocalDate
 
 @Transactional
 class TopPontoRepService {
+
+    /**
+     * Pega a jornarda a ser considerada no dia para o Funcionario
+     */
+    def pegaJornadaFunc(String servidor){
+        try{
+
+            String funcionario
+
+            switch (servidor) {
+                case "Ivanildo": funcionario = "31"
+                    break;
+                case "Torres": funcionario = "3"
+                    break;
+                case "Rudsom": funcionario = "64"
+                    break;
+                default: throw new Exception("Funcionario inexistente");
+            }
+
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            String connectionUrl = "jdbc:sqlserver://10.15.0.97:1433;" +
+                    "databaseName=TopPontoREP;user=sa;password=pol1c1@;";
+
+            Connection con=DriverManager.getConnection(connectionUrl);
+
+            Statement stmt=con.createStatement();
+            String sql =  """ select distinct jornadas_func.codFunc, jornadas_func.DtInicio, horarios_jornada.codHorario, marcacoes.marcacao, marcacoes.sequencia from dbo.jornadas_func 
+                        inner join horarios_jornada on jornadas_func.codJornada = horarios_jornada.codJornada 
+                        inner join marcacoes on horarios_jornada.codHorario = marcacoes.codHorario 
+                        where jornadas_func.CodFunc = """ + funcionario +
+                        """ order by dtInicio desc """
+
+            ResultSet rs=stmt.executeQuery(sql)
+            List horarios = new ArrayList();
+            while(rs.next()){
+                Jornada jornada = new Jornada();
+                jornada.codFunc = rs.getInt(1);
+                jornada.dataInicio = rs.getDate(2);
+                jornada.codHorario = rs.getInt(3);
+                jornada.marcacao = rs.getTime(4);
+                jornada.sequencia = rs.getInt(5);
+
+                horarios.add(jornada)
+            }
+            con.close();
+            return horarios
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
 
     /*
     * data deve estar no formato yy/MM/dd
@@ -49,7 +102,8 @@ class TopPontoRepService {
             ResultSet rs=stmt.executeQuery(sql);
             List horarios = new ArrayList();
             while(rs.next()){
-                horarios.add(rs.getString(1))
+                horarios.add(rs.getTime(1))
+
             }
             con.close();
             return horarios
@@ -58,59 +112,7 @@ class TopPontoRepService {
         }
     }
 
-    /**
-     * Pega a jornarda a ser considerada no dia para o Funcionario
-     */
-    def pegaJornadaFunc(String servidor){
-        try{
 
-            String funcionario
-
-            switch (servidor) {
-                case "Ivanildo": funcionario = "31"
-                    break;
-                case "Torres": funcionario = "3"
-                    break;
-                case "Rudsom": funcionario = "64"
-                    break;
-                default: throw new Exception("Funcionario inexistente");
-            }
-
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            String connectionUrl = "jdbc:sqlserver://10.15.0.97:1433;" +
-                    "databaseName=TopPontoREP;user=sa;password=pol1c1@;";
-
-            Connection con=DriverManager.getConnection(connectionUrl);
-
-            Statement stmt=con.createStatement();
-
-            String sql = "select distinct jf.codFunc, jf.DtInicio, hj.codHorario, mc.marcacao, mc.sequencia from dbo.jornadas_func  as jf" +
-                    " inner join horarios_jornada as hj on jf.codJornada = hj.codJornada inner join marcacoes as mc on hj.codHorario = mc.codHorario " +
-                    " where jf.CodFunc = " + funcionario +" order by dtInicio desc"
-
-            System.out.println(sql);
-
-            ResultSet rs=stmt.executeQuery(sql)
-            List horarios = new ArrayList();
-            while(rs.next()){
-                Jornada jornada = new Jornada();
-                jornada.codFunc = rs.getString(1);
-                jornada.dataInicio = rs.getString(2);
-                jornada.codHorario = rs.getString(3);
-                jornada.sequencia = rs.getString(4);
-
-                horarios.add(jornada)
-            }
-            con.close();
-
-            System.out.println(horarios);
-
-            return horarios
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }
 
 
 
