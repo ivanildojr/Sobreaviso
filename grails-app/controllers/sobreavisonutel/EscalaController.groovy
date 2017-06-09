@@ -242,7 +242,7 @@ class EscalaController {
             }
         }
 //        String usuario = "IVANILDO DE OLIVEIRA DA SILVA JR"
-        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso,usuarioLogado:usuario])
+        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso/*,usuarioLogado:usuario*/])
 
 
 

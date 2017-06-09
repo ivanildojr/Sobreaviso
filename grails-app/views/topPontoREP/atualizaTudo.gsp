@@ -28,41 +28,10 @@
 
 
         <div>
-            <div align="center">Saldo horário da semana até <br> <g:formatDate format="dd-MM-yyyy" date="${new Date()}"/></div>
-            <table align="center"  class=".table-condensed" border="1">
-                <tr>
-                    <th>Nome Servidor</th>
-                    <th>Horas Trabalhadas</th>
-                    <th>Horas Efetivas <br> Sobreaviso</th>
-                    <th>CH Semana</th>
-                    <th>Saldo</th>
-                </tr>
-                <tr align="center">
-                    <td>${servidores[0]}</td>
-                    <td>${horasTrabalhadas[0].trunc(4)}</td>
-                    <td>${horasSobreaviso[0].trunc(4)}</td>
-                    <td>${chSemana}</td>
-                    <td>${(horasTrabalhadas[0] + horasSobreaviso[0] - chSemana).trunc(4)}</td>
-                </tr>
-                <tr align="center">
-                    <td>${servidores[1]}</td>
-                    <td>${horasTrabalhadas[1].trunc(4)}</td>
-                    <td>${horasSobreaviso[1].trunc(4)}</td>
-                    <td>${chSemana}</td>
-                    <td>${(horasTrabalhadas[1] + horasSobreaviso[1] - chSemana).trunc(4)}</td>
-                </tr>
-                <tr align="center">
-                    <td>${servidores[2]}</td>
-                    <td>${horasTrabalhadas[2].trunc(4)}</td>
-                    <td>${horasSobreaviso[2].trunc(4)}</td>
-                    <td>${chSemana}</td>
-                    <td>${(horasTrabalhadas[2] + horasSobreaviso[2] - chSemana).trunc(4)}</td>
-                </tr>
-            </table>
 
-            %{--<g:each var="servidor" in="${servidores}">--}%
-                %{--${servidor}--}%
-            %{--</g:each>--}%
+            <div align="center">
+                    ${resposta.encodeAsRaw()}
+            </div>
         </div>
 
 
