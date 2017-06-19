@@ -12,6 +12,7 @@
 
     <asset:stylesheet src="prf/bootstrap.css"/>
     <asset:stylesheet src="prf/prf-sistemas-internos.css"/>
+    <asset:stylesheet src="prf/animacaoprogresso.css"/>
     <asset:javascript src="prf/jquery.js"/>
     <asset:javascript src="prf/bootstrap.js"/>
     <asset:javascript src="prf/bootstrap-inputmask.min.js"/>
@@ -115,7 +116,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <div align="center">
                     <h5 class="modal-title" id="atualizaTudo">Atualizar Dados</h5>
+                    <svg class="progress-circle indefinite" width="100" height="100">
+                        <g transform="rotate(-90,50,50)">
+                            <circle class="bg" r="20" cx="25" cy="25" fill="none"></circle>
+                            <circle class="progress" r="20" cx="25" cy="25" fill="none"></circle>
+                        </g>
+                    </svg>
+                    </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -124,6 +133,7 @@
                     Esse procedimento removerá todos os registros de ponto do banco Sobreaviso e buscará novamente no banco do TopPontoREP.
                     <br>Não realizar esse procedimento muitas vezes pois pode impactar na performance do banco do TopPontoREP.
                     <br>Procedimento busca todas as marcações de ponto desde o ano de 2013 para os servidores em sobreaviso.
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
