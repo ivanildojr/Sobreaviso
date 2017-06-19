@@ -48,10 +48,17 @@ class TopPontoREPController {
 
     }
 
+
+
     def atualizaTudo(){
         /* Remove todos os registros, busca novamente no banco do Top Ponto REP*/
         String resposta
         try {
+            Thread.sleep(5000)
+            throw new Exception("Erro produzido")
+
+
+
 
             TopPontoREP removerMarcacao = TopPontoREP.findAll()
 
