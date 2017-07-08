@@ -72,6 +72,8 @@
 
             <li id="menuAtualizaTodasMarcacoes"><a href="#modalAtualizaTudo" data-toggle="modal"><i class="icon-calendar"></i>Atualizar Todo Histórico</a></li>
 
+            <li id="menuRecalculaTudo"><g:link controller="topPontoREP" action="recalculaTudo"><i class="icon-calendar"></i>Recalcula</g:link></li>
+
             <li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>
 
 

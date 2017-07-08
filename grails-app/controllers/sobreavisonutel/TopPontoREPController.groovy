@@ -5,6 +5,8 @@ import groovy.time.TimeCategory
 import groovy.time.TimeDuration
 import org.apache.commons.lang.time.DateUtils
 
+import java.sql.Time
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -13,6 +15,8 @@ import grails.transaction.Transactional
 class TopPontoREPController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+
+    public String dataInicio =  "2013-11-01"
 
     def topPontoRepService
 
@@ -48,36 +52,64 @@ class TopPontoREPController {
 
     }
 
-
-
     def atualizaTudo(){
         /* Remove todos os registros, busca novamente no banco do Top Ponto REP*/
         String resposta
         try {
-            Thread.sleep(5000)
-            throw new Exception("Erro produzido")
 
+            List<TopPontoREP> removerMarcacao = TopPontoREP.findAll()
+            println "Removendo Maracações!!!"
+            if (removerMarcacao.size() > 0) {
+                removerMarcacao.each{
+                    it.delete flush: true
+                }
 
-
-
-            TopPontoREP removerMarcacao = TopPontoREP.findAll()
-
-            if (removerMarcacao != null) {
-                removerMarcacao.delete flush: true
+            }
+            println "Removendo Jornadas!!!"
+            List<Jornada> removerJornada = Jornada.findAll()
+            if (removerJornada.size() > 0) {
+                removerJornada.each {
+                    it.delete flush: true
+                }
+            }
+            println "Removendo Fechamentos!!!"
+            List<Fechamentos> removerFechamentos = Fechamentos.findAll()
+            if (removerFechamentos.size() > 0) {
+                removerFechamentos.each {
+                    it.delete flush: true
+                }
+            }
+            println "Removendo Feriados!!!"
+            List<Feriados> removerFeriados = Feriados.findAll()
+            if (removerFeriados.size() > 0) {
+                removerFeriados.each {
+                    it.delete flush: true
+                }
             }
 
-            Jornada removerJornada = Jornada.findAll()
-            if (removerJornada != null) {
-                removerJornada.delete flush: true
+            /*Remove todos as ausencias/abonos*/
+            println "Removendo Ausências/Abonos!!!"
+            List<Abono> removerAbonos = Abono.findAll()
+            if (removerAbonos.size() > 0) {
+                removerAbonos.each {
+                    it.delete flush: true
+                }
             }
 
-            Fechamentos removerFechamentos = Fechamentos.findAll()
-            if (removerFechamentos != null) {
-                removerFechamentos.delete flush: true
+            /*Remove todos os Afastamentos*/
+            println "Removendo Afastamentos!!!"
+            List<Afastamentos> removerAfastamentos = Afastamentos.findAll()
+            if (removerAfastamentos.size() > 0) {
+                removerAfastamentos.each {
+                    it.delete flush: true
+                }
             }
+
 
             /*Pega os Fechamentos inseridos no Banco - Onde são lançados os sobreavisos e horas pela SRH*/
+            println "Inserindo Fechamentos!!!"
             List<Atendentes> atendentes = Atendentes.findAll()
+//            List<Atendentes> atendentes = Atendentes.findAllByNome("Ivanildo")
             atendentes.each {
                 println "Fechamentos: "
                 List horarios = topPontoRepService.pegaFechamentos(it.nome)
@@ -86,11 +118,93 @@ class TopPontoREPController {
                     println it.codFunc + "----" + it.dataLancamento + "----" + it.cargaHorariaLancada
                     Fechamentos fch = new Fechamentos()
                     fch = it
+
+
+                    /*Insere no banco o equivalente double das horas de fechamento*/
+                    TimeDuration duracao
+                    TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+                    def start = new Time(0,0,0)
+                    def end = fch.cargaHorariaLancada
+                    duracao = TimeCategory.minus(end, start)
+                    cargaHoraria = cargaHoraria.plus(duracao)
+
+                    Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                    cargaHoras = cargaHoras / 60 / 60
+
+                    fch.cargaHorariaLancadaD = cargaHoras
+
+
+                    cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+                    start = new Time(0,0,0)
+                    end = fch.cargaHorariaCredito
+                    duracao = TimeCategory.minus(end, start)
+                    cargaHoraria = cargaHoraria.plus(duracao)
+
+                    cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                    cargaHoras = cargaHoras / 60 / 60
+
+                    fch.cargaHorariaCreditoD = (-1)*cargaHoras
+
                     fch.save flush: true
                 }
             }
 
+            /*Pega os Abonos inseridos no Banco - Onde são lançados as ausencias e horas pelo servidor*/
+            println "Inserindo Abonos!!!"
+            atendentes.each {
+                println "Abonos: "
+                List horarios = topPontoRepService.pegaAbonos(it.nome)
+
+                horarios.each {
+                    println it.codFunc + "----" + it.dataLancamento + "----" + it.ausencia
+                    Abono ab = new Abono()
+                    ab = it
+
+                    /*Insere no banco o equivalente double das horas de ausencia*/
+                    TimeDuration duracao
+                    TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+                    def start = new Time(0,0,0)
+                    def end = ab.ausencia
+                    duracao = TimeCategory.minus(end, start)
+                    cargaHoraria = cargaHoraria.plus(duracao)
+
+                    Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                    cargaHoras = cargaHoras / 60 / 60
+
+                    ab.ausenciaD = cargaHoras
+
+
+
+                    ab.save flush: true
+                }
+            }
+
+            /*Pega os Feriados e insere no banco*/
+            println "Inserindo Feriados!!!"
+            List feriados = topPontoRepService.pegaFeriadosFunc()
+            feriados.each {
+                    println it.dataFeriado.toString() + "----" + it.nomeFeriado
+                    Feriados f = new Feriados()
+                    f = it
+                    f.save flush: true
+            }
+
+
+            /*Pega os Afastamentos e insere no banco*/
+            println "Inserindo Afastamentos!!!"
+            atendentes.each {
+                println "Afastamentos: "
+                List horarios = topPontoRepService.pegaAfastamentosFunc(it.nome)
+                horarios.each {
+                    println it.codFunc + "----" + it.dtInicio + "----" + it.dtFim + "-----" + it.codMotivo + it.abonado
+                    Afastamentos afa = new Afastamentos()
+                    afa = it
+                    afa.save flush: true
+                }
+            }
+
             /*Pega as Jornadas e insere no banco*/
+            println "Inserindo Jornadas!!!"
             atendentes.each {
                 println "Jornada: "
                 List horarios = topPontoRepService.pegaJornadaFunc(it.nome)
@@ -103,56 +217,82 @@ class TopPontoREPController {
             }
 
             /*Pega os horários na base TopPonto - desde a data informada até a data da execução*/
+            println "Inserindo Marcações!!!"
             atendentes.each {
                 println "Horários: "
-                Date partida = Date.parse("yyyy-MM-dd", "2013-01-01")
+                Date partida = Date.parse("yyyy-MM-dd", dataInicio)
 
                 while (partida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
+//                while (partida.before(Date.parse("yyyy-MM-dd", "2015-02-28"))) {
                     println it.nome + "----" + partida
                     pegaHorarios(partida, it.nome, false)
-
                     partida = partida.plus(1)
                 }
             }
 
-            /*Estou aqui!!!*/
-            /*Remover pois sera feito visualmente
-            * Talvez seja melhor calcular em tempo de execução
-            * No momento que for calcular a quantidade de horas baseado no lancamento,
-            * verificar o fechamento e se tiver hora a lancar nesse dia somar
-            *
-            * */
+            /*Por algum motivo ainda não identificado, quando usa-se o pegaAfastamentos dentro loop onde esta o pegaHorarios, a consulta fica aparentemente travado
+            * Fazendo com o que não se retorne nada da consulta.
+            * Somente colocando em outro loop é que a consulta passou a retornar.*/
+            println "Ajustando Afastamentos nas Marcações !!!"
+            atendentes.each {
+                println "Afastamentos: "
+                Date partida = Date.parse("yyyy-MM-dd", dataInicio)
 
-    //        List<Fechamentos> cargaHorariaFechamentos = Fechamentos.findAllByCodFunc(31)
-    //        Double cargaHF = 0
-    //        TimeDuration duracao
-    //        TimeDuration cargaHorariaJornada = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-    //        for (int j = 0; j < cargaHorariaFechamentos.size(); j ++) {
-    //            def start = Date.parse("HH:mm", "00:00")
-    //            def end = cargaHorariaFechamentos.get(j).cargaHorariaLancada
-    //            duracao = TimeCategory.minus(end, start)
-    //            cargaHorariaJornada = cargaHorariaJornada.plus(duracao)
-    //
-    //        }
-    //
-    //        cargaHF = cargaHorariaJornada.toMilliseconds() / 1000
-    //        cargaHF = cargaHF / 60 / 60
-    //        println "cargaHF: " + cargaHF
-    //
-    //        List<TopPontoREP> rep = TopPontoREP.findAllByDataMarcacao(Date.parse("yyyy-MM-dd","2017-05-31"))
-    //
-    //
-    //        cargaHF += rep.get(0).cargaHorariaDia
-    //        println "cargaHF + Hora do dia: " + cargaHF
+                while (partida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
+                    println it.nome + "----" + partida
+                    pegaAfastamentos(it.nome,partida) //Tentativa de que seja feita a consulta.
+                    partida = partida.plus(1)
+                }
+            }
 
-                /*Remover*/
+
+            /*Ajustes nas folhas individuais de todos - Fatos encontratos na folha*/
+            /*Ivanildo*/
+            List<TopPontoREP> repIvanildo = TopPontoREP.findAllByCodFuncAndDataMarcacao(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2015-12-29")) //Uma hora a mais no BH
+            repIvanildo.each{
+                it.bancoHoras = it.bancoHoras-1
+                it.save flush:true
+            }
+            /*banco de horas não considerado pelo topponto*/
+            repIvanildo = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-11-01"),Date.parse("yyyy-MM-dd","2013-11-30"))
+            repIvanildo.each{
+                it.bancoHoras = 0
+                it.save flush:true
+            }
+//            /*Banco de Horas considerado errado*/
+//            repIvanildo = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-11-01"),Date.parse("yyyy-MM-dd","2015-02-06"))
+//            repIvanildo.each{
+//                it.bancoHoras = 0
+//                it.save flush:true
+//            }
+            List<Fechamentos> fchIvanildo = Fechamentos.findAllByCodFuncAndDataLancamento(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-12-01")) //Credito errado
+            fchIvanildo.each{
+                it.cargaHorariaCredito = new Time(0,0,0)
+                it.cargaHorariaCreditoD = 0
+                it.save flush:true
+            }
+
+
+            /*Torres*/
+            /*banco de horas não considerado pelo topponto*/
+            List<TopPontoREP> repTorres = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario("Torres"), Date.parse("yyyy-MM-dd","2013-11-01"),Date.parse("yyyy-MM-dd","2013-11-30"))
+            repTorres.each{
+                it.bancoHoras = 0
+                it.save flush:true
+            }
+            /*Trabalhou nas férias e houve jornada no dia*/
+            repTorres = TopPontoREP.findAllByCodFuncAndDataMarcacao(pegaFuncionario("Torres"), Date.parse("yyyy-MM-dd","2017-01-11"))
+            repTorres.each{
+                it.bancoHoras = 1+(5/60)
+                it.save flush:true
+            }
 
             resposta = "Banco atualizado com sucesso!!!"
 
             render(view:'atualizaTudo',model:[resposta:resposta])
         }catch(Exception e){
             resposta = "Houve um erro no processamento da atualização.<br>" +
-                        e.toString()
+                        e.toString() + e.printStackTrace()
             render(view:'atualizaTudo',model:[resposta:resposta])
         }
 
@@ -206,7 +346,60 @@ class TopPontoREPController {
         horasTrabalhadas.add(horasTrabalhadasRudsom)
         horasSobreaviso.add(horasSobreavisoRudsom)
 
-        render(view:'pegaMarcacoes',model:[servidores:funcionarios,horasTrabalhadas:horasTrabalhadas,horasSobreaviso:horasSobreaviso,chSemana:chSemana])
+
+        int mes = Calendar.getInstance().get(Calendar.MONTH)
+        int ano = Calendar.getInstance().get(Calendar.YEAR)
+        List<Double> bh = new ArrayList<Double>()
+        Double bancoHorasAnterior = 0
+        Double bancoHorasCorrente = 0
+        funcionarios.each{
+            int month = 11
+            int year = 2013
+
+            while(year <= ano){
+
+                Double fechamentosDebito = Fechamentos.executeQuery("select sum(f.cargaHorariaLancadaD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
+                        [func: pegaFuncionario(it),m: month,y: year])[0]
+                Double fechamentosCredito = Fechamentos.executeQuery("select sum(f.cargaHorariaCreditoD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
+                        [func: pegaFuncionario(it),m: month,y: year])[0]
+                Double abonos = Abono.executeQuery("select sum(a.ausenciaD) from Abono a where cod_func = ? and cod_motivo != 4 and month(data_lancamento) = ? and year(data_lancamento) = ?",
+                        [pegaFuncionario(it),month,year])[0]
+                Double bancoHoras = TopPontoREP.executeQuery("select sum(tp.bancoHoras) from TopPontoREP tp where cod_func = ? and month(data_marcacao) = ? and year(data_marcacao) = ?",
+                        [pegaFuncionario(it),month,year])[0]
+
+                if(abonos==null) abonos = 0
+                if(fechamentosDebito==null) fechamentosDebito = 0
+                if(fechamentosCredito==null) fechamentosCredito = 0
+                if(bancoHoras==null) bancoHoras = 0
+
+
+                bancoHorasCorrente = bancoHoras - abonos + bancoHorasAnterior + fechamentosDebito + fechamentosCredito
+                bancoHorasAnterior = bancoHorasCorrente
+//                println "Mês/Ano: " + mes+"/"+ ano + " Month/Year: " + month+"/"+ year +" - Funcionario: " + it + " Fechamentos: " + fechamentosDebito + " Abonos: " + abonos + " bancoHoras: " + bancoHoras + " BancoHorasCorrente: " + bancoHorasCorrente
+                //println " Month/Year: " + month+"/"+ year +" - Funcionario: " + it + " BancoHorasCorrente: " + bancoHorasCorrente
+
+
+
+                month+=1
+                if(month == 13){
+                    year+=1
+                    month = 1
+
+                }
+                if(year == ano && month == mes+2) break;
+            }
+
+            bh.add(bancoHorasCorrente)
+            //println "Banco Horas: " + bancoHorasCorrente + " Funcionario: " + it
+            bancoHorasAnterior = 0
+            bancoHorasCorrente = 0
+
+
+        }
+
+
+
+        render(view:'pegaMarcacoes',model:[servidores:funcionarios,horasTrabalhadas:horasTrabalhadas,horasSobreaviso:horasSobreaviso,chSemana:chSemana,bh:bh])
     }
 
     private void pegaHorariosEntreDuasDatas(Date partida, String funcionario, Date termino) {
@@ -226,7 +419,7 @@ class TopPontoREPController {
         def PAR = 1
         def IMPAR = 2
 
-        /*Remover a marcacao para re-inserir de forma atualizada*/
+        /*Remover a marcacao para re-inserir de forma atualizada - Está fazendo duas vezes no atualizaTudo?*/
         if(apagaRegistros){
             TopPontoREP marcacaoRemover = TopPontoREP.findByDataMarcacaoAndNomeFuncionario(dataPartida,nomeFuncioario)
             if(marcacaoRemover!=null) {
@@ -236,6 +429,7 @@ class TopPontoREPController {
 
         List horarios = topPontoRepService.pegaHorario(dataPartida.format("yyyy-MM-dd"), nomeFuncioario)
         TopPontoREP registro = new TopPontoREP()
+        registro.codFunc = pegaFuncionario(nomeFuncioario).toInteger()
 
         if (horarios.size() > 0) {
             if (horarios.size() % 2 == 0) {
@@ -286,7 +480,9 @@ class TopPontoREPController {
                 Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
                 cargaHoras = cargaHoras / 60 / 60
 
-                registro.cargaHorariaDia = cargaHoras
+
+
+
                 registro.nomeFuncionario = nomeFuncioario
                 registro.dataMarcacao = dataPartida
 
@@ -316,6 +512,27 @@ class TopPontoREPController {
                     }
                 }
 
+                /*O sistema TOPPonto desconsidera a diferenca de ate 15 minutos */
+                if(cargaHoras >= registro.jornadaHorariaDia - 0.25 && cargaHoras <= registro.jornadaHorariaDia){
+                    cargaHoras = registro.jornadaHorariaDia
+                }
+
+                /*Ajuste para calcular corretamente o banco de horas*/
+                if(cargaHoras > registro.jornadaHorariaDia){
+                    registro.cargaHorariaDia = registro.jornadaHorariaDia
+                    registro.bancoHoras = cargaHoras - registro.jornadaHorariaDia
+                }else if(cargaHoras < registro.jornadaHorariaDia){
+                    registro.cargaHorariaDia = cargaHoras
+                    registro.bancoHoras = cargaHoras - registro.jornadaHorariaDia
+                }else{
+                    registro.cargaHorariaDia = cargaHoras
+                    registro.bancoHoras = 0
+                }
+
+
+                ajusteAbonoBH(nomeFuncioario, dataPartida, registro)
+
+
                 registro.save flush: true
             } else {
                 /*IMPAR*/
@@ -327,23 +544,19 @@ class TopPontoREPController {
                 def minutosDia = 0
 
                 switch (horarios.size()) {
-                    case 2:
+                    case 3:
                         registro.marcacao1 = horarios.get(0)
                         registro.marcacao2 = horarios.get(1)
                         break;
-                    case 4:
+                    case 5:
                         registro.marcacao1 = horarios.get(0)
                         registro.marcacao2 = horarios.get(1)
                         registro.marcacao3 = horarios.get(2)
                         registro.marcacao4 = horarios.get(3)
                         break;
-                    case 6:
-                        registro.marcacao1 = horarios.get(0)
-                        registro.marcacao2 = horarios.get(1)
-                        registro.marcacao3 = horarios.get(2)
-                        registro.marcacao4 = horarios.get(3)
-                        registro.marcacao5 = horarios.get(4)
-                        registro.marcacao6 = horarios.get(5)
+                    case 1:
+                        //Não faz nada pois não há registros de marcação suficientes
+                        //Ajustar para não dar erro se não fizer nada.
                         break;
 
                 }
@@ -365,7 +578,9 @@ class TopPontoREPController {
                 Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
                 cargaHoras = cargaHoras / 60 / 60
 
-                registro.cargaHorariaDia = cargaHoras
+
+
+                //registro.cargaHorariaDia = cargaHoras
                 registro.nomeFuncionario = nomeFuncioario
                 registro.dataMarcacao = dataPartida
 
@@ -395,8 +610,254 @@ class TopPontoREPController {
                     }
                 }
 
+                /*O sistema TOPPonto desconsidera a diferenca de ate 15 minutos */
+                if(cargaHoras >= registro.jornadaHorariaDia - 0.25 && cargaHoras <= registro.jornadaHorariaDia){
+                    cargaHoras = registro.jornadaHorariaDia
+                }
+
+                /*Ajuste para calcular corretamente o banco de horas*/
+                if(cargaHoras > registro.jornadaHorariaDia){
+                    registro.cargaHorariaDia = registro.jornadaHorariaDia
+                    registro.bancoHoras = cargaHoras - registro.jornadaHorariaDia
+                }else if(cargaHoras < registro.jornadaHorariaDia){
+                    registro.cargaHorariaDia = cargaHoras
+                    registro.bancoHoras = cargaHoras - registro.jornadaHorariaDia
+                }else{
+                    registro.cargaHorariaDia = cargaHoras
+                    registro.bancoHoras = 0
+                }
+
+
+                ajusteAbonoBH(nomeFuncioario, dataPartida, registro)
+
 
                 registro.save flush: true
+            }
+        }
+    }
+
+
+
+    def recalculaTudo(){/*Calculando ERRADO AINDA!*/
+
+
+        List<Atendentes> nomeDosFuncionarios = Atendentes.findAll()
+        Date dataPartida = Date.parse("yyyy-MM-dd", dataInicio)
+
+        nomeDosFuncionarios.each{ nomeFuncioario->
+
+
+                try {
+                    while (dataPartida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
+                        //println nomeFuncioario.nome + "----" + dataPartida
+                        List<TopPontoREP> horarios = TopPontoREP.findAllByDataMarcacaoAndNomeFuncionario(dataPartida, nomeFuncioario.nome)
+                        if (horarios.size() > 0){
+
+                            horarios[0].cargaHorariaDia = 0
+                            horarios[0].jornadaHorariaDia = 0
+                            horarios[0].bancoHoras = 0
+
+                            TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+
+                            if (horarios[0].marcacao1 != null && horarios[0].marcacao2 != null) {
+                                cargaHoraria = cargaHoraria.plus(TimeCategory.minus(horarios[0].marcacao2, horarios[0].marcacao1))
+                            }
+                            if (horarios[0].marcacao3 != null && horarios[0].marcacao4 != null) {
+                                cargaHoraria = cargaHoraria.plus(TimeCategory.minus(horarios[0].marcacao4, horarios[0].marcacao3))
+                            }
+                            if (horarios[0].marcacao5 != null && horarios[0].marcacao6 != null) {
+                                cargaHoraria = cargaHoraria.plus(TimeCategory.minus(horarios[0].marcacao6, horarios[0].marcacao5))
+                            }
+
+                            Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                            cargaHoras = cargaHoras / 60 / 60
+
+
+                            List<Jornada> jornadaDia = Jornada.findAllByCodFuncAndDataInicio(pegaFuncionario(nomeFuncioario.nome), dataPartida)
+                            if (jornadaDia.size() > 0) {
+                                /*O SRH inseriu um jornada para essa data. Mesmo se for feriado com meio expediente*/
+                                Double cargaHorasJornada = pegaJornadaHoraria(jornadaDia, 0, 0).toMilliseconds() / 1000
+                                cargaHorasJornada = cargaHorasJornada / 60 / 60
+
+                                horarios[0].jornadaHorariaDia = cargaHorasJornada
+                            } else {
+                                /*O SRH não inseriu uma jornada para esse dia, então devemos checar se é feriado o dia inteiro ou fim de semana
+                                             * Caso contrário deve ser de 8 horas a jornada*/
+                                int diaDaSemana = fimDeSemanaCheck(dataPartida)
+                                if ((diaDaSemana == Calendar.SATURDAY) || (diaDaSemana == Calendar.SUNDAY)) {
+                                    horarios[0].jornadaHorariaDia = 0
+                                } else {
+
+                                    List<Feriados> feriados = Feriados.findAllByDataFeriado(dataPartida)
+
+                                    if (feriados.size() > 0) {
+                                        /*A data em questão é um feriado. Dessa forma a carga horaria deve ser zero*/
+                                        horarios[0].jornadaHorariaDia = 0
+                                    } else {
+                                        horarios[0].jornadaHorariaDia = 8
+                                    }
+                                }
+                            }
+
+                            /*O sistema TOPPonto desconsidera a diferenca de ate 15 minutos */
+                            if (cargaHoras >= horarios[0].jornadaHorariaDia - 0.25 && cargaHoras <= horarios[0].jornadaHorariaDia) {
+                                cargaHoras = horarios[0].jornadaHorariaDia
+                            }
+
+                            /*Ajuste para calcular corretamente o banco de horas*/
+                            if (cargaHoras > horarios[0].jornadaHorariaDia) {
+                                horarios[0].cargaHorariaDia = horarios[0].jornadaHorariaDia
+                                horarios[0].bancoHoras = cargaHoras - horarios[0].jornadaHorariaDia
+                            } else if (cargaHoras < horarios[0].jornadaHorariaDia) {
+                                horarios[0].cargaHorariaDia = cargaHoras
+                                horarios[0].bancoHoras = cargaHoras - horarios[0].jornadaHorariaDia
+                            } else {
+                                horarios[0].cargaHorariaDia = cargaHoras
+                                horarios[0].bancoHoras = 0
+                            }
+
+
+                            /*Quando há marcação no ponto juntamente com compensação de horas, o sistema está descontando duas vezes
+                            * Dessa forma, checar se existe na tabela abono e banco de horas < que zero. Nesse caso descontar o abono*/
+                            List<Abono> abonos = Abono.findAllByCodFuncAndDataLancamento(pegaFuncionario(nomeFuncioario.nome), dataPartida)
+                            if (abonos.size() > 0) {
+                                if (horarios[0].bancoHoras < 0) {
+                                    horarios[0].bancoHoras += abonos.get(0).ausenciaD
+                                    //println "Ajuste no BH por meio do Abono: " + horarios[0].bancoHoras
+                                }
+                            }
+
+
+                            horarios[0].save flush: true
+
+
+                        }
+                        dataPartida = dataPartida.plus(1)
+                    }
+
+                } catch (Exception e ) {
+                    render(view: 'recalculaTudo', model: [resposta: "Erro na hora de recalcular!!!!" + e.printStackTrace()])
+
+                }
+                dataPartida = Date.parse("yyyy-MM-dd", dataInicio)
+
+        }
+
+        /*Por algum motivo ainda não identificado, quando usa-se o pegaAfastamentos dentro loop onde esta o pegaHorarios, a consulta fica aparentemente travado
+            * Fazendo com o que não se retorne nada da consulta.
+            * Somente colocando em outro loop é que a consulta passou a retornar.*/
+        //println "Ajustando Afastamentos nas Marcações !!!"
+        nomeDosFuncionarios.each {
+            //println "Afastamentos: "
+            Date partida = Date.parse("yyyy-MM-dd", dataInicio)
+
+            while (partida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
+                //println it.nome + "----" + partida
+                pegaAfastamentos(it.nome,partida) //Tentativa de que seja feita a consulta.
+                partida = partida.plus(1)
+            }
+        }
+
+
+
+
+
+        /*Ajustes nas folhas individuais de todos - Fatos encontratos na folha*/
+        /*Ivanildo*/
+        List<TopPontoREP> repIvanildo = TopPontoREP.findAllByCodFuncAndDataMarcacao(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2015-12-29")) //Uma hora a mais no BH
+        repIvanildo.each{
+            it.bancoHoras = it.bancoHoras-1
+            it.save flush:true
+        }
+        /*banco de horas não considerado pelo topponto*/
+        repIvanildo = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-11-01"),Date.parse("yyyy-MM-dd","2013-11-30"))
+        repIvanildo.each{
+            it.bancoHoras = 0
+            it.save flush:true
+        }
+        List<Fechamentos> fchIvanildo = Fechamentos.findAllByCodFuncAndDataLancamento(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-12-01")) //Credito errado
+        fchIvanildo.each{
+            it.cargaHorariaCredito = new Time(0,0,0)
+            it.cargaHorariaCreditoD = 0
+            it.save flush:true
+        }
+
+
+        /*Torres*/
+        /*banco de horas não considerado pelo topponto*/
+        List<TopPontoREP> repTorres = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario("Torres"), Date.parse("yyyy-MM-dd","2013-11-01"),Date.parse("yyyy-MM-dd","2013-11-30"))
+        repTorres.each{
+            it.bancoHoras = 0
+            it.save flush:true
+        }
+        /*Trabalhou nas férias e houve jornada no dia*/
+        repTorres = TopPontoREP.findAllByCodFuncAndDataMarcacao(pegaFuncionario("Torres"), Date.parse("yyyy-MM-dd","2017-01-11"))
+        repTorres.each{
+            it.bancoHoras = 1+(5/60)
+            it.save flush:true
+        }
+
+
+
+        render(view: 'recalculaTudo', model: [resposta: "Cálculo refeito!!!"])
+
+    }
+
+
+    private void ajusteAbonoBH(String nomeFuncioario, Date dataPartida, TopPontoREP registro) {
+        /*Quando há marcação no ponto juntamente com compensação de horas, o sistema está descontando duas vezes
+         * Dessa forma, checar se existe na tabela abono e banco de horas < que zero. Nesse caso descontar o abono*/
+        List<Abono> abonos = Abono.findAllByCodFuncAndDataLancamento(pegaFuncionario(nomeFuncioario), dataPartida)
+        if (abonos.size() > 0) {
+            if (registro.bancoHoras < 0) {
+                registro.bancoHoras += abonos.get(0).ausenciaD
+                println "Ajuste no BH por meio do Abono: " + registro.bancoHoras
+            }
+        }
+    }
+
+    private void pegaAfastamentos(String nomeFuncioario, Date dataPartida) {
+
+
+
+        List<Afastamentos> afastamentosDia = Afastamentos.findAllByCodFuncAndDtInicio(pegaFuncionario(nomeFuncioario), dataPartida.clearTime())
+
+        if (afastamentosDia.size() > 0) {
+            /*São os dias em que a jornada também pode ser zeradao: alistamento eleitoral, ferias, viagem...
+            * Verificar se todos os motivos geram a zerada da jornada do dia*/
+            afastamentosDia.eachWithIndex { afs, it->
+                List<TopPontoREP> listaMarcacoes = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario(nomeFuncioario), afs.dtInicio, afs.dtFim)
+                listaMarcacoes.eachWithIndex { mar,it2->
+
+                    println "Jornada do dia antes: " + mar.dataMarcacao + " -- jornadaAntes: " + mar.jornadaHorariaDia
+                    println "Banco H dia antes: " + mar.dataMarcacao + " -- bh-Antes: " + mar.bancoHoras
+
+                    /*Aparentemente tanto a jornado do dia quanto o banco de horas do dia devem ser zerados
+                    * Para Rudsom zerar funciona, mas para Ivanildo não.*/
+                    if(afs.codMotivo == 8){
+                            mar.bancoHoras = 0 //Férias não gera banco de horas
+                    }else if(nomeFuncioario.equals("Ivanildo") && afs.codMotivo == 3){
+                        if(mar.jornadaHorariaDia > 0){
+                            println "BancoHoras Antes: " + mar.bancoHoras
+                            mar.bancoHoras = mar.cargaHorariaDia
+                            println "BancoHoras Depos: " + mar.bancoHoras
+                        }
+                    }else if(nomeFuncioario.equals("Torres") && afs.codMotivo == 3){
+                        if(mar.jornadaHorariaDia > 0){
+                            println "BancoHoras Antes: " + mar.bancoHoras
+                            mar.bancoHoras = mar.cargaHorariaDia
+                            println "BancoHoras Depos: " + mar.bancoHoras
+                        }
+                    }else{
+                        mar.bancoHoras = 0
+                    }
+
+                    mar.jornadaHorariaDia = 0
+
+                    println "Jornada do dia depois: " + mar.dataMarcacao + " -- jornadaDepois: " + mar.jornadaHorariaDia
+                    println "Banco H dia depois: " + mar.dataMarcacao + " -- bh-depois: " + mar.bancoHoras
+                    mar.save flush:true
+                }
             }
         }
     }

@@ -64,7 +64,27 @@
                 %{--${servidor}--}%
             %{--</g:each>--}%
         </div>
+        <br>
+            <div align="center">Banco de Horas mês de <g:formatDate format="dd-MM-yyyy" date="${new Date()}"/></div>
+            <table align="center"  class=".table-condensed" border="1">
+                <tr>
+                    <th>Nome Servidor</th>
+                    <th>Saldo Banco Horas</th>
+                </tr>
+                <tr align="center">
+                    <td>${servidores[0]}</td>
+                    <td>${bh[0].intValue()} Horas e ${((bh[0]-(bh[0].intValue()))*60).round()} Minutos</td>
 
+                </tr>
+                <tr align="center">
+                    <td>${servidores[1]}</td>
+                    <td>${bh[1].intValue()} Horas e ${((bh[1]-(bh[1].intValue()))*60).round()} Minutos</td>
+                </tr>
+                <tr align="center">
+                    <td>${servidores[2]}</td>
+                    <td>${bh[2].intValue()} Horas e ${((bh[2]-(bh[2].intValue()))*60).round()} Minutos</td>
+                </tr>
+            </table>
 
         </div>
 

@@ -17,6 +17,9 @@ class TopPontoREP {
     /*Deve ser inserido o valor da jornada a ser considerado
      para o dia.*/
     Double jornadaHorariaDia
+    Double codFunc
+    Double bancoHoras
+
 
 
     static constraints = {
@@ -30,5 +33,7 @@ class TopPontoREP {
         marcacao5 nullable: true
         marcacao6 nullable: true
         jornadaHorariaDia nullable: false
+        codFunc nullable: false
+        bancoHoras nullable: false
     }
 }
