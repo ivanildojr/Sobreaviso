@@ -138,7 +138,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="buttons">
-                                <div align="center"><g:submitButton name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
+                                <div align="center"><g:submitButton id="alterarBtn" name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
                             </fieldset>
 
                         </g:form>
@@ -146,7 +146,10 @@
                 </tr>
             </table>
 
+            <div id="alertaData" class="alert alert-danger" role="alert">
 
+                <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
+            </div>
         </div>
 
     </div>
@@ -155,7 +158,26 @@
 
 
 <g:javascript>
+
    $(document).ready(function() {
+       /*var dataAtual = new Date()
+       var dataHistorico = $('#dataHistorico');
+
+       dataHistorico.val(dataAtual.getDate() + '/' + (dataAtual.getMonth()+1) + '/' + dataAtual.getFullYear());
+       dataHistorico.dispatchEvent(new Event('change'))
+        */
+       $('#alertaData').hide()
+
+
+        $('#alterarBtn').on('click',function (e) {
+
+            if($('#dataHistorico').val().length == 0){
+                e.preventDefault()
+                $('#alertaData').show()
+                //alert("O campo data deve ser preenchido!");
+            }
+        });
+
        $('#dataHistorico').datepicker({
            format: "dd/mm/yyyy",
            clearBtn: true,

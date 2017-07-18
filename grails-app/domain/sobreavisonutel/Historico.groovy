@@ -9,7 +9,7 @@ class Historico {
     Date dataEscala //data da escala
     Date dataModificacao //data da modificação para fins de log
     Atendentes atendentes //atendente no dia
-    Usuario login //Login de quem alterou a escala
+    String login //Login de quem alterou a escala
 
     static constraints = {
         dia nullable: false, inList: ["1","2","3","4","5","6","7"]

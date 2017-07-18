@@ -27,7 +27,7 @@ class EscalaController {
         render(view:'chatbot',model:[chatUser:usuario])
     }
 
-    /* Ajustando gravar escalas */
+
     def sobreavisoHistorico(){
 
 
@@ -38,14 +38,16 @@ class EscalaController {
 
 
         /*Avaliar necessidade de limpar para o Historico, para Escala ainda persiste*/
-        List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("dd/MM/yyyy", params.getProperty("domingo")),Date.parse("dd/MM/yyyy", params.getProperty("sabado")))
+        List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("yyyy-MM-dd", params.getProperty("domingo")),Date.parse("yyyy-MM-dd", params.getProperty("sabado")))
 
-        limpaEscala.each{
+        /*limpaEscala.each{
             Historico historico = it
              historico.atendentes = null
              historico.save flush:true
-        }
+        }*/
 
+
+        Date dataModificacao = new Date()
 
         sobreavisoNutel.each{ s->
 
@@ -57,24 +59,15 @@ class EscalaController {
                     Date dataDia
                     dataDia = dataByDia(dia, dataDia)
 
-                    /*Teste*/
-                    Historico historico = Historico.findAllByDataEscalaAndDiaAndHora(dataDia,dia,hora)
-                    if(historico.dia!=null){
-                        historico.atendentes = atendente
-                        historico.save flush:true
-                    }
-                    else{
-                        historico = new Historico()
-                        historico.dia = dia
-                        historico.hora = hora
-                        historico.dataEscala = dataDia
-                        historico.dataModificacao = new Date()
-                        historico.atendentes = atendente
-                        Usuario user = new Usuario()
-                        user.nome = springSecurityService.currentUser
-                        historico.login = user
-                        historico.save()
-                    }
+                    Historico historico = new Historico()
+
+                    historico.dia = dia
+                    historico.hora = hora
+                    historico.dataEscala = dataDia
+                    historico.dataModificacao = dataModificacao
+                    historico.atendentes = atendente
+                    historico.login = springSecurityService.currentUser
+                    historico.save flush:true
 
                     break;
                 case 'T':/*Torres*/
@@ -85,23 +78,15 @@ class EscalaController {
                     dataDia = dataByDia(dia, dataDia)
 
 
-                    Historico historico = Historico.findAllByDataEscalaAndDiaAndHora(dataDia,dia,hora)
-                    if(historico.dia!=null){
-                        historico.atendentes = atendente
-                        historico.save flush:true
-                    }
-                    else{
-                        historico = new Historico()
-                        historico.dia = dia
-                        historico.hora = hora
-                        historico.dataEscala = dataDia
-                        historico.dataModificacao = new Date()
-                        historico.atendentes = atendente
-                        Usuario user = new Usuario()
-                        user.nome = springSecurityService.currentUser
-                        historico.login = user
-                        historico.save()
-                    }
+                    Historico historico = new Historico()
+
+                    historico.dia = dia
+                    historico.hora = hora
+                    historico.dataEscala = dataDia
+                    historico.dataModificacao = dataModificacao
+                    historico.atendentes = atendente
+                    historico.login = springSecurityService.currentUser
+                    historico.save flush:true
 
                     break;
                 case 'R':/*Rudsom*/
@@ -111,34 +96,24 @@ class EscalaController {
                     Date dataDia
                     dataDia = dataByDia(dia, dataDia)
 
-                    /*Teste*/
-                    Historico historico = Historico.findAllByDataEscalaAndDiaAndHora(dataDia,dia,hora)
-                    if(historico.dia!=null){
-                        historico.atendentes = atendente
-                        historico.save flush:true
-                    }
-                    else{
-                        historico = new Historico()
-                        historico.dia = dia
-                        historico.hora = hora
-                        historico.dataEscala = dataDia
-                        historico.dataModificacao = new Date()
-                        historico.atendentes = atendente
-                        Usuario user = new Usuario()
-                        user.nome = springSecurityService.currentUser
-                        historico.login = user
-                        historico.save()
-                    }
+                    Historico historico = new Historico()
+
+                    historico.dia = dia
+                    historico.hora = hora
+                    historico.dataEscala = dataDia
+                    historico.dataModificacao = dataModificacao
+                    historico.atendentes = atendente
+                    historico.login = springSecurityService.currentUser
+                    historico.save flush:true
 
                     break;
             }
         }
 
-        /*Estou aqui*/
 
         String[] diasNum = ["1","2","3","4","5","6","7"]
         String[] horasNum = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
-        List escala = Escala.findAll()
+        /*List escala = Escala.findAll()
         List escalaSobreaviso = new ArrayList()
 
 
@@ -155,8 +130,34 @@ class EscalaController {
 
             }
         }
-        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso,usuarioLogado:usuario])
+        render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso,usuarioLogado:springSecurityService.currentUser])*/
 
+        def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
+                [data1:Date.parse("yyyy-MM-dd", params.getProperty("domingo")),data2:Date.parse("yyyy-MM-dd", params.getProperty("sabado"))]).get(0)
+        List historico = Historico.executeQuery("""
+            from Historico where dataModificacao = :dataModificacao and dataEscala between :data1 and :data2 order by dataModificacao desc""",
+                [dataModificacao:dataMaisRecente,data1:Date.parse("yyyy-MM-dd", params.getProperty("domingo")),data2:Date.parse("yyyy-MM-dd", params.getProperty("sabado"))])
+
+
+
+        List escalaSobreavisoHistorico = new ArrayList()
+
+        String letraInicial = ""
+        historico.each{ e->
+
+            if(e.atendentes){
+                letraInicial = e.atendentes.nome.charAt(0)
+                if(Integer.parseInt(e.hora) < 10)
+                    escalaSobreavisoHistorico.add(letraInicial+"-"+e.dia+"-"+'0'+e.hora)
+                else
+                    escalaSobreavisoHistorico.add(letraInicial+"-"+e.dia+"-"+e.hora)
+            }
+        }
+
+
+
+
+        render(view:'historico',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreavisoHistorico])
 
 
 
@@ -164,19 +165,19 @@ class EscalaController {
 
     private Date dataByDia(String dia, Date dataDia) {
         switch (dia) {
-            case '1': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("domingo"))
+            case '1': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("domingo"))
                 break;
-            case '2': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("segunda"))
+            case '2': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("segunda"))
                 break;
-            case '3': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("terca"))
+            case '3': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("terca"))
                 break;
-            case '4': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("quarta"))
+            case '4': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("quarta"))
                 break;
-            case '5': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("quinta"))
+            case '5': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("quinta"))
                 break;
-            case '6': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("sexta"))
+            case '6': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("sexta"))
                 break;
-            case '7': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("sabado"))
+            case '7': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("sabado"))
                 break;
         }
         dataDia
@@ -360,12 +361,21 @@ class EscalaController {
         String[] diasNum = ["1","2","3","4","5","6","7"]
         String[] horasNum = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
 
-        List historico = Historico.findAllByDataEscalaBetween(dataInicial,dataFinal) /*Pega a escala da semana correspondente ao dia selecionado no datepicker*/
+        def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
+                [data1:dataInicial,data2:dataFinal]).get(0)
+        List historico = Historico.executeQuery("""
+            from Historico where dataModificacao = :dataModificacao and dataEscala between :data1 and :data2 order by dataModificacao desc""",
+        [dataModificacao:dataMaisRecente,data1:dataInicial,data2:dataFinal])
+
+
+
+
+
+
         List escalaSobreavisoHistorico = new ArrayList()
 
         String letraInicial = ""
         historico.each{ e->
-
             if(e.atendentes){
                 letraInicial = e.atendentes.nome.charAt(0)
                 if(Integer.parseInt(e.hora) < 10)

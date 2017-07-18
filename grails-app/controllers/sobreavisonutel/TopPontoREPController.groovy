@@ -53,99 +53,78 @@ class TopPontoREPController {
     }
 
     def atualizaTudo(){
-        /* Remove todos os registros, busca novamente no banco do Top Ponto REP*/
+        /* Remove todos os registros de dois meses anteriores, busca novamente no banco do Top Ponto REP*/
         String resposta
         try {
 
-            List<TopPontoREP> removerMarcacao = TopPontoREP.findAll()
-            println "Removendo Maracações!!!"
-            if (removerMarcacao.size() > 0) {
-                removerMarcacao.each{
-                    it.delete flush: true
-                }
+            println "Removendo Maracações anteriores!!!"
+            TopPontoREP.executeUpdate('delete from TopPontoREP')
 
-            }
+
+
             println "Removendo Jornadas!!!"
-            List<Jornada> removerJornada = Jornada.findAll()
-            if (removerJornada.size() > 0) {
-                removerJornada.each {
-                    it.delete flush: true
-                }
-            }
+            Jornada.executeUpdate('delete from Jornada')
+
+
             println "Removendo Fechamentos!!!"
-            List<Fechamentos> removerFechamentos = Fechamentos.findAll()
-            if (removerFechamentos.size() > 0) {
-                removerFechamentos.each {
-                    it.delete flush: true
-                }
-            }
+            Fechamentos.executeUpdate('delete from Fechamentos')
+
             println "Removendo Feriados!!!"
-            List<Feriados> removerFeriados = Feriados.findAll()
-            if (removerFeriados.size() > 0) {
-                removerFeriados.each {
-                    it.delete flush: true
-                }
-            }
+            Feriados.executeUpdate('delete from Feriados')
+
 
             /*Remove todos as ausencias/abonos*/
-            println "Removendo Ausências/Abonos!!!"
-            List<Abono> removerAbonos = Abono.findAll()
-            if (removerAbonos.size() > 0) {
-                removerAbonos.each {
-                    it.delete flush: true
-                }
-            }
+            println "Removendo Ausências/Abonos !!!"
+            Abono.executeUpdate('delete from Abono')
+
 
             /*Remove todos os Afastamentos*/
-            println "Removendo Afastamentos!!!"
-            List<Afastamentos> removerAfastamentos = Afastamentos.findAll()
-            if (removerAfastamentos.size() > 0) {
-                removerAfastamentos.each {
-                    it.delete flush: true
-                }
-            }
+            println "Removendo Afastamentos todos!!!"
+            Afastamentos.executeUpdate('delete from Afastamentos')
+
 
 
             /*Pega os Fechamentos inseridos no Banco - Onde são lançados os sobreavisos e horas pela SRH*/
             println "Inserindo Fechamentos!!!"
             List<Atendentes> atendentes = Atendentes.findAll()
-//            List<Atendentes> atendentes = Atendentes.findAllByNome("Ivanildo")
             atendentes.each {
                 println "Fechamentos: "
                 List horarios = topPontoRepService.pegaFechamentos(it.nome)
 
                 horarios.each {
-                    println it.codFunc + "----" + it.dataLancamento + "----" + it.cargaHorariaLancada
-                    Fechamentos fch = new Fechamentos()
-                    fch = it
 
 
-                    /*Insere no banco o equivalente double das horas de fechamento*/
-                    TimeDuration duracao
-                    TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                    def start = new Time(0,0,0)
-                    def end = fch.cargaHorariaLancada
-                    duracao = TimeCategory.minus(end, start)
-                    cargaHoraria = cargaHoraria.plus(duracao)
+                        println it.codFunc + "----" + it.dataLancamento + "----" + it.cargaHorariaLancada
+                        Fechamentos fch = new Fechamentos()
+                        fch = it
 
-                    Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
-                    cargaHoras = cargaHoras / 60 / 60
+                        /*Insere no banco o equivalente double das horas de fechamento*/
+                        TimeDuration duracao
+                        TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+                        def start = new Time(0, 0, 0)
+                        def end = fch.cargaHorariaLancada
+                        duracao = TimeCategory.minus(end, start)
+                        cargaHoraria = cargaHoraria.plus(duracao)
 
-                    fch.cargaHorariaLancadaD = cargaHoras
+                        Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                        cargaHoras = cargaHoras / 60 / 60
+
+                        fch.cargaHorariaLancadaD = cargaHoras
 
 
-                    cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                    start = new Time(0,0,0)
-                    end = fch.cargaHorariaCredito
-                    duracao = TimeCategory.minus(end, start)
-                    cargaHoraria = cargaHoraria.plus(duracao)
+                        cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+                        start = new Time(0, 0, 0)
+                        end = fch.cargaHorariaCredito
+                        duracao = TimeCategory.minus(end, start)
+                        cargaHoraria = cargaHoraria.plus(duracao)
 
-                    cargaHoras = cargaHoraria.toMilliseconds() / 1000
-                    cargaHoras = cargaHoras / 60 / 60
+                        cargaHoras = cargaHoraria.toMilliseconds() / 1000
+                        cargaHoras = cargaHoras / 60 / 60
 
-                    fch.cargaHorariaCreditoD = (-1)*cargaHoras
+                        fch.cargaHorariaCreditoD = (-1) * cargaHoras
 
-                    fch.save flush: true
+                        fch.save flush: true
+
                 }
             }
 
@@ -223,7 +202,6 @@ class TopPontoREPController {
                 Date partida = Date.parse("yyyy-MM-dd", dataInicio)
 
                 while (partida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
-//                while (partida.before(Date.parse("yyyy-MM-dd", "2015-02-28"))) {
                     println it.nome + "----" + partida
                     pegaHorarios(partida, it.nome, false)
                     partida = partida.plus(1)
@@ -240,10 +218,12 @@ class TopPontoREPController {
 
                 while (partida.before(Date.parse("yyyy-MM-dd", new Date().format("yyyy-MM-dd")))) {
                     println it.nome + "----" + partida
-                    pegaAfastamentos(it.nome,partida) //Tentativa de que seja feita a consulta.
+                    pegaAfastamentos(it.nome,partida)
                     partida = partida.plus(1)
                 }
             }
+
+
 
 
             /*Ajustes nas folhas individuais de todos - Fatos encontratos na folha*/
@@ -313,9 +293,10 @@ class TopPontoREPController {
         List<Double> horasTrabalhadas = new ArrayList<Double>()
         List<Double> horasSobreaviso = new ArrayList<Double>()
         int diaSemanaAtual = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico").get(0)
 
         List<TopPontoREP> marcacoesIvanildo = TopPontoREP.findAllByNomeFuncionarioAndDataMarcacaoBetween(funcionarios[0],domingoCorrente,sabadoCorrente)
-        List<Escala> sobreavisoIvanildo = Escala.findAllByAtendentesAndDiaLessThan(Atendentes.findAllByNome(funcionarios[0]),diaSemanaAtual)
+        List<Historico> sobreavisoIvanildo = Historico.findAllByAtendentesAndDiaLessThanAndDataModificacao(Atendentes.findAllByNome(funcionarios[0]),diaSemanaAtual,dataMaisRecente)
         Double horasTrabalhadasIvanildo = 0
         Double horasSobreavisoIvanildo = sobreavisoIvanildo.size() / 3
         Double chSemana = 0
@@ -327,7 +308,7 @@ class TopPontoREPController {
         horasSobreaviso.add(horasSobreavisoIvanildo)
 
         List<TopPontoREP> marcacoesTorres = TopPontoREP.findAllByNomeFuncionarioAndDataMarcacaoBetween(funcionarios[1],domingoCorrente,sabadoCorrente)
-        List<Escala> sobreavisoTorres = Escala.findAllByAtendentesAndDiaLessThan(Atendentes.findAllByNome(funcionarios[1]),diaSemanaAtual)
+        List<Historico> sobreavisoTorres = Historico.findAllByAtendentesAndDiaLessThanAndDataModificacao(Atendentes.findAllByNome(funcionarios[1]),diaSemanaAtual,dataMaisRecente)
         Double horasTrabalhadasTorres = 0
         Double horasSobreavisoTorres = sobreavisoTorres.size() / 3
         marcacoesTorres.each{
@@ -337,7 +318,7 @@ class TopPontoREPController {
         horasSobreaviso.add(horasSobreavisoTorres)
 
         List<TopPontoREP> marcacoesRudsom = TopPontoREP.findAllByNomeFuncionarioAndDataMarcacaoBetween(funcionarios[2],domingoCorrente,sabadoCorrente)
-        List<Escala> sobreavisoRudsom = Escala.findAllByAtendentesAndDiaLessThan(Atendentes.findAllByNome(funcionarios[2]),diaSemanaAtual)
+        List<Historico> sobreavisoRudsom = Historico.findAllByAtendentesAndDiaLessThanAndDataModificacao(Atendentes.findAllByNome(funcionarios[2]),diaSemanaAtual,dataMaisRecente)
         Double horasTrabalhadasRudsom = 0
         Double horasSobreavisoRudsom = sobreavisoRudsom.size() / 3
         marcacoesRudsom.each{

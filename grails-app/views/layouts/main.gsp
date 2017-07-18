@@ -12,7 +12,7 @@
 
     <asset:stylesheet src="prf/bootstrap.css"/>
     <asset:stylesheet src="prf/prf-sistemas-internos.css"/>
-    <asset:stylesheet src="prf/animacaoprogresso.css"/>
+    %{--<asset:stylesheet src="prf/animacaoprogresso.css"/>--}%
     <asset:javascript src="prf/jquery.js"/>
     <asset:javascript src="prf/bootstrap.js"/>
     <asset:javascript src="prf/bootstrap-inputmask.min.js"/>
@@ -59,28 +59,33 @@
 <div class="container-fluid" id="main-container">
     <!-- Menú principal lateral ================================================== -->
     <div id="sidebar" class="fixed">
-        <ul class="nav nav-list nav-open">
-            <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Fechar menu </a></li>
+        <sec:ifLoggedIn>
+            <ul class="nav nav-list nav-open">
+                <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Fechar menu </a></li>
 
-            <li id="menuInicio" class="ativo"><a href="/sobreaviso"><i class="icon-home"></i> Início</a></li>
-
-            <li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>
-
-            <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-calendar"></i>Histórico Escala</g:link></li>
-
-            <li id="menuTopPontoREP"><g:link controller="topPontoREP" action="pegaMarcacoes"><i class="icon-calendar"></i>Saldo Horário Semana</g:link></li>
-
-            <li id="menuAtualizaTodasMarcacoes"><a href="#modalAtualizaTudo" data-toggle="modal"><i class="icon-calendar"></i>Atualizar Todo Histórico</a></li>
-
-            <li id="menuRecalculaTudo"><g:link controller="topPontoREP" action="recalculaTudo"><i class="icon-calendar"></i>Recalcula</g:link></li>
-
-            <li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>
+                <li id="menuInicio" class="ativo"><a href="/sobreaviso"><i class="icon-home"></i> Início</a></li>
 
 
-        </ul>
-        <ul class="nav nav-list nav-close" style="display:none">
-            <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Abrir menu</a></li>
-        </ul>
+                    <!--li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li-->
+
+                    <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-tasks"></i>Escala</g:link></li>
+
+                    <li id="menuTopPontoREP"><g:link controller="topPontoREP" action="pegaMarcacoes"><i class="icon-calendar"></i>Saldo Horário Semana</g:link></li>
+
+                    <sec:ifAllGranted roles="ROLE_ADMIN">
+                        <li id="menuAtualizaTodasMarcacoes"><a href="#modalAtualizaTudo" data-toggle="modal"><i class="icon-refresh"></i>Atualizar Todo Histórico</a></li>
+                    </sec:ifAllGranted>
+
+                    %{--<li id="menuRecalculaTudo"><g:link controller="topPontoREP" action="recalculaTudo"><i class="icon-adjust"></i>Recalcula</g:link></li>--}%
+
+                    <!--li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li-->
+
+
+            </ul>
+            <ul class="nav nav-list nav-close" style="display:none">
+                <li><a href="#" class="fechar-sidebar"><i class="icon-reorder"></i> Abrir menu</a></li>
+            </ul>
+        </sec:ifLoggedIn>
     </div>        <div id="main-content" class="clearfix">
     <!-- Breadcrumb    ================================================== -->
     <!-- Navegação secundária    ================================================== -->
@@ -120,16 +125,14 @@
                 <div class="modal-header">
                     <div align="center">
                     <h5 class="modal-title" id="atualizaTudo">Atualizar Dados</h5>
-                    <svg class="progress-circle indefinite" width="100" height="100">
+                    <!--svg class="progress-circle indefinite" width="100" height="100">
                         <g transform="rotate(-90,50,50)">
                             <circle class="bg" r="20" cx="25" cy="25" fill="none"></circle>
                             <circle class="progress" r="20" cx="25" cy="25" fill="none"></circle>
                         </g>
-                    </svg>
+                    </svg-->
+
                     </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     Esse procedimento removerá todos os registros de ponto do banco Sobreaviso e buscará novamente no banco do TopPontoREP.
@@ -138,8 +141,17 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn"><g:link controller="topPontoREP" action="atualizaTudo">Atualizar Todo Histórico</g:link></button>
+                    <div id="barraProgresso" class="progress">
+                        <div class="progress progress-striped active" role="progressbar">
+                            <div class="bar" style="width: 100%;"></div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button id="atualizarPonto" type="button" class="btn"><g:link controller="topPontoREP" action="atualizaTudo">Atualizar Todo Histórico</g:link></button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -164,6 +176,18 @@
     </footer>
 
 
+<g:javascript>
+
+    $(document).ready(function() {
+
+        $('#barraProgresso').hide();
+
+        $('#atualizarPonto').on('click', function (){
+            $('#barraProgresso').show();
+        });
+
+    });
+</g:javascript>
 
 </body>
 </html>
