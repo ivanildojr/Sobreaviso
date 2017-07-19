@@ -6,16 +6,20 @@
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#edit-perfil" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="edit-perfil" class="content scaffold-edit" role="main">
+
+
+
+    <!-- Conteúdo da página    ================================================== -->
+    <div id="page-content" class="clearfix fixed">
+        ﻿
+        <div class="page-header">
             <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
+        </div>
+        <div class="box">
+            <div class="box-content padded">
+
+        <div id="edit-perfil" class="content scaffold-edit" role="main">
+
             <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
             </g:if>
@@ -36,5 +40,10 @@
                 </fieldset>
             </g:form>
         </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Fim do conteúdo da página ================================================== -->
     </body>
 </html>

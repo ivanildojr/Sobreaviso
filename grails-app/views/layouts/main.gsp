@@ -66,19 +66,35 @@
                 <li id="menuInicio" class="ativo"><a href="/sobreaviso"><i class="icon-home"></i> Início</a></li>
 
 
-                    <!--li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li-->
+                    %{--<li id="menuAgenda"><g:link controller="escala" action="agenda"><i class="icon-tasks"></i>Agenda</g:link></li>--}%
 
                     <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-tasks"></i>Escala</g:link></li>
 
                     <li id="menuTopPontoREP"><g:link controller="topPontoREP" action="pegaMarcacoes"><i class="icon-calendar"></i>Saldo Horário Semana</g:link></li>
 
                     <sec:ifAllGranted roles="ROLE_ADMIN">
+                        <li id="menuAuditoria"><g:link controller="fechamentos" action="index"><i class="icon-time"></i>Fechamentos</g:link></li>
+                        <li id="menuHistoricoAuditoria"><g:link controller="historico" action="index"><i class="icon-cogs"></i>Historico Auditoria</g:link></li>
                         <li id="menuAtualizaTodasMarcacoes"><a href="#modalAtualizaTudo" data-toggle="modal"><i class="icon-refresh"></i>Atualizar Todo Histórico</a></li>
+
+                        <li id="menuUsuario" role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-user"></i>Dados de Usuário
+                            </a>
+                            <ul class="dropdown-menu fixed">
+                                <li><g:link controller="usuario" action="index"><i class="icon-user"></i>Usuário</g:link></li>
+                                <li><g:link controller="perfil" action="index"><i class="icon-user"></i>Perfil</g:link></li>
+                                %{--<li><g:link controller="usuarioPerfil" action="index"><i class="icon-user"></i>Usuário / Perfil</g:link></li>--}%
+                            </ul>
+                        </li>
+
+
+
                     </sec:ifAllGranted>
 
                     %{--<li id="menuRecalculaTudo"><g:link controller="topPontoREP" action="recalculaTudo"><i class="icon-adjust"></i>Recalcula</g:link></li>--}%
 
-                    <!--li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li-->
+                    %{--<li id="nutelRobot"><g:link controller="escala" action="chatBot"><i class="icon-user-md"></i>Suporte On-Line</g:link></li>--}%
 
 
             </ul>

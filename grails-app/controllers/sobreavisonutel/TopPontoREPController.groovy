@@ -804,7 +804,7 @@ class TopPontoREPController {
         List<Afastamentos> afastamentosDia = Afastamentos.findAllByCodFuncAndDtInicio(pegaFuncionario(nomeFuncioario), dataPartida.clearTime())
 
         if (afastamentosDia.size() > 0) {
-            /*São os dias em que a jornada também pode ser zeradao: alistamento eleitoral, ferias, viagem...
+            /*São os dias em que a jornada também pode ser zerada: alistamento eleitoral, ferias, viagem...
             * Verificar se todos os motivos geram a zerada da jornada do dia*/
             afastamentosDia.eachWithIndex { afs, it->
                 List<TopPontoREP> listaMarcacoes = TopPontoREP.findAllByCodFuncAndDataMarcacaoBetween(pegaFuncionario(nomeFuncioario), afs.dtInicio, afs.dtFim)

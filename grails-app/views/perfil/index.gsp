@@ -5,24 +5,51 @@
         <g:set var="entityName" value="${message(code: 'perfil.label', default: 'Perfil')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
-    <body>
-        <a href="#list-perfil" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="list-perfil" class="content scaffold-list" role="main">
+    <body><!-- Conteúdo da página    ================================================== -->
+    <div id="page-content" class="clearfix fixed">
+        ﻿
+        <div class="page-header">
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
+        </div>
+        <div class="box">
+            <div class="box-content padded">
+                <!-- Inicio da página -->
+        <div id="list-perfil" class="content scaffold-list" role="main">
+
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:table collection="${perfilList}" />
+                <table class="table table-hover table-responsive">
+                    <thead class="table-header">
+                    <tr>
+                        <th>Authority</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-row-cell">
+                    <g:each status="i" in="${perfilList}" var="item">
+                        <tr>
+                            <td><g:link action="edit" id="${item.id}">${item.authority?.encodeAsHTML()}</g:link></td>
+                        </tr>
+                    </g:each>
+                    </tbody>
+                    <tfoot class="table-footer">
+                    <tr>
+                        <td colspan="6">
+                            <div class="pagination">
+                                <g:paginate total="${perfilCount ?: 0}" />
+                            </div>
+                        </td>
 
-            <div class="pagination">
-                <g:paginate total="${perfilCount ?: 0}" />
+                    </tr>
+                    </tfoot>
+                </table>
+
+
+        </div>
             </div>
         </div>
+
+    </div>
+    <!-- Fim do conteúdo da página ================================================== -->
     </body>
 </html>
