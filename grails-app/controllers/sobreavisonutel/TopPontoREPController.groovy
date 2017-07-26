@@ -302,7 +302,7 @@ class TopPontoREPController {
         List<Double> horasTrabalhadas = new ArrayList<Double>()
         List<Double> horasSobreaviso = new ArrayList<Double>()
         int diaSemanaAtual = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico").get(0)
+        def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :dt1 and :dt2",[dt1:domingoCorrente,dt2:sabadoCorrente]).get(0)
 
         List<TopPontoREP> marcacoesIvanildo = TopPontoREP.findAllByNomeFuncionarioAndDataMarcacaoBetween(funcionarios[0],domingoCorrente,sabadoCorrente)
         List<Historico> sobreavisoIvanildo = Historico.findAllByAtendentesAndDiaLessThanAndDataModificacao(Atendentes.findAllByNome(funcionarios[0]),diaSemanaAtual,dataMaisRecente)

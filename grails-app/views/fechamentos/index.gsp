@@ -48,7 +48,7 @@
                                 <g:link action="edit" id="${item.id}"><g:formatDate format="yyyy-MM-dd" date="${item.dataLancamento}"/></g:link>
 
                             </td>
-                            <td><g:link action="edit" id="${item.id}">${item.cargaHorariaLancadaD?.encodeAsHTML()}</g:link></td>
+                            <td><g:link action="edit" id="${item.id}">${item.cargaHorariaD?.encodeAsHTML()}</g:link></td>
                         </tr>
                     </g:each>
                     </tbody>
