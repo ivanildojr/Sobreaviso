@@ -5,10 +5,8 @@ import grails.transaction.Transactional
 
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
-import java.sql.Time
 import java.time.LocalDate
 
 @Transactional
@@ -138,18 +136,20 @@ class TopPontoRepService {
                 Fechamentos fch = new Fechamentos()
                 fch.codFunc = rs.getInt(1)
                 fch.dataLancamento = rs.getDate(2)
-                fch.cargaHorariaLancada = rs.getTime(3)
-                fch.cargaHorariaCredito = rs.getTime(4)
+                fch.cargaHorariaDebito = rs.getDate(3) /*Não está trazendo a hora*/
+                fch.cargaHorariaCredito = rs.getDate(4)
+                fch.cargaHorarioDebitoTime = rs.getTime(3) /*Criado pois com Date não trouxe a hora*/
+                fch.cargaHorariaCreditoTime = rs.getTime(4)
 
                 horarios.add(fch)
             }
 
-            println horarios
 
             con.close();
             return horarios
         }catch(Exception e){
             System.out.println(e);
+            e.printStackTrace();
         }
     }
 

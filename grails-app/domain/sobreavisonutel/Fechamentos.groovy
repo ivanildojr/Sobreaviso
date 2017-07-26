@@ -6,17 +6,19 @@ class Fechamentos {
 
     int codFunc
     Date dataLancamento
-    Time cargaHorariaLancada
-    Double cargaHorariaLancadaD
-    Time cargaHorariaCredito
-    Double cargaHorariaCreditoD
+    Date cargaHorariaDebito
+    Double cargaHorariaD
+    Date cargaHorariaCredito
+    Time cargaHorarioDebitoTime
+    Time cargaHorariaCreditoTime
 
     static constraints = {
         codFunc nullable: false
         dataLancamento nullable: false
-        cargaHorariaLancada nullable: false
-        cargaHorariaLancadaD nullable: false
+        cargaHorariaDebito nullable: false
+        cargaHorariaD nullable: false
         cargaHorariaCredito nullable: false
-        cargaHorariaCreditoD nullable: false
+        cargaHorariaCreditoTime nullable: false
+        cargaHorarioDebitoTime nullable: false
     }
 }

@@ -3,7 +3,6 @@ package sobreavisonutel
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.time.TimeCategory
 import groovy.time.TimeDuration
-import org.apache.commons.lang.time.DateUtils
 
 import java.sql.Time
 
@@ -87,41 +86,51 @@ class TopPontoREPController {
             /*Pega os Fechamentos inseridos no Banco - Onde são lançados os sobreavisos e horas pela SRH*/
             println "Inserindo Fechamentos!!!"
             List<Atendentes> atendentes = Atendentes.findAll()
+//            List<Atendentes> atendentes = Atendentes.findAllByNome("Ivanildo")
             atendentes.each {
                 println "Fechamentos: "
                 List horarios = topPontoRepService.pegaFechamentos(it.nome)
 
                 horarios.each {
 
-
-                        println it.codFunc + "----" + it.dataLancamento + "----" + it.cargaHorariaLancada
                         Fechamentos fch = new Fechamentos()
                         fch = it
 
                         /*Insere no banco o equivalente double das horas de fechamento*/
                         TimeDuration duracao
                         TimeDuration cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                        def start = new Time(0, 0, 0)
-                        def end = fch.cargaHorariaLancada
+                        def start = fch.cargaHorariaCreditoTime
+                        def end = fch.cargaHorarioDebitoTime
+
+
+
                         duracao = TimeCategory.minus(end, start)
-                        cargaHoraria = cargaHoraria.plus(duracao)
+
+                        int dataDuration = fch.cargaHorariaDebito - fch.cargaHorariaCredito
+
+                        TimeDuration horasData = new TimeDuration(dataDuration*24,0,0,0)
+
+                        cargaHoraria = cargaHoraria.plus(duracao).plus(horasData)
+
+                        println "Data Lancamento: " + fch.dataLancamento + "  Data Debito - Hora debito: " + fch.cargaHorariaDebito + ' ' + fch.cargaHorarioDebitoTime + " Data Credito - Hora Credito: " + fch.cargaHorariaCredito + ' ' + fch.cargaHorariaCreditoTime + " Duracao: " + cargaHoraria
+
 
                         Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
                         cargaHoras = cargaHoras / 60 / 60
 
-                        fch.cargaHorariaLancadaD = cargaHoras
+                        fch.cargaHorariaD = cargaHoras
 
 
-                        cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
-                        start = new Time(0, 0, 0)
-                        end = fch.cargaHorariaCredito
-                        duracao = TimeCategory.minus(end, start)
-                        cargaHoraria = cargaHoraria.plus(duracao)
-
-                        cargaHoras = cargaHoraria.toMilliseconds() / 1000
-                        cargaHoras = cargaHoras / 60 / 60
-
-                        fch.cargaHorariaCreditoD = (-1) * cargaHoras
+//                        cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
+//                        start = fch.cargaHorariaCredito
+//                        end = fch.cargaHorariaCredito
+//                        duracao = TimeCategory.minus(end, start)
+//                        cargaHoraria = cargaHoraria.plus(duracao)
+//
+//                        cargaHoras = cargaHoraria.toMilliseconds() / 1000
+//                        cargaHoras = cargaHoras / 60 / 60
+//
+//                        fch.cargaHorariaCreditoD = (-1) * cargaHoras
 
                         fch.save flush: true
 
@@ -248,7 +257,7 @@ class TopPontoREPController {
             List<Fechamentos> fchIvanildo = Fechamentos.findAllByCodFuncAndDataLancamento(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-12-01")) //Credito errado
             fchIvanildo.each{
                 it.cargaHorariaCredito = new Time(0,0,0)
-                it.cargaHorariaCreditoD = 0
+                it.cargaHorariaD = 0
                 it.save flush:true
             }
 
@@ -339,9 +348,11 @@ class TopPontoREPController {
 
             while(year <= ano){
 
-                Double fechamentosDebito = Fechamentos.executeQuery("select sum(f.cargaHorariaLancadaD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
-                        [func: pegaFuncionario(it),m: month,y: year])[0]
-                Double fechamentosCredito = Fechamentos.executeQuery("select sum(f.cargaHorariaCreditoD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
+//                Double fechamentosDebito = Fechamentos.executeQuery("select sum(f.cargaHorariaD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
+//                        [func: pegaFuncionario(it),m: month,y: year])[0]
+//                Double fechamentosCredito = Fechamentos.executeQuery("select sum(f.cargaHorariaCreditoD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
+//                        [func: pegaFuncionario(it),m: month,y: year])[0]
+                Double fechamentos = Fechamentos.executeQuery("select sum(f.cargaHorariaD) from Fechamentos f where cod_func = :func and month(data_lancamento) = :m and year(data_lancamento) = :y",
                         [func: pegaFuncionario(it),m: month,y: year])[0]
                 Double abonos = Abono.executeQuery("select sum(a.ausenciaD) from Abono a where cod_func = ? and cod_motivo != 4 and month(data_lancamento) = ? and year(data_lancamento) = ?",
                         [pegaFuncionario(it),month,year])[0]
@@ -349,12 +360,14 @@ class TopPontoREPController {
                         [pegaFuncionario(it),month,year])[0]
 
                 if(abonos==null) abonos = 0
-                if(fechamentosDebito==null) fechamentosDebito = 0
-                if(fechamentosCredito==null) fechamentosCredito = 0
+//                if(fechamentosDebito==null) fechamentosDebito = 0
+//                if(fechamentosCredito==null) fechamentosCredito = 0
+                if(fechamentos==null) fechamentos = 0
                 if(bancoHoras==null) bancoHoras = 0
 
 
-                bancoHorasCorrente = bancoHoras - abonos + bancoHorasAnterior + fechamentosDebito + fechamentosCredito
+//                bancoHorasCorrente = bancoHoras - abonos + bancoHorasAnterior + fechamentosDebito + fechamentosCredito
+                bancoHorasCorrente = bancoHoras - abonos + bancoHorasAnterior + fechamentos
                 bancoHorasAnterior = bancoHorasCorrente
 //                println "Mês/Ano: " + mes+"/"+ ano + " Month/Year: " + month+"/"+ year +" - Funcionario: " + it + " Fechamentos: " + fechamentosDebito + " Abonos: " + abonos + " bancoHoras: " + bancoHoras + " BancoHorasCorrente: " + bancoHorasCorrente
                 //println " Month/Year: " + month+"/"+ year +" - Funcionario: " + it + " BancoHorasCorrente: " + bancoHorasCorrente
@@ -759,7 +772,7 @@ class TopPontoREPController {
         List<Fechamentos> fchIvanildo = Fechamentos.findAllByCodFuncAndDataLancamento(pegaFuncionario("Ivanildo"), Date.parse("yyyy-MM-dd","2013-12-01")) //Credito errado
         fchIvanildo.each{
             it.cargaHorariaCredito = new Time(0,0,0)
-            it.cargaHorariaCreditoD = 0
+//            it.cargaHorariaCreditoD = 0
             it.save flush:true
         }
 
