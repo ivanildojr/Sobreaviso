@@ -12,7 +12,7 @@
     <div id="page-content" class="clearfix fixed">
         ﻿
         <div class="page-header">
-            <h1> Sobreaviso
+            <h1> Sobreaviso - Não deve ser usado mais - foi substituido pelo historico
                 <small><i class="icon-double-angle-right"></i> Sistema de Abertura e Acompanhamento de Chamados - NUTEL-RN</small>
             </h1>
         </div>
