@@ -90,24 +90,14 @@ hibernate:
         use_query_cache: false
         region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
 
-
-
-#dataSource_topponto:
-#    dialect = org.hibernate.dialect.SQLServerDialect
-#    driverClassName = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
-#    username = "sa"
-#    password = "pol1c1@"
-#    readOnly = true
-#    dbCreate = "validate"
-
 dataSources:
   dataSource:
     pooled: true
     #logSql: true
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
-    username: root
-    password: qwe123
+    username:
+    password:
 
 
 
@@ -116,21 +106,26 @@ environments:
     development:
         dataSources:
           dataSource:
-            dbCreate: update
+            username:
+            password:
+            dbCreate:
             url: jdbc:mysql://localhost:3306/sobreaviso
+            properties:
+              autoReconnect: true
+
 
     test:
         dataSources:
           dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.15.0.6:3306/sobreaviso
+            url: jdbc:mysql://localhost:3306/sobreaviso
     production:
         grails:
           grails.serverURL: 'http://localhost:8080/sobreaviso'
         dataSources:
           dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.15.0.6:3306/sobreaviso
+            url: jdbc:mysql://localhost:3306/sobreaviso
             properties:
                 jmxEnabled: true
                 initialSize: 5

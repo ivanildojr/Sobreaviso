@@ -1,0 +1,49 @@
+.table tbody tr td{
+    border-left: 1px !important;
+}
+
+.table th,.table td{
+    padding: 0px;
+    text-align: center;
+    max-width: 350px;
+}
+
+td div{
+    overflow: hidden;
+    max-height: 20px;
+    -webkit-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+    -moz-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+
+
+
+}
+
+td div:hover{
+    max-height: 400px;
+    -webkit-transition: max-height 2s ease;
+    -moz-transition: max-height 2s ease;
+    transition: max-height 2s ease;
+
+
+}
+
+.table-aberto{
+    color: #3c763d !important;
+    background-color: #dff0d8 !important;
+    border-color: #d6e9c6 !important;
+}
+.table-executando{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+.table-prioridade{
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.table-aguardando{
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
