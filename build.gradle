@@ -23,6 +23,7 @@ apply plugin:"asset-pipeline"
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
+    //maven { url "https://mvnrepository.com/artifact/org.grails.plugins/jprogress" }
 }
 
 dependencyManagement {
@@ -45,7 +46,6 @@ dependencies {
     compile "org.grails.plugins:hibernate5"
     compile "org.hibernate:hibernate-core:5.1.2.Final"
     compile "org.hibernate:hibernate-ehcache:5.1.2.Final"
-    compile "org.grails.plugins:jprogress:0.2"
     compile "org.grails.plugins:spring-security-core:3.1.1"
     compile fileTree(dir: './lib', include: ['*.jar'])
     console "org.grails:grails-console"

@@ -107,7 +107,7 @@ dataSources:
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
     username: root
-    password: qwe123
+    password: root
 
 
 
@@ -123,7 +123,7 @@ environments:
         dataSources:
           dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.15.0.6:3306/sobreaviso
+            url: jdbc:mysql://localhost:3306/sobreaviso
     production:
         grails:
           grails.serverURL: 'http://localhost:8080/sobreaviso'

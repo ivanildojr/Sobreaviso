@@ -5,6 +5,7 @@
     %{--<asset:javascript src="prf/jquery.js"/>   Removido pois já está inserido no sistema  --}%
     <asset:javascript src="sobreaviso.js"/>
     <asset:stylesheet src="datepicker/css/bootstrap-datepicker.css"/>
+    %{--<asset:stylesheet src="grails-app/assets/stylesheets/rudsom.css"/>--}%
     <asset:javascript src="datepicker/js/bootstrap-datepicker.min.js"/>
     <asset:javascript src="datepicker/locales/bootstrap-datepicker.pt-BR.min.js"/>
     <style>
@@ -24,6 +25,21 @@
             text-align: center;
             font-weight: bold;
             font-size: xx-small;
+        }
+        span[id=R] {
+            color: #0000FF;
+        }
+        input[name=checkListI] {
+            color: #0000FF;
+            outline: 2px solid green;
+        }
+        input[name=checkListR] {
+            color: #0000FF;
+            outline: 2px solid blue;
+        }
+        input[name=checkListT] {
+            color: #0000FF;
+            outline: 2px solid red;
         }
     </style>
 
@@ -127,9 +143,15 @@
                                                 <td>${hora}:00</td>
                                                 <g:each var="dia" status="i" in="${diasListNum}">
                                                     <td align="center">
-                                                        I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
-                                                        T: <g:checkBox name="checkList" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
-                                                        R: <g:checkBox name="checkList" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                                        <span id="I">
+                                                            I: <g:checkBox name="checkListI" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
+                                                        </span>
+                                                        <span id="T">
+                                                            T: <g:checkBox name="checkListT" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
+                                                        </span>
+                                                        <span id="R">
+                                                            R: <g:checkBox name="checkListR" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                                        </span>
                                                     </td>
                                                 </g:each>
                                             </tr>
