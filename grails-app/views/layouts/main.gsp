@@ -74,6 +74,7 @@
 
                     <sec:ifAllGranted roles="ROLE_ADMIN">
                         <li id="menuAuditoria"><g:link controller="fechamentos" action="index"><i class="icon-time"></i>Fechamentos</g:link></li>
+                        <li id="menuRelatorio"><g:link controller="relatorio" action="index"><i class="icon-list-alt"></i>Relatório</g:link></li>
                         <li id="menuHistoricoAuditoria"><g:link controller="historico" action="index"><i class="icon-cogs"></i>Historico Auditoria</g:link></li>
                         <li id="menuAtualizaTodasMarcacoes"><a href="#modalAtualizaTudo" data-toggle="modal"><i class="icon-refresh"></i>Atualizar Todo Histórico</a></li>
 
