@@ -9,7 +9,6 @@ import sobreavisonutel.seguranca.Usuario
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -356,6 +355,9 @@ class EscalaController {
         JsonUtil jsonUtil = new JsonUtil()
         jsonUtil.dataInicial = dataInicial
         jsonUtil.dataFinal = dataFinal
+
+        println jsonUtil.dataInicial = dataInicial
+        println jsonUtil.dataFinal = dataFinal
 
         /**************Busca os horários na tabela historico**********************/
         String[] diasNum = ["1","2","3","4","5","6","7"]

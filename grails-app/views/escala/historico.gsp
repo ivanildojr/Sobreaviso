@@ -29,18 +29,18 @@
         span[id=R] {
             color: #0000FF;
         }
-        input[name=checkListI] {
-            color: #0000FF;
-            outline: 2px solid green;
-        }
-        input[name=checkListR] {
-            color: #0000FF;
-            outline: 2px solid blue;
-        }
-        input[name=checkListT] {
-            color: #0000FF;
-            outline: 2px solid red;
-        }
+        /*input[name=checkListI] {*/
+            /*color: #0000FF;*/
+            /*outline: 2px solid green;*/
+        /*}*/
+        /*input[name=checkListR] {*/
+            /*color: #0000FF;*/
+            /*outline: 2px solid blue;*/
+        /*}*/
+        /*input[name=checkListT] {*/
+            /*color: #0000FF;*/
+            /*outline: 2px solid red;*/
+        /*}*/
     </style>
 
 </head>
