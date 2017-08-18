@@ -9,6 +9,7 @@ import sobreavisonutel.seguranca.Usuario
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -270,7 +271,7 @@ class EscalaController {
                     escalaSobreaviso.add(letraInicial+"-"+e.dia+"-"+e.hora)
             }
         }
-//        println escalaSobreaviso
+        //println escalaSobreaviso
         render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso])
     }
 
@@ -300,11 +301,11 @@ class EscalaController {
             dataFinal = new Date()
         }
 
-//        println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
+     //   println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
         List historico = Historico.findAllByDataEscalaBetween(dataInicial,dataFinal)
         List escalaSobreavisoHistorico = new ArrayList()
 
-//        println historico
+        println historico
 
 
         String letraInicial = ""
@@ -320,9 +321,11 @@ class EscalaController {
         }
 
         DateFormat df = new SimpleDateFormat ("dd/MM/yyyy");
-//        println df.format(dataInicial)
+
+
 
         render(view:'historico',model:[inicial:df.format(dataInicial),final:dataFinal,diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreavisoHistorico])
+
     }
 
     def datasAjax(String dataHistorico){
@@ -356,9 +359,6 @@ class EscalaController {
         jsonUtil.dataInicial = dataInicial
         jsonUtil.dataFinal = dataFinal
 
-        println jsonUtil.dataInicial = dataInicial
-        println jsonUtil.dataFinal = dataFinal
-
         /**************Busca os horários na tabela historico**********************/
         String[] diasNum = ["1","2","3","4","5","6","7"]
         String[] horasNum = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
@@ -389,6 +389,8 @@ class EscalaController {
 
 
         jsonUtil.escalaSobreavisoHistorico = escalaSobreavisoHistorico
+//        println Historico.executeQuery("from Historico where ")
+        //println historico
         /*************************************/
 
         render jsonUtil as JSON

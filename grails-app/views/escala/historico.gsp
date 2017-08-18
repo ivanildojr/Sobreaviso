@@ -158,6 +158,7 @@
                                         </g:each>
                                     </table>
                                 </div>
+
                             </fieldset>
                             <fieldset class="buttons">
                                 <div align="center"><g:submitButton id="alterarBtn" name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
