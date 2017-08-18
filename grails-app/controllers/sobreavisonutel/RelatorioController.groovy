@@ -13,9 +13,13 @@ class RelatorioController {
     def springSecurityService
 
     def index() {
-        def atendentes = Atendentes.findAll()
-        println atendentes.nome
         //render "some text"
+    }
 
+    def gerador() {
+        def atendente = params.list("atendentes")
+        def dataInicio = params.list("dataInicio")
+        println atendente
+        println dataInicio
     }
 }

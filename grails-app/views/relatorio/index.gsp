@@ -64,10 +64,15 @@
 
         <table align="center">
             <tr>
-                <td>
-                    <div>Informe a data de pesquisa:</div><input id="dataHistorico" data-provide="datepicker">
-                </td>
-                <td>
+                %{--<td>--}%
+                    %{--<div>Data do início:</div>--}%
+                    %{--<input id="dataInicio" data-provide="datepicker">--}%
+                %{--</td>--}%
+                %{--<td>--}%
+                    %{--<div>Data do fim:</div>--}%
+                    %{--<input id="dataFim" data-provide="datepicker">--}%
+                %{--</td>--}%
+                %{--<td>--}%
                     <g:form action="sobreavisoHistorico">
 
                         <fieldset class="form">
@@ -172,13 +177,20 @@
 
 
         <div align="center">
-        <g:form action="index">
+        <g:form>
+            <td>
+                <div>Período:</div>
+                <g:datePicker name="dataInicio" value="${new Date()}" precision="month"
+                              noSelection="['':'-Choose-']"/>
+            </td>
+
             <p>Selecione atendente</p>
-            <g:select name="atendentes" optionKey="id" optionValue="nome"
+            <g:select name="atendentes" optionKey="nome" optionValue="nome"
                       from="${sobreavisonutel.Atendentes.listOrderByNome()}"
             />
-            <g:submitButton name="Gerar" value="index" />
-            <p>teste</p>
+            <div align="center">
+                <g:actionSubmit value="Gerar" action="gerador" />
+            </div>
         </g:form>
         </div>
 
@@ -219,7 +231,15 @@
             }
         });
 
-       $('#dataHistorico').datepicker({
+       $('#dataInicio').datepicker({
+           format: "dd/mm/yyyy",
+           clearBtn: true,
+           language: "pt-BR",
+           autoclose: true,
+           todayHighlight: true
+       });
+
+       $('#dataFim').datepicker({
            format: "dd/mm/yyyy",
            clearBtn: true,
            language: "pt-BR",
@@ -228,18 +248,18 @@
        });
 
 
-       $('#dataHistorico').on('change',function(){
+       $('#dataInicio').on('change',function(){
 
-                var dados = $('#dataHistorico').val();
+                var dataInicio = $('#dataInicio').val();
 
-                /*Para apagar o preenchimento da tabela*/
-                $.each(["1","2","3","4","5","6","7"], function( i, vi ) {
-                        $.each(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"], function( j, vj ) {
-                            $.each(["I","T","R"], function( k, vk ) {
-                                $("input[value|="+vk+'-'+vi+']').prop('checked', false)
-                            });
-                        });
-                });
+                // /*Para apagar o preenchimento da tabela*/
+                // $.each(["1","2","3","4","5","6","7"], function( i, vi ) {
+                //         $.each(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"], function( j, vj ) {
+                //             $.each(["I","T","R"], function( k, vk ) {
+                //                 $("input[value|="+vk+'-'+vi+']').prop('checked', false)
+                //             });
+                //         });
+                // });
 
 
                 /*Pega os dados do banco e preenche a tabela*/
