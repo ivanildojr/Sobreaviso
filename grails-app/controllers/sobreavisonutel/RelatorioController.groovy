@@ -17,9 +17,25 @@ class RelatorioController {
     }
 
     def gerador() {
+
         def atendente = params.list("atendentes")
         def dataInicio = params.list("dataInicio")
+        dataInicio = Date.parse("yyyy-MM-dd", params.getProperty("dataInicio"))
         println atendente
         println dataInicio
+
+        def dataFim = "2017-08-31 00:00:00"
+
+        def atendenteId = Atendentes.findByNome(atendente)
+        atendenteId = atendenteId.id
+        println "atendenteID:" + atendenteId
+
+        //def escala = Historico.executeQuery("select count(dataEscala) from Historico where atendentes_id=$atendenteId and dataEscala=$dataInicio")
+
+        println escala
+
+
+
+        render(view: "index")
     }
 }

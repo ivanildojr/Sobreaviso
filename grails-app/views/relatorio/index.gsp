@@ -177,21 +177,21 @@
 
 
         <div align="center">
-        <g:form>
-            <td>
-                <div>Período:</div>
-                <g:datePicker name="dataInicio" value="${new Date()}" precision="month"
-                              noSelection="['':'-Choose-']"/>
-            </td>
+            <g:form>
+                <td>
+                    <div>Período:</div>
+                    <g:datePicker name="dataInicio" value="${new Date()}" precision="month"
+                                  noSelection="['':'-Choose-']"/>
+                </td>
 
-            <p>Selecione atendente</p>
-            <g:select name="atendentes" optionKey="nome" optionValue="nome"
-                      from="${sobreavisonutel.Atendentes.listOrderByNome()}"
-            />
-            <div align="center">
-                <g:actionSubmit value="Gerar" action="gerador" />
-            </div>
-        </g:form>
+                <p>Selecione atendente</p>
+                <g:select name="atendentes" optionKey="nome" optionValue="nome"
+                          from="${sobreavisonutel.Atendentes.listOrderByNome()}"
+                />
+                <div align="center">
+                    <g:actionSubmit value="Gerar" action="gerador" />
+                </div>
+            </g:form>
         </div>
 
 
