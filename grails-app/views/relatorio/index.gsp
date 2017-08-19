@@ -60,134 +60,28 @@
         </h1>
     </div>
     <div class="box">
-
-
-        <table align="center">
-            <tr>
-                %{--<td>--}%
-                    %{--<div>Data do início:</div>--}%
-                    %{--<input id="dataInicio" data-provide="datepicker">--}%
-                %{--</td>--}%
-                %{--<td>--}%
-                    %{--<div>Data do fim:</div>--}%
-                    %{--<input id="dataFim" data-provide="datepicker">--}%
-                %{--</td>--}%
-                %{--<td>--}%
-                    <g:form action="sobreavisoHistorico">
-
-                        <fieldset class="form">
-                            <div align="center">
-                                <table id="tabelaSobreaviso" class=".table-condensed" border="1">
-                                    <tr>
-
-                                        <th>Horas/Dias</th>
-                                        <g:each var="dia" status="i" in="${diasListNum}">
-                                            <th>
-                                                <g:if test="${dia == '1'}">
-                                                    Domingo<br>
-                                                    <input align="center" type="text" readonly name="domingo" value=""/><br>
-                                                    I: <g:checkBox name="allI1" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT1" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR1" value="R" checked="false"/>
-                                                </g:if>
-                                                <g:elseif test="${dia == '2'}">
-                                                    Segunda-feira
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="segunda" value=""/><br>
-                                                    I: <g:checkBox name="allI2" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT2" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR2" value="R" checked="false"/>
-                                                </g:elseif>
-                                                <g:elseif test="${dia == '3'}">
-                                                    Terça-feira
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="terca" value=""/><br>
-                                                    I: <g:checkBox name="allI3" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT3" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR3" value="R" checked="false"/>
-                                                </g:elseif>
-                                                <g:elseif test="${dia == '4'}">
-                                                    Quarta-feira
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="quarta" value=""/><br>
-                                                    I: <g:checkBox name="allI4" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT4" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR4" value="R" checked="false"/>
-                                                </g:elseif>
-                                                <g:elseif test="${dia == '5'}">
-                                                    Quinta-feira
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="quinta" value=""/><br>
-                                                    I: <g:checkBox name="allI5" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT5" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR5" value="R" checked="false"/>
-                                                </g:elseif>
-                                                <g:elseif test="${dia == '6'}">
-                                                    Sexta-feira
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="sexta" value=""/><br>
-                                                    I: <g:checkBox name="allI6" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT6" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR6" value="R" checked="false"/>
-                                                </g:elseif>
-                                                <g:elseif test="${dia == '7'}">
-                                                    Sábado
-                                                    <br>
-                                                    <input align="center" type="text" readonly name="sabado" value=""/><br>
-                                                    I: <g:checkBox name="allI7" value="I" checked="false"/>
-                                                    T: <g:checkBox name="allT7" value="T" checked="false"/>
-                                                    R: <g:checkBox name="allR7" value="R" checked="false"/>
-                                                </g:elseif>
-
-                                            </th>
-                                        </g:each>
-
-                                    </tr>
-                                    <g:each var="hora" status="j" in="${horasListNum}">
-                                        <tr>
-                                            <td>${hora}:00</td>
-                                            <g:each var="dia" status="i" in="${diasListNum}">
-                                                <td align="center">
-                                                    <span id="I">
-                                                        I: <g:checkBox name="checkListI" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
-                                                    </span>
-                                                    <span id="T">
-                                                        T: <g:checkBox name="checkListT" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
-                                                    </span>
-                                                    <span id="R">
-                                                        R: <g:checkBox name="checkListR" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
-                                                    </span>
-                                                </td>
-                                            </g:each>
-                                        </tr>
-                                    </g:each>
-                                </table>
-                            </div>
-
-                        </fieldset>
-                        <fieldset class="buttons">
-                            <div align="center"><g:submitButton id="alterarBtn" name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
-                        </fieldset>
-
-                    </g:form>
-                </td>
-            </tr>
-        </table>
-
-
-
         <div align="center">
+            <br>
             <g:form>
-                <td>
-                    <div>Período:</div>
-                    <g:datePicker name="dataInicio" value="${new Date()}" precision="month"
-                                  noSelection="['':'-Choose-']"/>
-                </td>
-
-                <p>Selecione atendente</p>
+                <div>
+                    <td>
+                        DATA INICIAL:
+                        <g:datePicker name="dataInicio" value="${new Date()}" precision="day" noSelection="['':'-Choose-']"/>
+                    </td>
+                </div>
+                <br>
+                <div>
+                    <td>
+                        DATA FINAL:
+                        <g:datePicker name="dataFim" value="${new Date()}" precision="day" noSelection="['':'-Choose-']"/>
+                    </td>
+                </div>
+                <br>
+                ATENDENTE:
                 <g:select name="atendentes" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
                 />
+                <br><br>
                 <div align="center">
                     <g:actionSubmit value="Gerar" action="gerador" />
                 </div>
@@ -195,12 +89,7 @@
         </div>
 
 
-
-
-
-
         <div id="alertaData" class="alert alert-danger" role="alert">
-
             <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
         </div>
     </div>
