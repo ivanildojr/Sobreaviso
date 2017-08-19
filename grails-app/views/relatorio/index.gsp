@@ -9,17 +9,17 @@
     <asset:javascript src="datepicker/js/bootstrap-datepicker.min.js"/>
     <asset:javascript src="datepicker/locales/bootstrap-datepicker.pt-BR.min.js"/>
     <style>
-    input[type=text] {
-        width: auto;
-        padding: 1px 1px;
-        box-sizing: border-box;
-        border: none;
-        background-color: #ffffff;
-        box-shadow: none;
-        text-align: center;
-        font-weight: bold;
-        font-size: xx-small;
-    }
+    /*input[type=text] {*/
+        /*width: auto;*/
+        /*padding: 1px 1px;*/
+        /*box-sizing: border-box;*/
+        /*border: none;*/
+        /*background-color: #ffffff;*/
+        /*box-shadow: none;*/
+        /*text-align: center;*/
+        /*font-weight: bold;*/
+        /*font-size: xx-small;*/
+    /*}*/
     input[id=dataHistorico]{
         width: auto;
         text-align: center;
@@ -41,6 +41,12 @@
     /*color: #0000FF;*/
     /*outline: 2px solid red;*/
     /*}*/
+
+    input[id=datepicker] {
+        font-size: 14px;
+        line-height: 1.428571429
+    }
+
     </style>
 
 </head>
@@ -66,14 +72,14 @@
                 <div>
                     <td>
                         DATA INICIAL:
-                        <g:datePicker name="dataInicio" value="${new Date()}" precision="day" noSelection="['':'-Choose-']"/>
+                        <g:datePicker name="dataInicio" precision="day" noSelection="['':'-Choose-']"/>
                     </td>
                 </div>
                 <br>
                 <div>
                     <td>
                         DATA FINAL:
-                        <g:datePicker name="dataFim" value="${new Date()}" precision="day" noSelection="['':'-Choose-']"/>
+                        <g:datePicker name="dataFim" precision="day" noSelection="['':'-Choose-']"/>
                     </td>
                 </div>
                 <br>
@@ -82,6 +88,13 @@
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
                 />
                 <br><br>
+                <div class="input-daterange input-group" id="datepicker">
+                    PERÍODO:
+                    <input type="text" class="form-control" name="dataInicio" />
+                    <span class="input-group-addon">ATÉ</span>
+                    <input type="text" class="form-control" name="dataFim" />
+                </div>
+                <br>
                 <div align="center">
                     <g:actionSubmit value="Gerar" action="gerador" />
                 </div>
@@ -120,11 +133,10 @@
             }
         });
 
-       $('#dataInicio').datepicker({
+       $('.input-daterange').datepicker({
            format: "dd/mm/yyyy",
            clearBtn: true,
            language: "pt-BR",
-           autoclose: true,
            todayHighlight: true
        });
 
@@ -137,19 +149,13 @@
        });
 
 
+       $('#datepicker').on('change',function(){
+           var periodo = $('#datepicker').val();
+       });
+
        $('#dataInicio').on('change',function(){
 
                 var dataInicio = $('#dataInicio').val();
-
-                // /*Para apagar o preenchimento da tabela*/
-                // $.each(["1","2","3","4","5","6","7"], function( i, vi ) {
-                //         $.each(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"], function( j, vj ) {
-                //             $.each(["I","T","R"], function( k, vk ) {
-                //                 $("input[value|="+vk+'-'+vi+']').prop('checked', false)
-                //             });
-                //         });
-                // });
-
 
                 /*Pega os dados do banco e preenche a tabela*/
                 $.ajax({

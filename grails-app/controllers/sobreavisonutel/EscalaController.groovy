@@ -37,6 +37,7 @@ class EscalaController {
         println "Sobreaviso marcações: " + sobreavisoNutel
 
 
+
         /*Avaliar necessidade de limpar para o Historico, para Escala ainda persiste*/
         List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("yyyy-MM-dd", params.getProperty("domingo")),Date.parse("yyyy-MM-dd", params.getProperty("sabado")))
 
