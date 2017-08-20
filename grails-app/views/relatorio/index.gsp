@@ -84,18 +84,18 @@
                 </div>
                 <br>
                 ATENDENTE:
-                <g:select name="atendentes" optionKey="nome" optionValue="nome"
+                <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
                 />
                 <br><br>
-                <div class="input-daterange input-group" id="datepicker">
+                <div class="input-daterange input-group" id="calendario">
                     PERÍODO:
-                    <input type="text" class="form-control" name="dataInicio" />
+                    <g:field type="text" class="form-control" name="dataInicio" />
                     <span class="input-group-addon">ATÉ</span>
-                    <input type="text" class="form-control" name="dataFim" />
+                    <g:field type="text" class="form-control" name="dataFim" />
                 </div>
                 <br>
-                <div align="center">
+                <div align="center" name="gerarBtn">
                     <g:actionSubmit value="Gerar" action="gerador" />
                 </div>
             </g:form>
@@ -114,26 +114,29 @@
 
 <g:javascript>
 
+
+
    $(document).ready(function() {
         $('#alertaData').hide()
-        $('#alterarBtn').on('click',function (e) {
-
-            if($('#dataHistorico').val().length == 0){
+        $('#gerarBtn').on('click',function (e) {
+            alert("O campo data deve ser preenchido!");
+            if($('#dataInicio').val().length == 0){
                 e.preventDefault()
                 $('#alertaData').show()
-                //alert("O campo data deve ser preenchido!");
+                alert("O campo data deve ser preenchido!");
             }
         });
 
-       $('.input-daterange').datepicker({
+       $('#calendario').datepicker({
            format: "dd/mm/yyyy",
            clearBtn: true,
            language: "pt-BR",
            todayHighlight: true
        });
 
-       $('#datepicker').on('change',function(){
-           var periodo = $('#datepicker').val();
+       $('#calendario').on('change',function(){
+           var periodo = $('#calendario').val();
+           //alert(periodo);
        });
 
 

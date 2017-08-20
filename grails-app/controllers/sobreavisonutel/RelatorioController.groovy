@@ -2,6 +2,7 @@ package sobreavisonutel
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
+import groovyjarjarantlr.collections.List
 
 import java.sql.Date
 
@@ -17,37 +18,57 @@ class RelatorioController {
     }
 
     def gerador() {
-//        def dataInicio = new Date().format("yyyy-MM-dd")
-        //def dataFim = new Date().format("yyyy-MM-dd")
-        def atendente = params.list("atendentes")  //recebe atendentes e dataInicio da view
+        def atendente = params.list("atendente")  //recebe atendentes e dataInicio da view
         def dataInicio = params.list("dataInicio")
         def dataFim = params.list("dataFim")
 
         dataInicio = dataInicio[1] //pega só a data
         dataFim = dataFim[1] //pega só a data
-        println dataInicio
-        println dataFim
+        println "dataInicio: $dataInicio"
+        println "dataFim: $dataFim"
+        println "atendente: $atendente"
         dataInicio = Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd") //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
         dataFim = Date.parse("dd/MM/yyyy", dataFim).format("yyyy-MM-dd")
-//        println dataInicio
-//        println dataFim
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-//        def escalaCount = Historico.executeQuery("select count(dataEscala) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim'")
-//        println "$escalaCount horas"
-        def escala = Historico.executeQuery("select distinct hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+        String hql = "select distinct new map(hora as Hora, dataEscala as Dia) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala, hora"
+        def escala = Historico.executeQuery(hql)
 
-//        def escala = Historico.executeQuery("select new map(distinct hora, dataEscala) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+//        def escala = Historico.executeQuery("select distinct hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+
         def horasTrabalhadas = escala.size()
-        println horasTrabalhadas
-        println escala
-        for(hora in escala) {
-            escala[0]
+        println "$horasTrabalhadas horas"
+        //println escala
+        def diaAnterior
+        def mapEscala = [:]
+        def mapEscalaString
+        def escalaFormatada = []
+        def countHora = 0
+        boolean flagDataInicial = 1
+        for(day in escala) {
+            def hora = day.Hora
+            def dia = day.Dia
+            if(flagDataInicial) {  //so executa uma vez a data inicial
+                diaAnterior = dia
+                flagDataInicial = 0
+            }
+            //println "$hora - $dia"
+            if(diaAnterior==dia){
+                countHora+=1
+            }
+            else {
+                mapEscala['hora'] = countHora
+                mapEscala['dia'] = diaAnterior
+                mapEscalaString = mapEscala.toString()
+//                println mapEscala
+                flagDataInicial = 1 //habilita a contagem de horas de uma nova data
+                escalaFormatada.push(mapEscalaString)
+//                println escalaFormatada
+                countHora=0 //zera contagem de horas pra novas contagens
+            }
         }
-
-
-
+        println escalaFormatada
         render(view: "index")
     }
 }
