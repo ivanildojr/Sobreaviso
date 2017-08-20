@@ -40,6 +40,8 @@ class RelatorioController {
         def horasTrabalhadas = escala.size()
         println "$horasTrabalhadas horas"
         //println escala
+        def listDia = []
+        def listHora = []
         def diaAnterior
         def mapEscala = [:]
         def mapEscalaString
@@ -58,7 +60,8 @@ class RelatorioController {
                 countHora+=1
             }
             else {
-                println diaAnterior
+                listHora << countHora
+                listDia << diaAnterior
                 mapEscala['dia'] = diaAnterior
                 mapEscala['hora'] = countHora
                 mapEscalaString = mapEscala.values()
@@ -71,7 +74,9 @@ class RelatorioController {
             }
         }
         println escalaFormatada
-        render(view: "index", model: [escalaFormatada:escalaFormatada])
+        println listHora
+        println listDia
+        render(view: "index", model: [listHora:listHora, listDia:listDia])
 //        render(view: "index", model:[dia:dia, hora:hora])
     }
 }

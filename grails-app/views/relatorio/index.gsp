@@ -102,13 +102,28 @@
         </div>
 
         <div>
-            <g:each var="dia" status="i" in="${escalaFormatada}">
-                <table id="tabelaRelatorio" class=".table-condensed" border="1">
-                    <tr>
-                        <td>${dia}</td>
-                    </tr>
+            <table id="tabelaRelatorio1" class="table" border="1" text-align="center">
+              <tr>
+                <td>
+                <table id="tabelaRelatorio2" class="table" border="1" text-align="center">
+                    <g:each var="dia" status="i" in="${listDia}">
+                        <tr>
+                            <td>${dia}</td>
+                        </tr>
+                    </g:each>
                 </table>
-            </g:each>
+                <td>
+                <table id="tabelaRelatorio3" class="table" border="0" text-align="center">
+                    <g:each var="hora" status="j" in="${listHora}">
+                        <tr>
+                        <td>${hora}</td>
+                        </tr>
+                    </g:each>
+                </table>
+                </td>
+              </td>
+              </tr>
+            </table>
         </div>
 
 
