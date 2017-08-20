@@ -58,10 +58,12 @@ class RelatorioController {
                 countHora+=1
             }
             else {
-                mapEscala['hora'] = countHora
+                println diaAnterior
                 mapEscala['dia'] = diaAnterior
-                mapEscalaString = mapEscala.toString()
-//                println mapEscala
+                mapEscala['hora'] = countHora
+                mapEscalaString = mapEscala.values()
+                mapEscalaString = mapEscalaString.toString()
+                println mapEscalaString
                 flagDataInicial = 1 //habilita a contagem de horas de uma nova data
                 escalaFormatada.push(mapEscalaString)
 //                println escalaFormatada
@@ -69,6 +71,7 @@ class RelatorioController {
             }
         }
         println escalaFormatada
-        render(view: "index")
+        render(view: "index", model: [escalaFormatada:escalaFormatada])
+//        render(view: "index", model:[dia:dia, hora:hora])
     }
 }

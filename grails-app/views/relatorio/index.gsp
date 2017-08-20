@@ -101,6 +101,20 @@
             </g:form>
         </div>
 
+        <div>
+            <g:each var="dia" status="i" in="${escalaFormatada}">
+                <table id="tabelaRelatorio" class=".table-condensed" border="1">
+                    <tr>
+                        <td>${dia}</td>
+                    </tr>
+                </table>
+            </g:each>
+        </div>
+
+
+
+
+
 
         <div id="alertaData" class="alert alert-danger" role="alert">
             <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
