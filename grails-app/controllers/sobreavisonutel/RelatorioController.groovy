@@ -32,51 +32,29 @@ class RelatorioController {
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-        String hql = "select distinct new map(hora as Hora, dataEscala as Dia) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala, hora"
-        def escala = Historico.executeQuery(hql)
+//        String hql = "select distinct new map(hora as Hora, dataEscala as Dia) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala, hora"
+//        def escala = Historico.executeQuery(hql)
 
-//        def escala = Historico.executeQuery("select distinct hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+//        escala = Historico.executeQuery("select distinct hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
 
-        def horasTrabalhadas = escala.size()
-        println "$horasTrabalhadas horas"
-        //println escala
-        def listDia = []
         def listHora = []
-        def diaAnterior
-        def mapEscala = [:]
-        def mapEscalaString
-        def escalaFormatada = []
-        def countHora = 0
-        boolean flagDataInicial = 1
-        for(day in escala) {
-            def hora = day.Hora
-            def dia = day.Dia
-            if(flagDataInicial) {  //so executa uma vez a data inicial
-                diaAnterior = dia
-                flagDataInicial = 0
-            }
-            //println "$hora - $dia"
-            if(diaAnterior==dia){
-                countHora+=1
-            }
-            else {
-                listHora << countHora
-                listDia << diaAnterior
-                mapEscala['dia'] = diaAnterior
-                mapEscala['hora'] = countHora
-                mapEscalaString = mapEscala.values()
-                mapEscalaString = mapEscalaString.toString()
-                println mapEscalaString
-                flagDataInicial = 1 //habilita a contagem de horas de uma nova data
-                escalaFormatada.push(mapEscalaString)
-//                println escalaFormatada
-                countHora=0 //zera contagem de horas pra novas contagens
-            }
+        def listData = []
+        def listBusca = Historico.executeQuery("select distinct hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+//        def listDia = Historico.executeQuery("select distinct dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+
+        listBusca.each {i->
+            def listH = i[0]
+            listHora << listH
+            def listD = i[1]
+            listData << listD
         }
-        println escalaFormatada
+
         println listHora
-        println listDia
-        render(view: "index", model: [listHora:listHora, listDia:listDia])
-//        render(view: "index", model:[dia:dia, hora:hora])
+        println listData
+
+        def horasTrabalhadas = listHora.size()
+        println "$horasTrabalhadas horas"
+
+        render(view: "index", model: [listHora:listHora, listData:listData])
     }
 }

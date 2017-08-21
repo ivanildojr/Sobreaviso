@@ -102,18 +102,18 @@
         </div>
 
         <div>
-            <table id="tabelaRelatorio1" class="table" border="1" text-align="center">
+            <table id="tabelaRelatorio1" class="table table-sm" border="1" text-align="center">
               <tr>
                 <td>
-                <table id="tabelaRelatorio2" class="table" border="1" text-align="center">
-                    <g:each var="dia" status="i" in="${listDia}">
+                <table id="tabelaRelatorio2" class="table table-sm" border="1" text-align="center">
+                    <g:each var="dia" status="i" in="${listData}">
                         <tr>
                             <td>${dia}</td>
                         </tr>
                     </g:each>
                 </table>
                 <td>
-                <table id="tabelaRelatorio3" class="table" border="0" text-align="center">
+                <table id="tabelaRelatorio3" class="table table-sm" border="1" text-align="center">
                     <g:each var="hora" status="j" in="${listHora}">
                         <tr>
                         <td>${hora}</td>
