@@ -69,30 +69,17 @@
         <div align="center">
             <br>
             <g:form>
-                <div>
-                    <td>
-                        DATA INICIAL:
-                        <g:datePicker name="dataInicio" precision="day" noSelection="['':'-Choose-']"/>
-                    </td>
-                </div>
-                <br>
-                <div>
-                    <td>
-                        DATA FINAL:
-                        <g:datePicker name="dataFim" precision="day" noSelection="['':'-Choose-']"/>
-                    </td>
-                </div>
-                <br>
+
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
                 />
                 <br><br>
-                <div class="input-daterange input-group" id="calendario">
+                <div class="input-daterange" id="calendario" >
                     PERÍODO:
-                    <g:field type="text" class="form-control" name="dataInicio" />
-                    <span class="input-group-addon">ATÉ</span>
-                    <g:field type="text" class="form-control" name="dataFim" />
+                    <input type="text" class="input-small" name="dataInicio" />
+                    <span class="add-on" style="vertical-align: top; height:20px"> ATÉ </span>
+                    <input type="text" class="input-small" name="dataFim" />
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
@@ -102,28 +89,15 @@
         </div>
 
         <div>
-            <table id="tabelaRelatorio1" class="table table-sm" border="1" text-align="center">
-              <tr>
-                <td>
-                <table id="tabelaRelatorio2" class="table table-sm" border="1" text-align="center">
-                    <g:each var="dia" status="i" in="${listData}">
-                        <tr>
-                            <td>${dia}</td>
-                        </tr>
-                    </g:each>
-                </table>
-                <td>
-                <table id="tabelaRelatorio3" class="table table-sm" border="1" text-align="center">
-                    <g:each var="hora" status="j" in="${listHora}">
-                        <tr>
-                        <td>${hora}</td>
-                        </tr>
-                    </g:each>
-                </table>
-                </td>
+              <td>
+                  <table id="tabelaRelatorio4" class="table table-sm" border="1" text-align="center">
+                      <g:each var="valor" status="j" in="${listaBusca}">
+                          <tr>
+                              <td>${valor}</td>
+                          </tr>
+                      </g:each>
+                  </table>
               </td>
-              </tr>
-            </table>
         </div>
 
 
@@ -157,10 +131,11 @@
         });
 
        $('#calendario').datepicker({
+           language: "pt-BR",
            format: "dd/mm/yyyy",
            clearBtn: true,
-           language: "pt-BR",
-           todayHighlight: true
+           todayHighlight: true,
+           orientation: "bottom left"
        });
 
        $('#calendario').on('change',function(){
