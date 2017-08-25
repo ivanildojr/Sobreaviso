@@ -107,7 +107,7 @@ dataSources:
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
     username: root
-    password: qwe123
+    password: root
 
 
 

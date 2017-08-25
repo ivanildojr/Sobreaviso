@@ -2,9 +2,7 @@ package sobreavisonutel
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
-import groovyjarjarantlr.collections.List
 
-import java.sql.Date
 
 @Transactional(readOnly = true)
 @Secured('ROLE_ADMIN')
@@ -21,31 +19,36 @@ class RelatorioController {
 
         println params  //imprime tudo que foi retornado do formulario da view
 
-        def atendente = params.list("atendente")  //recebe atendentes e dataInicio da view
-        def dataInicio = params.list("dataInicio")
-        def dataFim = params.list("dataFim")
+        def atendente = params.list("atendente").get(0)  //recebe atendentes e dataInicio da view e tira da list
+        def dataInicio = params.list("dataInicio").get(0)
+        def dataFim = params.list("dataFim").get(0)
 
-        println "dataInicio: " + dataInicio
-        println "dataFim: $dataFim"
-        println "atendente: $atendente"
-        println "Parse: " + Date.parse("dd/MM/yyyy", dataInicio[0])
-        println "Format: " + Date.parse("dd/MM/yyyy", dataInicio[0]).format("yyyy-MM-dd")
-        dataInicio = Date.parse("dd/MM/yyyy", dataInicio[0]).format("yyyy-MM-dd") //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
-        dataFim = Date.parse("dd/MM/yyyy", dataFim[0]).format("yyyy-MM-dd")
+//        println "dataInicio: " + dataInicio
+//        println "dataFim: $dataFim"
+//        println "atendente: $atendente"
+//        println "Parse: " + Date.parse("dd/MM/yyyy", dataInicio)
+//        println "Format: " + Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd")
+        dataInicio = Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd")              //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
+        dataFim = Date.parse("dd/MM/yyyy", dataFim).format("yyyy-MM-dd")
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-//        String hql = "select distinct new map(hora as Hora, dataEscala as Dia) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala, hora"
-//        def escala = Historico.executeQuery(hql)
 
-//        escala = Historico.executeQuery("select distinct (hora, dataEscala) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
+        Calendar cal = Calendar.getInstance()
+        println cal.setTime(dataInicio)
+        cal.setFirstDayOfWeek (Calendar.SUNDAY);
+        int diaSemana = cal.get(Calendar.DAY_OF_WEEK);                       //pega o numero do dia de semana de 1:domingo a 7:sabado
+        cal.add (Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
+//        println "dia da semana: " + Calendar.DAY_OF_WEEK
+        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
+        def listBusca
+        while(dataFim >= dataInicio){
+            cal.add (Calendar.DAY_OF_MONTH, 6)
+            dataFim = cal.getTime()
+            listBusca << Historico.executeQuery("select dataEscala, hora from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId') order by dataEscala")
 
-
-        //def dataModificacao = Historico.executeQuery("select max(data_modificacao) from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
-        //def listBusca = Historico.executeQuery("select hora, dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
-//        def listDia = Historico.executeQuery("select distinct dataEscala from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' order by dataEscala ASC")
-
-        def listBusca = Historico.executeQuery("select dataEscala, hora from Historico where atendentes_id='$atendenteId' and dataEscala between '$dataInicio' and '$dataFim' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId') order by dataEscala")
+            dataInicio = dataFim
+        }
 
         println listBusca
 
@@ -78,18 +81,18 @@ class RelatorioController {
         println listData
         println listHora
 
-//        def horasTrabalhadas = listBusca.size()
-//        println "$horasTrabalhadas horas"
+        List<Relatorio> relatorioList = new ArrayList<Relatorio>()
         listData.eachWithIndex {dia, index->
-            println "index: " + index
+            data = listData.getAt(index)
+            println data
             relatorio = new Relatorio()
-            relatorio.data = listData.getAt(index)
+            relatorio.data = data
             relatorio.hora = listHora.getAt(index)
+            relatorioList.add(relatorio)
         }
+//        List relatorioList = Relatorio.getCount()
+//        println relatorioList
 
-        List relatorioList = Relatorio.findAll()
-        println relatorioList
-
-        render(view: "index", model: [listHora:listHora, listData:listData, listaBusca:listBusca])
+        render(view: "index", model: [listaBusca:relatorioList])
     }
 }

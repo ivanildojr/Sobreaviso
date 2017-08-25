@@ -69,7 +69,6 @@
         <div align="center">
             <br>
             <g:form>
-
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
@@ -86,24 +85,23 @@
                     <g:actionSubmit value="Gerar" action="gerador" />
                 </div>
             </g:form>
+        <br>
         </div>
-
-        <div>
-              <td>
-                  <table id="tabelaRelatorio4" class="table table-sm" border="1" text-align="center">
-                      <g:each var="valor" status="j" in="${listaBusca}">
-                          <tr>
-                              <td>${valor}</td>
-                          </tr>
-                      </g:each>
-                  </table>
-              </td>
-        </div>
-
-
-
-
-
+            <div class="container-fluid">
+                  <td>
+                      <table id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+                          <th class="col-md-2">Data</th>
+                          <th class="col-md-1">Horas trabalhadas</th>
+                          <g:each var="relatorio" status="j" in="${listaBusca}">
+                              <tr>
+                                  <td>${formatDate(format:'dd-MM-yyyy',date:relatorio.data)}</td>
+                                  <td>${relatorio.hora}</td>
+                              </tr>
+                          </g:each>
+                      </table>
+                  </td>
+            </div>
+        <br>
 
         <div id="alertaData" class="alert alert-danger" role="alert">
             <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
