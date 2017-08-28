@@ -1,5 +1,6 @@
 package sobreavisonutel
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
@@ -16,7 +17,7 @@ class RelatorioController {
 
     def gerador() {
 
-        println params  //imprime tudo que foi retornado do formulario da view
+        println params.list()  //imprime tudo que foi retornado do formulario da view
 
         def atendente = params.list("atendente").get(0)  //recebe atendentes e dataInicio da view e tira da list
         def stringDataInicio = params.list("dataInicio").get(0)
@@ -104,8 +105,8 @@ class RelatorioController {
         }
 
         println "horasTotal: " + horasTotal
-//        println relatorioList
 
-        render(view: "index", model: [listaBusca:relatorioList, horasTotal:horasTotal])
+        render(template: "relatorio", model: [listaBusca:relatorioList, horasTotal:horasTotal])
+//        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

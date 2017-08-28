@@ -75,7 +75,7 @@
     <div class="box">
         <div align="center">
             <br>
-            <g:form>
+            <g:form id="form">
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
@@ -83,37 +83,20 @@
                 <br><br>
                 <div class="input-daterange" id="calendario" >
                     PERÍODO:
-                    <input type="text" class="input-small" name="dataInicio" />
+                    <input type="text" class="input-small" id="dataInicio" name="dataInicio" />
                     <span class="add-on" style="vertical-align: top; height:20px"> ATÉ </span>
-                    <input type="text" class="input-small" name="dataFim" />
+                    <input type="text" class="input-small" id="dataFim" name="dataFim" />
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
-                    <button action="gerador" class="btn btn-primary">Teste</button>
-                    <g:actionSubmit value="Gerar" action="gerador"/>
+                    <button id="btnGerar" action="gerador" class="btn btn-primary">Gerar</button>
+                    %{--<g:actionSubmit id="btnGerar" value="Gerar" action="gerador"/>--}%
                 </div>
             </g:form>
         <br>
         </div>
-        <div>
-            %{--<g:if test="${listaBusca.size() > 0}">--}%
-                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
-                    <th class="col-md-4">Data</th>
-                    <th class="col-md-4">Período</th>
-                    <th class="col-md-4">Horas em sobreaviso</th>
-                    <g:each var="relatorio" status="j" in="${listaBusca}">
-                        <tr>
-                            <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
-                            <td> ${relatorio.periodo} </td>
-                            <td> ${relatorio.hora} </td>
-                        </tr>
-                    </g:each>
-                    <tr>
-                        <td colspan="2"><b>Total em sobreaviso</b></td>
-                        <td><b>${horasTotal} horas</b></td>
-                    </tr>
-                </table>
-            %{--</g:if>--}%
+        <div id="tabela">
+            %{--<g:render template="relatorio" model="[listaBusca:listaBusca, horasTotal:horasTotal]"></g:render>--}%
         </div>
         <br>
 
@@ -129,12 +112,9 @@
 
 <g:javascript>
 
-
-
    $(document).ready(function() {
         $('#alertaData').hide()
         $('#gerarBtn').on('click',function (e) {
-            alert("O campo data deve ser preenchido!");
             if($('#dataInicio').val().length == 0){
                 e.preventDefault()
                 $('#alertaData').show()
@@ -155,7 +135,22 @@
            //alert(periodo);
        });
 
-
+        $('#btnGerar').on('click',function () {
+           // console.log($('#atendente option:selected').text())
+           // console.log($('#dataInicio').val())
+           $.ajax({
+                  url:'${g.createLink(controller: 'relatorio', action: 'gerador')}',
+                  // dataType: 'json',
+                  data: {atendente: $('#atendente option:selected').text(),
+                         dataInicio: $('#dataInicio').val(),
+                         dataFim: $('#dataFim').val(),
+                         },
+                  success: function (data) {
+                      $('#tabela').html(data)
+                      // console.log(data);
+                  }
+            });
+       });
    });
 </g:javascript>
 </body>
