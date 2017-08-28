@@ -29,6 +29,13 @@
     span[id=R] {
         color: #0000FF;
     }
+    .col-md-6{
+        text-align: center;
+        /*color: red;*/
+    }
+    span[id=colunas] {
+        color: red;
+    }
     /*input[name=checkListI] {*/
     /*color: #0000FF;*/
     /*outline: 2px solid green;*/
@@ -82,25 +89,32 @@
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
-                    <g:actionSubmit value="Gerar" action="gerador" />
+                    <button action="gerador" class="btn btn-primary">Teste</button>
+                    <g:actionSubmit value="Gerar" action="gerador"/>
                 </div>
             </g:form>
         <br>
         </div>
-            <div class="container-fluid">
-                  <td>
-                      <table id="tabelaRelatorio" class="table table-condensed" style="width:30%">
-                          <th class="col-md-2">Data</th>
-                          <th class="col-md-1">Horas trabalhadas</th>
-                          <g:each var="relatorio" status="j" in="${listaBusca}">
-                              <tr>
-                                  <td>${formatDate(format:'dd-MM-yyyy',date:relatorio.data)}</td>
-                                  <td>${relatorio.hora}</td>
-                              </tr>
-                          </g:each>
-                      </table>
-                  </td>
-            </div>
+        <div>
+            %{--<g:if test="${listaBusca.size() > 0}">--}%
+                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+                    <th class="col-md-4">Data</th>
+                    <th class="col-md-4">Período</th>
+                    <th class="col-md-4">Horas em sobreaviso</th>
+                    <g:each var="relatorio" status="j" in="${listaBusca}">
+                        <tr>
+                            <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
+                            <td> ${relatorio.periodo} </td>
+                            <td> ${relatorio.hora} </td>
+                        </tr>
+                    </g:each>
+                    <tr>
+                        <td colspan="2"><b>Total em sobreaviso</b></td>
+                        <td><b>${horasTotal} horas</b></td>
+                    </tr>
+                </table>
+            %{--</g:if>--}%
+        </div>
         <br>
 
         <div id="alertaData" class="alert alert-danger" role="alert">

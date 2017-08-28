@@ -6,7 +6,7 @@ class Relatorio {
 
     Date data
     String hora
-
+    String periodo
     static constraints = {
     }
 }

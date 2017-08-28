@@ -44,7 +44,7 @@ class RelatorioController {
         List listBusca = []
         def busca
 
-        while(dataFim > dataInicio){
+        while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
             busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
 
@@ -61,29 +61,31 @@ class RelatorioController {
         List list_i = []
         Date data
         def horas = 0
+        def horasTotal = 0
+        def periodoInicio
+        def periodoFim
+        def listPeriodo = []
         boolean flagData = 0
         def relatorio
         listBusca.each {i->
             println "i: "+ i
             data = i[0][0]
             list_i = i
-            horas = list_i.size()
+            horas = list_i.size()                      //pega todas as horas do dia
+            horasTotal = horasTotal + horas
+            periodoInicio = list_i.get(0)
+            periodoInicio = periodoInicio[1]
+            periodoFim = list_i.get(horas-1)
+            periodoFim = (periodoFim[1] as Integer) + 1
+            print "periodo: " + periodoInicio + " - "
+            println periodoFim
+
             println "listdata: " + listData
 
             if(!listData.contains(data)) {              //se a lista de datas ainda nao tem a data
                 listData << data                        //inclui data na listData
-//                if(flagData) {                          //se passou por aqui pela 1 vez
-                    listHora << horas
-////                    relatorio.hora = horas
-//                }
-//                horas = 0
-////                println "i_zero: " + data
-//                horas++                               //inclui a primeira hora no somatorio de horas
-//                flagData = 1;
-            }
-            else {                                    //se já contem a data na listData, incrementa as horas desta data
-                horas++                              //busca quantas vezes a data aparece na lista, então essa é a soma de horas
-                println "horas: " + horas
+                listHora << horas
+                listPeriodo << periodoInicio + " - " + periodoFim + "h"
             }
         }
         listHora << horas
@@ -97,11 +99,13 @@ class RelatorioController {
             relatorio = new Relatorio()
             relatorio.data = data
             relatorio.hora = listHora.getAt(index)
+            relatorio.periodo = listPeriodo.getAt(index)
             relatorioList.add(relatorio)
         }
-//        List relatorioList = Relatorio.getCount()
+
+        println "horasTotal: " + horasTotal
 //        println relatorioList
 
-        render(view: "index", model: [listaBusca:relatorioList])
+        render(view: "index", model: [listaBusca:relatorioList, horasTotal:horasTotal])
     }
 }
