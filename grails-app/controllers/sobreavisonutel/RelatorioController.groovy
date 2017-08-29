@@ -30,6 +30,7 @@ class RelatorioController {
 //        println "Format: " + Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd")
         Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)           //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
         Date dataFim = Date.parse("dd/MM/yyyy", stringDataFim)
+        Date dataIni = dataInicio
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
@@ -106,7 +107,7 @@ class RelatorioController {
 
         println "horasTotal: " + horasTotal
 
-        render(template: "relatorio", model: [listaBusca:relatorioList, horasTotal:horasTotal])
+        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

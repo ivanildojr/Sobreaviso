@@ -36,6 +36,11 @@
     span[id=colunas] {
         color: red;
     }
+    .table th, .table td {
+        text-align: center;
+    }
+
+
     /*input[name=checkListI] {*/
     /*color: #0000FF;*/
     /*outline: 2px solid green;*/
@@ -75,7 +80,7 @@
     <div class="box">
         <div align="center">
             <br>
-            <g:form id="form">
+            <g:form>
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"
@@ -83,20 +88,39 @@
                 <br><br>
                 <div class="input-daterange" id="calendario" >
                     PERÍODO:
-                    <input type="text" class="input-small" id="dataInicio" name="dataInicio" />
+                    <input type="text" class="input-small" name="dataInicio" />
                     <span class="add-on" style="vertical-align: top; height:20px"> ATÉ </span>
-                    <input type="text" class="input-small" id="dataFim" name="dataFim" />
+                    <input type="text" class="input-small" name="dataFim" />
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
-                    <button id="btnGerar" action="gerador" class="btn btn-primary">Gerar</button>
-                    %{--<g:actionSubmit id="btnGerar" value="Gerar" action="gerador"/>--}%
+                    <g:actionSubmit value="Gerar" action="gerador"/>
                 </div>
             </g:form>
         <br>
         </div>
-        <div id="tabela">
-            %{--<g:render template="relatorio" model="[listaBusca:listaBusca, horasTotal:horasTotal]"></g:render>--}%
+        <div>
+            <g:if test="${horasTotal > 0}">
+                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+                    <tr>
+                        <th colspan="3"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
+                    </tr>
+                    <th class="col-md-4">Data</th>
+                    <th class="col-md-4">Período</th>
+                    <th class="col-md-4">Horas em sobreaviso</th>
+                    <g:each var="relatorio" status="j" in="${listaBusca}">
+                        <tr align="center">
+                            <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
+                            <td> ${relatorio.periodo} </td>
+                            <td> ${relatorio.hora} </td>
+                        </tr>
+                    </g:each>
+                    <tr>
+                        <td colspan="2"><b>Total em sobreaviso</b></td>
+                        <td><b>${horasTotal} horas</b></td>
+                    </tr>
+                </table>
+            </g:if>
         </div>
         <br>
 
@@ -112,9 +136,12 @@
 
 <g:javascript>
 
+
+
    $(document).ready(function() {
         $('#alertaData').hide()
         $('#gerarBtn').on('click',function (e) {
+            alert("O campo data deve ser preenchido!");
             if($('#dataInicio').val().length == 0){
                 e.preventDefault()
                 $('#alertaData').show()
@@ -135,22 +162,7 @@
            //alert(periodo);
        });
 
-        $('#btnGerar').on('click',function () {
-           // console.log($('#atendente option:selected').text())
-           // console.log($('#dataInicio').val())
-           $.ajax({
-                  url:'${g.createLink(controller: 'relatorio', action: 'gerador')}',
-                  // dataType: 'json',
-                  data: {atendente: $('#atendente option:selected').text(),
-                         dataInicio: $('#dataInicio').val(),
-                         dataFim: $('#dataFim').val(),
-                         },
-                  success: function (data) {
-                      $('#tabela').html(data)
-                      // console.log(data);
-                  }
-            });
-       });
+
    });
 </g:javascript>
 </body>
