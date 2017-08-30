@@ -4,21 +4,24 @@ import sobreavisonutel.Atendentes
 
 class Ocorrencias {
 
-    Date dataInicio //data da escala
-    Date dataFim
+    Date data //data da escala
+    Date horaInicio
+    Date horaFim
     Date dataModificacao //data da modificação para fins de log
-    Atendentes atendentes //atendente no dia
+    String atendentes //atendente no dia
     String resumido
     String detalhado
     String login //Login de quem alterou a escala
 
     static constraints = {
 
+        data nullable: false
         atendentes nullable: false
-        dataInicio nullable: false
-        dataFim nullable: false
+        horaInicio nullable: false
+        horaFim nullable: false
         dataModificacao nullable: false
         resumido nullable: false
-        login nullable: false;
+        detalhado nullable: true
+        login nullable: false
     }
 }

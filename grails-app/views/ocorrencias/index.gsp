@@ -13,6 +13,11 @@
         font-size: 14px;
         line-height: 1.428571429
     }
+
+    .table th, .table td {
+        text-align: center;
+    }
+
     </style>
 
 </head>
@@ -32,53 +37,63 @@
     <div class="box">
         <div align="center">
             <br>
-            <g:form>
+            <g:form class="form-inline">
+                <div class="form-group">
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
                           from="${sobreavisonutel.Atendentes.listOrderByNome()}"/>
-                <br><br>
-
-                <div class="controls controls-row" id="calendario">
-                    DATA:
-                    <input type="text" class="input-small" name="dataInicio">
-                    <span class="add-on" style="vertical-align: top; height:20px"></span>
-                    INÍCIO: <input class="input-small" type="time" placeholder="">
-                    FIM: <input class="input-small" type="time" placeholder="">
                 </div>
                 <br>
-                OCORRÊNCIA: <input class="input-xxlarge" type="text" placeholder="">
+                <div class="form-group input-group date" id="calendario">
+                    DATA:
+                    <input type="text" class="input-small form-control" name="data">
+                    <span class="add-on" style="height:20px"></span>
+                </div>
+                <br>
+                <div class="form-group">
+                    INÍCIO: <input class="input-small" type="time" name="horaInicio">
+                    FIM: <input class="input-small" type="time" name="horaFim">
+                </div>
+                <br>
+                OCORRÊNCIA: <input class="input-xxlarge" type="text" name="ocorrencia">
                 <br><br>
 
-                <div align="center" name="gerarBtn">
-                    <g:actionSubmit value="Enviar" action="gerador"/>
+                <div align="center" name="registrarBtn">
+                    <g:actionSubmit value="Registrar" action="ocorrencias"/>
                 </div>
             </g:form>
             <br>
         </div>
 
         <div>
-            <g:if test="${horasTotal > 0}">
-                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+            %{--<g:if test="${horasTotal > 0}">--}%
+                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:100%">
                     <tr>
-                        <th colspan="3"><b>${atendente} - ${formatDate(format: 'dd-MM-yyyy', date: dataInicio)} à ${formatDate(format: 'dd-MM-yyyy', date: dataFim)}</b>
-                        </th>
+                        %{--<th colspan="3"><b>${atendente} - ${formatDate(format: 'dd-MM-yyyy', date: dataInicio)} à ${formatDate(format: 'dd-MM-yyyy', date: dataFim)}</b>--}%
+                        %{--</th>--}%
                     </tr>
-                    <th class="col-md-4">Data</th>
-                    <th class="col-md-4">Período</th>
-                    <th class="col-md-4">Horas em sobreaviso</th>
-                    <g:each var="relatorio" status="j" in="${listaBusca}">
+                    <th class="col-md-1">Id</th>
+                    <th class="col-md-1">Atendente</th>
+                    <th class="col-md-1">Data</th>
+                    <th class="col-md-1">Hora Início</th>
+                    <th class="col-md-1">Hora Fim</th>
+                    <th class="col-md-8">Ocorrência</th>
+                    <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
                         <tr align="center">
-                            <td>${formatDate(format: 'dd-MM-yyyy', date: relatorio.data)}</td>
-                            <td>${relatorio.periodo}</td>
-                            <td>${relatorio.hora}</td>
+                            <td><g:link action="edit">${ocorrencia.id} </g:link> </td>
+                            <td>${ocorrencia.atendentes}</td>
+                            <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
+                            <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
+                            <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
+                            <td>${ocorrencia.resumido}</td>
                         </tr>
                     </g:each>
                     <tr>
-                        <td colspan="2"><b>Total em sobreaviso</b></td>
-                        <td><b>${horasTotal} horas</b></td>
+                        %{--<td colspan="2"><b>Total em sobreaviso</b></td>--}%
+                        %{--<td><b>${horasTotal} horas</b></td>--}%
                     </tr>
                 </table>
-            </g:if>
+            %{--</g:if>--}%
         </div>
         <br>
 
