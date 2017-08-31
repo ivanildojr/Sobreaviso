@@ -38,7 +38,6 @@
                     jQuery('[name=horaInicio]').val(data.horaInicioF)
                     jQuery('[name=horaFim]').val(data.horaFimF)
                     jQuery('[name=ocorrencia]').val(data.detalhado)
-
                 }
             })
         }

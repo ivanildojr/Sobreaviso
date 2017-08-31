@@ -19,17 +19,16 @@ class OcorrenciasController {
     def editar() {
         def mapRetorno = [:]
 //        println "ocorrencias: " + params.id
-        def ocorrencia = Ocorrencias.findAllById(params.id)
+//        def ocorrencia = Ocorrencias.findAllById(params.id)
+        def ocorrencia = Ocorrencias.executeQuery("from Ocorrencias where id='$params.id'")
         def atendentes = ocorrencia.atendentes.get(0)
         def dataF = ocorrencia.data.getAt(0)
         def horaInicioF = ocorrencia.horaInicio.get(0)
         def horaFimF = ocorrencia.horaFim.get(0)
         def relato = ocorrencia.resumido.get(0)
-        dataF = dataF.format("dd-MM-yyyy")
+        dataF = dataF.format("dd/MM/yyyy")
         horaInicioF = horaInicioF.format("HH:mm")
         horaFimF = horaFimF.format("HH:mm")
-//        mapRetorno = ocorrencia
-        println dataF
         mapRetorno << [atendentes: atendentes]
         mapRetorno << [diaF: dataF]
         mapRetorno << [horaInicioF: horaInicioF]
@@ -45,7 +44,7 @@ class OcorrenciasController {
     }
 
     def index() {
-        def listaOcorrencias = Ocorrencias.findAll()
+        def listaOcorrencias = Ocorrencias.executeQuery("from Ocorrencias order by data desc")
         render(view: "index", model: [listaOcorrencias:listaOcorrencias])
     }
 
