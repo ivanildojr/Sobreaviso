@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta name="layout" content="main"/>
-    %{--<asset:javascript src="prf/jquery.js"/>   Removido pois já está inserido no sistema  --}%
+    %{--<asset:javascript src="prf/jquery.js"/>   Removido pois já está inserido no sistema--}%
     <asset:javascript src="sobreaviso.js"/>
     <asset:stylesheet src="datepicker/css/bootstrap-datepicker.css"/>
     %{--<asset:stylesheet src="grails-app/assets/stylesheets/rudsom.css"/>--}%
@@ -19,6 +19,28 @@
     }
 
     </style>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+//            alert("funcionou")
+        });
+
+            function alterarOcorrencia(id){
+            $.ajax({
+                method: "POST",
+                url: "editar",
+                data: { "id": id },
+                dataType: 'json',
+                success: function(data){
+                    console.log(data)
+                    jQuery('input[name=data]').val(data.data)
+                    jQuery('input[name=ocorrencia]').val(data.detalhado)
+
+                }
+            })
+        }
+
+    </script>
 
 </head>
 
@@ -37,7 +59,7 @@
     <div class="box">
         <div align="center">
             <br>
-            <g:form class="form-inline">
+            <g:form id="formOcorrencia" class="form-inline">
                 <div class="form-group">
                 ATENDENTE:
                 <g:select name="atendente" optionKey="nome" optionValue="nome"
@@ -46,19 +68,20 @@
                 <br>
                 <div class="form-group input-group date" id="calendario">
                     DATA:
-                    <input type="text" class="input-small form-control" name="data">
+                    <input id="data" type="text" class="input-small form-control" name="data">
                     <span class="add-on" style="height:20px"></span>
                 </div>
                 <br>
                 <div class="form-group">
-                    INÍCIO: <input class="input-small" type="time" name="horaInicio">
-                    FIM: <input class="input-small" type="time" name="horaFim">
+                    INÍCIO: <input class="input-small" type="time" id="horaInicio" name="horaInicio">
+                    FIM: <input class="input-small" type="time" id="horaFim" name="horaFim">
                 </div>
                 <br>
-                OCORRÊNCIA: <input class="input-xxlarge" type="text" name="ocorrencia">
+                OCORRÊNCIA: <input class="input-xxlarge" type="text" id="inputOcorrencia" name="ocorrencia">
                 <br><br>
 
                 <div align="center" name="registrarBtn">
+                    <button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>
                     <g:actionSubmit value="Registrar" action="ocorrencias"/>
                 </div>
             </g:form>
@@ -80,7 +103,8 @@
                     <th class="col-md-8">Ocorrência</th>
                     <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
                         <tr align="center">
-                            <td><g:link action="edit">${ocorrencia.id} </g:link> </td>
+                            %{--<td> <g:link id="${ocorrencia.id}" action="editar">${ocorrencia.id} </g:link> </td>--}%
+                            <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> ${ocorrencia.id} </a> </td>
                             <td>${ocorrencia.atendentes}</td>
                             <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
                             <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
@@ -109,8 +133,6 @@
 
 <g:javascript>
 
-
-
     $(document).ready(function () {
         $('#alertaData').hide()
         $('#gerarBtn').on('click', function (e) {
@@ -122,7 +144,7 @@
             }
         });
 
-        $('#calendario').datepicker({
+        $('#data').datepicker({
             language: "pt-BR",
             format: "dd/mm/yyyy",
             clearBtn: true,
@@ -130,10 +152,11 @@
             orientation: "bottom left"
         });
 
-        $('#calendario').on('change', function () {
+        $('#data').on('change', function () {
             var periodo = $('#calendario').val();
             //alert(periodo);
         });
+
 
 
     });

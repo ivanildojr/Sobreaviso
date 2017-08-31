@@ -1,5 +1,6 @@
 package sobreavisonutel
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
@@ -15,8 +16,15 @@ class OcorrenciasController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     def springSecurityService
 
-    def edit(Ocorrencias ocorrencias) {
-        respond ocorrencias
+    def editar() {
+        def retorno = [:]
+        println "ocorrencias: " + params.id
+//        Ocorrencias ocorrencia = Ocorrencias.get(params.id)
+        def ocorrencia = Ocorrencias.findAllById(params.id)
+
+        retorno = ocorrencia.get(0)
+        println retorno as JSON
+        render retorno as JSON
     }
 
     def index() {
