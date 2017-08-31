@@ -17,14 +17,22 @@ class OcorrenciasController {
     def springSecurityService
 
     def editar() {
-        def retorno = [:]
-        println "ocorrencias: " + params.id
-//        Ocorrencias ocorrencia = Ocorrencias.get(params.id)
+        def mapRetorno = [:]
+        def data = [:]
+//        println "ocorrencias: " + params.id
         def ocorrencia = Ocorrencias.findAllById(params.id)
+        def dia = ocorrencia.data.getAt(0)
+        println data
+        dia = dia.format("dd-MM-yyyy")
+        data.put(data, dia)
+        mapRetorno = ocorrencia.get(0)
+//        render data as JSON
+        println mapRetorno as JSON
+        render mapRetorno as JSON
+    }
 
-        retorno = ocorrencia.get(0)
-        println retorno as JSON
-        render retorno as JSON
+    def apagar() {
+
     }
 
     def index() {

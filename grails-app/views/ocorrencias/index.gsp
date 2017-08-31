@@ -33,8 +33,9 @@
                 dataType: 'json',
                 success: function(data){
                     console.log(data)
-                    jQuery('input[name=data]').val(data.data)
-                    jQuery('input[name=ocorrencia]').val(data.detalhado)
+                    jQuery('[name=atendente]').val(data.atendentes)
+                    jQuery('[name=data]').val(data.data)
+                    jQuery('[name=ocorrencia]').val(data.detalhado)
 
                 }
             })
@@ -81,7 +82,7 @@
                 <br><br>
 
                 <div align="center" name="registrarBtn">
-                    <button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>
+                    %{--<button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>--}%
                     <g:actionSubmit value="Registrar" action="ocorrencias"/>
                 </div>
             </g:form>
