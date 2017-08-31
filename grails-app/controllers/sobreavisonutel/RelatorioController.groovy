@@ -45,12 +45,16 @@ class RelatorioController {
 //        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
         List listBusca = []
         def busca
+        def horasTrabalhadas
+
 
         while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
             busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
+            horasTrabalhadas = Ocorrencias.executeQuery("select data, horaInicio, horaFim from Ocorrencias")
 
-            println "busca: " + busca
+
+            println "horasTrabalhadas: " + horasTrabalhadas
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
             dataInicio = dataInicio.plus(1)
@@ -106,6 +110,8 @@ class RelatorioController {
         }
 
         println "horasTotal: " + horasTotal
+
+
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
