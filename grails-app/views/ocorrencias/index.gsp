@@ -34,7 +34,9 @@
                 success: function(data){
                     console.log(data)
                     jQuery('[name=atendente]').val(data.atendentes)
-                    jQuery('[name=data]').val(data.data)
+                    jQuery('[name=data]').val(data.diaF)
+                    jQuery('[name=horaInicio]').val(data.horaInicioF)
+                    jQuery('[name=horaFim]').val(data.horaFimF)
                     jQuery('[name=ocorrencia]').val(data.detalhado)
 
                 }
