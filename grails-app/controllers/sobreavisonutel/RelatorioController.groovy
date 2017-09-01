@@ -61,18 +61,21 @@ class RelatorioController {
 
         /////////////////////////////////TRATANDO AS HORAS TRABALHADAS   /////////////////////////////////////////
         def listDiasTrabalhados
-        def diaTrabalhado
-        List listHorasTrabalhadas = [], listDuracaoTrabalhadas = [], listHoraInicio = [], listHoraFim = []
-        String stringHoraInicio, stringHoraFim
+        String diaTrabalhado
+        List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = []
+        String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
         TimeDuration horasTrab
         TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
 
-        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim from Ocorrencias")
+        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias")
 //        println "diasTrabalhados: " + listDiasTrabalhados
         listDiasTrabalhados.each {i->
-//            diaTrabalhado = i[0]
+            diaTrabalhado = i[0]
+            diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
 //            println "diaTrabalhado: " + diaTrabalhado
+            listDia << diaTrabalhado
+//             println "listDia: " + listDia
             stringHoraInicio = i[1]
 //            println "stringHoraInicio: " + stringHoraInicio
             stringHoraFim = i[2]
@@ -82,6 +85,8 @@ class RelatorioController {
             horaFim = Date.parse('yyyy-MM-dd HH:mm:ss', stringHoraFim)
             stringHoraFim = horaFim.getTimeString()
             listHoraFim << stringHoraFim
+            resumido = i[3]
+            listResumido << resumido
 
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
 //            println "horasTrabalhadas: " + horasTrab
@@ -91,6 +96,19 @@ class RelatorioController {
         println "horasTrabTotal: " + horasTrabTotal
         println "listHoraInicio: " + listHoraInicio
         println "listHoraFim: " + listHoraFim
+
+        List<RelatorioOcorrencia> ocorrenciaList = new ArrayList<RelatorioOcorrencia>()
+        def relatorioOcorrencia
+
+        diaTrabalhado.eachWithIndex {dia, index->
+            relatorioOcorrencia = new RelatorioOcorrencia()
+            relatorioOcorrencia.data = listDia.getAt(index)
+            relatorioOcorrencia.horaInicio = listHoraInicio.getAt(index)
+            relatorioOcorrencia.horaFim = listHoraFim.getAt(index)
+            relatorioOcorrencia.duracao = listHorasTrabalhadas.getAt(index)
+            relatorioOcorrencia.relato = listResumido.getAt(index)
+            ocorrenciaList.add(relatorioOcorrencia)
+        }
 
         /////////////////////////////////TRATANDO AS HORAS EM SOBREAVISO/////////////////////////////////////////
         println "listBusca: " + listBusca
@@ -146,8 +164,7 @@ class RelatorioController {
 
 
 
-        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal, listDiasTrabalhados: listDiasTrabalhados,
-                                      listDuracaoTrabalhadas: listDuracaoTrabalhadas])
+        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal, ocorrenciaList: ocorrenciaList])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }
