@@ -6,6 +6,9 @@ import grails.transaction.Transactional
 import groovy.time.TimeCategory
 import groovy.time.TimeDuration
 
+
+import static java.time.LocalDate.now
+
 @Transactional(readOnly = true)
 @Secured('ROLE_ADMIN')
 class RelatorioController {
@@ -66,10 +69,11 @@ class RelatorioController {
         String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
         TimeDuration horasTrab
-        TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
+        TimeDuration horasTrabTotal = new Date(2017,08,03,0,0)
 
-        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias")
+        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente'")
 //        println "diasTrabalhados: " + listDiasTrabalhados
+        horasTrabTotal = horasTrabTotal
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
@@ -80,27 +84,33 @@ class RelatorioController {
 //            println "stringHoraInicio: " + stringHoraInicio
             stringHoraFim = i[2]
             horaInicio = Date.parse("yyyy-MM-dd HH:mm:ss", stringHoraInicio)
-            stringHoraInicio = horaInicio.getTimeString()
+            stringHoraInicio = horaInicio.format("HH:mm")
             listHoraInicio << stringHoraInicio
             horaFim = Date.parse('yyyy-MM-dd HH:mm:ss', stringHoraFim)
-            stringHoraFim = horaFim.getTimeString()
+            stringHoraFim = horaFim.format("HH:mm")
             listHoraFim << stringHoraFim
             resumido = i[3]
             listResumido << resumido
 
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
-//            println "horasTrabalhadas: " + horasTrab
-            horasTrabTotal = horasTrab + horasTrabTotal
+            println "horasTrab: " + horasTrab
+            horasTrabTotal = horasTrabTotal.plus(horasTrab)
+            println"horasTrabTotal: " + horasTrabTotal
             listHorasTrabalhadas << horasTrab
         }
-        println "horasTrabTotal: " + horasTrabTotal
-        println "listHoraInicio: " + listHoraInicio
-        println "listHoraFim: " + listHoraFim
+        Date dataBase = new Date(0,0,0,0,0,0)
+
+        println horasTrabTotal
+
+//        println "listHoraInicio: " + listHoraInicio
+//        println "listHoraFim: " + listHoraFim
+//        println "diaTrabalhado: " + diaTrabalhado
+
 
         List<RelatorioOcorrencia> ocorrenciaList = new ArrayList<RelatorioOcorrencia>()
         def relatorioOcorrencia
 
-        diaTrabalhado.eachWithIndex {dia, index->
+        listDia.eachWithIndex {dia, index->
             relatorioOcorrencia = new RelatorioOcorrencia()
             relatorioOcorrencia.data = listDia.getAt(index)
             relatorioOcorrencia.horaInicio = listHoraInicio.getAt(index)
@@ -164,7 +174,8 @@ class RelatorioController {
 
 
 
-        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal, ocorrenciaList: ocorrenciaList])
+        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
+                                      ocorrenciaList: ocorrenciaList, horasTrabTotal:horasTrabTotal])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

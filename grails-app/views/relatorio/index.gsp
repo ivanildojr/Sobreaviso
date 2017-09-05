@@ -105,9 +105,9 @@
                     <tr>
                         <th colspan="3"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
                     </tr>
-                    <th class="col-md-4">Data</th>
-                    <th class="col-md-4">Período</th>
-                    <th class="col-md-4">Horas em sobreaviso</th>
+                    <th class="col-md-1">Data</th>
+                    <th class="col-md-1">Período</th>
+                    <th class="col-md-1">Horas em sobreaviso</th>
                     <g:each var="relatorio" status="j" in="${listaBusca}">
                         <tr align="center">
                             <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
@@ -120,6 +120,30 @@
                         <td><b>${horasTotal} horas</b></td>
                     </tr>
                 </table>
+                <div>
+                    <br>
+                    <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
+                        <tr>
+                            <th colspan="4"><b>OCORRÊNCIAS</b></th>
+                        </tr>
+                        <th class="col-md-1">Data</th>
+                        <th class="col-md-1">Início - Fim</th>
+                        <th class="col-md-1">Duração</th>
+                        <th class="col-md-9">Ocorrência</th>
+                        <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
+                            <tr align="center">
+                                <td> ${ocorrencia.data} </td>
+                                <td> ${ocorrencia.horaInicio} - ${ocorrencia.horaFim} </td>
+                                <td> ${ocorrencia.duracao} </td>
+                                <td> ${ocorrencia.relato} </td>
+                            </tr>
+                        </g:each>
+                            <td colspan="2"><b>Total trabalhadas</b></td>
+                            <td><b>${horasTrabTotal}</b></td>
+                            <td></td>
+                    </table>
+                </div>
+
             </g:if>
         </div>
         <br>
