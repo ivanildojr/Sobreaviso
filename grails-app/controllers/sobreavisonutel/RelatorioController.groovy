@@ -69,11 +69,10 @@ class RelatorioController {
         String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
         TimeDuration horasTrab
-        TimeDuration horasTrabTotal = new Date(2017,08,03,0,0)
+        TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
 
         listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente'")
 //        println "diasTrabalhados: " + listDiasTrabalhados
-        horasTrabTotal = horasTrabTotal
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
@@ -93,14 +92,28 @@ class RelatorioController {
             listResumido << resumido
 
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
+            def hTrab = horasTrab.getHours()
+            def mTrab = horasTrab.getMinutes()
+            String tempoTrab
+            if(hTrab==0) tempoTrab = mTrab + " minutos"
+            if(mTrab==0) tempoTrab = hTrab + " horas"
+            if(hTrab>0 & mTrab>0) tempoTrab = hTrab + " horas, " + mTrab + " minutos"
             println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
             println"horasTrabTotal: " + horasTrabTotal
-            listHorasTrabalhadas << horasTrab
+            listHorasTrabalhadas << tempoTrab
         }
-        Date dataBase = new Date(0,0,0,0,0,0)
+        Integer hTrabTotal = horasTrabTotal.getHours()
+        def mTrabTotal = horasTrabTotal.getMinutes()
+        hTrabTotal = mTrabTotal/60 + hTrabTotal
+        mTrabTotal = mTrabTotal % 60
+        String tempoTrabTotal
+        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
+        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
+        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
 
-        println horasTrabTotal
+
+        println tempoTrabTotal
 
 //        println "listHoraInicio: " + listHoraInicio
 //        println "listHoraFim: " + listHoraFim
@@ -175,7 +188,7 @@ class RelatorioController {
 
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
-                                      ocorrenciaList: ocorrenciaList, horasTrabTotal:horasTrabTotal])
+                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

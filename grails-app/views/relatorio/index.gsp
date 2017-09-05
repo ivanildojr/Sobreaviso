@@ -88,9 +88,9 @@
                 <br><br>
                 <div class="input-daterange" id="calendario" >
                     PERÍODO:
-                    <input type="text" class="input-small" name="dataInicio" />
+                    <input required=true type="text" class="input-small" name="dataInicio" />
                     <span class="add-on" style="vertical-align: top; height:20px"> ATÉ </span>
-                    <input type="text" class="input-small" name="dataFim" />
+                    <input required=true type="text" class="input-small" name="dataFim" />
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
@@ -139,7 +139,7 @@
                             </tr>
                         </g:each>
                             <td colspan="2"><b>Total trabalhadas</b></td>
-                            <td><b>${horasTrabTotal}</b></td>
+                            <td><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>
                 </div>

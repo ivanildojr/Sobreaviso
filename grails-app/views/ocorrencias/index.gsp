@@ -70,16 +70,16 @@
                 <br>
                 <div class="form-group input-group date" id="calendario">
                     DATA:
-                    <input id="data" type="text" class="input-small form-control" name="data">
+                    <input required=true id="data" type="text" class="input-small form-control" name="data">
                     <span class="add-on" style="height:20px"></span>
                 </div>
                 <br>
                 <div class="form-group">
-                    INÍCIO: <input class="input-small" type="time" id="horaInicio" name="horaInicio">
-                    FIM: <input class="input-small" type="time" id="horaFim" name="horaFim">
+                    INÍCIO: <input required=true class="input-small" type="time" id="horaInicio" name="horaInicio">
+                    FIM: <input required=true class="input-small" type="time" id="horaFim" name="horaFim">
                 </div>
                 <br>
-                OCORRÊNCIA: <input class="input-xxlarge" type="text" id="inputOcorrencia" name="ocorrencia">
+                OCORRÊNCIA: <input required=true class="input-xxlarge" type="text" id="inputOcorrencia" name="ocorrencia">
                 <br><br>
 
                 <div align="center" name="registrarBtn">
@@ -102,7 +102,7 @@
                     <th class="col-md-1">Data</th>
                     <th class="col-md-1">Hora Início</th>
                     <th class="col-md-1">Hora Fim</th>
-                    <th class="col-md-8">Ocorrência</th>
+                    <th class="col-md-7">Ocorrência</th>
                     <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
                         <tr align="center">
                             %{--<td> <g:link id="${ocorrencia.id}" action="editar">${ocorrencia.id} </g:link> </td>--}%
