@@ -17,6 +17,10 @@
     .table th, .table td {
         text-align: center;
     }
+    #celOcorrencia{
+        width: 72%;
+    }
+
 
     </style>
 
@@ -86,7 +90,6 @@
                 <div align="center" name="registrarBtn">
                     %{--<button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>--}%
                     <g:actionSubmit value="Registrar" action="ocorrencias"/>
-                    <g:actionSubmit value="  Excluir  " action="excluirOcorrencia"/>
                 </div>
             </g:form>
             <br>
@@ -104,7 +107,8 @@
                     <th class="col-md-1">Data</th>
                     <th class="col-md-1">Hora Início</th>
                     <th class="col-md-1">Hora Fim</th>
-                    <th class="col-md-7">Ocorrência</th>
+                    <th class="col-md-1" id="celOcorrencia">Ocorrência</th>
+                    <th class="col-md-1"><i class="icon-trash"></i></th>
                     <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
                         <tr align="center">
                             %{--<td> <g:link id="${ocorrencia.id}" action="editar">${ocorrencia.id} </g:link> </td>--}%
@@ -114,6 +118,7 @@
                             <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
                             <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
                             <td>${ocorrencia.resumido}</td>
+                            <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" name="ocorrenciaId"><i class="icon-trash"></i></g:link></td>
                         </tr>
                     </g:each>
                     <tr>

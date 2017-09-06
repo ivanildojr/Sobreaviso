@@ -41,7 +41,7 @@
     }
 
     #celOcorrencia{
-         width: 79%;
+         width: 70%;
     }
 
     /*input[name=checkListI] {*/
@@ -132,7 +132,7 @@
                         <th class="col-md-1">Data</th>
                         <th class="col-md-1">Início - Fim</th>
                         <th class="col-md-1">Duração</th>
-                        <th class="col-md-9"id="celOcorrencia">Ocorrência</th>
+                        <th class="col-md-1"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
                             <tr align="center">
                                 <td> ${ocorrencia.data} </td>

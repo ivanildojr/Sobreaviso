@@ -39,8 +39,15 @@ class OcorrenciasController {
         render mapRetorno as JSON
     }
 
-    def apagar() {
-
+    def excluirOcorrencia() {
+//        println params.values()
+        def id = params.values().getAt(3)
+//        println id
+        Ocorrencias ocorrencia = Ocorrencias.findById(id as Long)
+        ocorrencia.delete()
+        println "Apagou registro"
+        def listaOcorrencias = Ocorrencias.executeQuery("from Ocorrencias order by data desc")
+        render(view: "index", model: [listaOcorrencias:listaOcorrencias])
     }
 
     def index() {
@@ -50,7 +57,7 @@ class OcorrenciasController {
 
     def ocorrencias() {
 
-//        println params.values() //imprime tudo que foi retornado do formulario da view
+        println params.values() //imprime tudo que foi retornado do formulario da view
         def atendente = params.list("atendente").get(0)  //recebe atendentes e dataInicio da view e tira da list
         def data = params.list("data").get(0)
         def horaInicio = params.list("horaInicio").get(0)
