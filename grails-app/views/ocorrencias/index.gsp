@@ -32,6 +32,7 @@
                 data: { "id": id },
                 dataType: 'json',
                 success: function(data){
+//                    alert("funcionou")
                     console.log(data)
                     jQuery('[name=atendente]').val(data.atendentes)
                     jQuery('[name=data]').val(data.diaF)
@@ -85,6 +86,7 @@
                 <div align="center" name="registrarBtn">
                     %{--<button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>--}%
                     <g:actionSubmit value="Registrar" action="ocorrencias"/>
+                    <g:actionSubmit value="  Excluir  " action="excluirOcorrencia"/>
                 </div>
             </g:form>
             <br>

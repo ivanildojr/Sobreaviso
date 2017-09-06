@@ -40,6 +40,9 @@
         text-align: center;
     }
 
+    #celOcorrencia{
+         width: 79%;
+    }
 
     /*input[name=checkListI] {*/
     /*color: #0000FF;*/
@@ -97,8 +100,8 @@
                     <g:actionSubmit value="Gerar" action="gerador"/>
                 </div>
             </g:form>
-        <br>
         </div>
+        <br>
         <div>
             <g:if test="${horasTotal > 0}">
                 <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
@@ -121,7 +124,7 @@
                     </tr>
                 </table>
                 <div>
-                    <br>
+                    <br><br>
                     <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
                         <tr>
                             <th colspan="4"><b>OCORRÊNCIAS</b></th>
@@ -129,7 +132,7 @@
                         <th class="col-md-1">Data</th>
                         <th class="col-md-1">Início - Fim</th>
                         <th class="col-md-1">Duração</th>
-                        <th class="col-md-9">Ocorrência</th>
+                        <th class="col-md-9"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
                             <tr align="center">
                                 <td> ${ocorrencia.data} </td>
@@ -142,6 +145,7 @@
                             <td><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>
+                    <br>
                 </div>
 
             </g:if>
