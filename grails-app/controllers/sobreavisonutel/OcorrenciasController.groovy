@@ -46,8 +46,7 @@ class OcorrenciasController {
         Ocorrencias ocorrencia = Ocorrencias.findById(id as Long)
         ocorrencia.delete()
         println "Apagou registro"
-        def listaOcorrencias = Ocorrencias.executeQuery("from Ocorrencias order by data desc")
-        render(view: "index", model: [listaOcorrencias:listaOcorrencias])
+        redirect(action: "index")
     }
 
     def index() {
@@ -85,10 +84,7 @@ class OcorrenciasController {
             println "Não salvou"
         }
 
-
-        def listaOcorrencias = Ocorrencias.findAll()
-
-        render(view: "index", model: [listaOcorrencias:listaOcorrencias])
+        redirect(action: "index")
 
     }
 }
