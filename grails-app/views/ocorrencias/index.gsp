@@ -102,22 +102,21 @@
                         %{--<th colspan="3"><b>${atendente} - ${formatDate(format: 'dd-MM-yyyy', date: dataInicio)} à ${formatDate(format: 'dd-MM-yyyy', date: dataFim)}</b>--}%
                         %{--</th>--}%
                     </tr>
-                    <th class="col-md-1">Id</th>
                     <th class="col-md-1">Atendente</th>
                     <th class="col-md-1">Data</th>
                     <th class="col-md-1">Hora Início</th>
                     <th class="col-md-1">Hora Fim</th>
                     <th class="col-md-1" id="celOcorrencia">Ocorrência</th>
+                    <th class="col-md-1"><i class="icon-pencil"></i></th>
                     <th class="col-md-1"><i class="icon-trash"></i></th>
                     <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
                         <tr align="center">
-                            %{--<td> <g:link id="${ocorrencia.id}" action="editar">${ocorrencia.id} </g:link> </td>--}%
-                            <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> ${ocorrencia.id} </a> </td>
                             <td>${ocorrencia.atendentes}</td>
                             <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
                             <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
                             <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
                             <td>${ocorrencia.resumido}</td>
+                            <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> <i class="icon-pencil"></i> </a> </td>
                             <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" name="ocorrenciaId"><i class="icon-trash"></i></g:link></td>
                         </tr>
                     </g:each>
