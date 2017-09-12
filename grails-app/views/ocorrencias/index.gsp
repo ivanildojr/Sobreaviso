@@ -117,7 +117,7 @@
                             <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
                             <td>${ocorrencia.resumido}</td>
                             <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> <i class="icon-pencil"></i> </a> </td>
-                            <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" name="ocorrenciaId"><i class="icon-trash"></i></g:link></td>
+                            <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" onclick="return confirm('Quer mesmo excluir o registro?')"><i class="icon-trash"></i></g:link></td>
                         </tr>
                     </g:each>
                     <tr>
@@ -127,26 +127,6 @@
                 </table>
             %{--</g:if>--}%
         </div>
-
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#confirm">Confirmação</button>
-
-        <div class="modal fade" id="confirm" role="dialog">
-            <div class="modal-dialog modal-md">
-
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <p> QUER REALMENTE FAZER ISSO?? NÂO POR FAVOR, EU TENHO FILHOS</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="excluir" type="button" class="btn btn-danger" id="delete">Apagar Registo</a>
-                        <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
 
         <br>
 
@@ -186,9 +166,10 @@
             //alert(periodo);
         });
 
-
-
     });
+
+
+
 </g:javascript>
 </body>
 </html>

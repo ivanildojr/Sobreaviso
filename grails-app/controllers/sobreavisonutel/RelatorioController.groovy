@@ -98,9 +98,9 @@ class RelatorioController {
             if(hTrab==0) tempoTrab = mTrab + " minutos"
             if(mTrab==0) tempoTrab = hTrab + " horas"
             if(hTrab>0 & mTrab>0) tempoTrab = hTrab + " horas, " + mTrab + " minutos"
-            println "horasTrab: " + horasTrab
+//            println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
-            println"horasTrabTotal: " + horasTrabTotal
+//            println"horasTrabTotal: " + horasTrabTotal
             listHorasTrabalhadas << tempoTrab
         }
         Integer hTrabTotal = horasTrabTotal.getHours()
@@ -113,12 +113,12 @@ class RelatorioController {
         if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
 
 
-        println tempoTrabTotal
+//        println tempoTrabTotal
 
 //        println "listHoraInicio: " + listHoraInicio
 //        println "listHoraFim: " + listHoraFim
 //        println "diaTrabalhado: " + diaTrabalhado
-
+        listDia.sort()
 
         List<RelatorioOcorrencia> ocorrenciaList = new ArrayList<RelatorioOcorrencia>()
         def relatorioOcorrencia
@@ -134,7 +134,7 @@ class RelatorioController {
         }
 
         /////////////////////////////////TRATANDO AS HORAS EM SOBREAVISO/////////////////////////////////////////
-        println "listBusca: " + listBusca
+//        println "listBusca: " + listBusca
 
         def listData = []
         def listHora = []
@@ -169,8 +169,9 @@ class RelatorioController {
             }
         }
         listHora << horas
-//        println listData
+        println listData
 //        println listHora
+
 
         List<Relatorio> relatorioList = new ArrayList<Relatorio>()
         listData.eachWithIndex {dia, index->
@@ -182,6 +183,7 @@ class RelatorioController {
             relatorio.periodo = listPeriodo.getAt(index)
             relatorioList.add(relatorio)
         }
+
 
 //        println "horasTotal: " + horasTotal
 
