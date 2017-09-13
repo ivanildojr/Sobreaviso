@@ -121,14 +121,21 @@
                     <tr>
                         <td colspan="2"><b>Total em sobreaviso</b></td>
                         <td><b>${horasTotal} horas</b></td>
+                        <tr>
+                            <td colspan="2"><b>Total em acionamento</b></td>
+                            <td><b>${tempoTrabTotal}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Lançamento no ponto</b></td>
+                            <td><b>${horasTotal}</b></td>
+                        </tr>
+                    </tr>
+                    <tr>
                     </tr>
                 </table>
                 <div>
                     <br><br>
                     <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
-                        <tr>
-                            <th colspan="4"><b>OCORRÊNCIAS</b></th>
-                        </tr>
                         <th class="col-md-1">Data</th>
                         <th class="col-md-1">Início - Fim</th>
                         <th class="col-md-1">Duração</th>
@@ -141,9 +148,19 @@
                                 <td> ${ocorrencia.relato} </td>
                             </tr>
                         </g:each>
-                            <td colspan="2"><b>Total trabalhadas</b></td>
+                            <td colspan="2"><b>Total em acionamento</b></td>
                             <td><b>${tempoTrabTotal}</b></td>
                             <td></td>
+                            <tr>
+                            <td colspan="2"><b>Total em sobreaviso</b></td>
+                            <td><b>${horasTotal} horas</b></td>
+                            <td></td>
+                            </tr>
+                            <tr>
+                            <td colspan="2"><b>Lançamento no ponto</b></td>
+                            <td><b>${horasTotal} horas</b></td>
+                            <td></td>
+                            </tr>
                     </table>
                     <br>
                 </div>

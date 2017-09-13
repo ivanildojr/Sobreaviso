@@ -187,7 +187,18 @@ class RelatorioController {
 
 //        println "horasTotal: " + horasTotal
 
+        def horasPonto = horasTotal/3 + tempoTrabTotal
 
+//        Integer hPonto = horasPonto.getHours()
+//        def mPonto = horasTrabTotal.getMinutes()
+//        hTrabTotal = mTrabTotal/60 + hTrabTotal
+//        mTrabTotal = mTrabTotal % 60
+//        String tempoTrabTotal
+//        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
+//        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
+//        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
+
+        println "horasPonto: " + horasPonto
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
                                       ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal])
