@@ -3,6 +3,7 @@ package sobreavisonutel
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
+import groovy.time.Duration
 import groovy.time.TimeCategory
 import groovy.time.TimeDuration
 
@@ -186,22 +187,18 @@ class RelatorioController {
 
 
 //        println "horasTotal: " + horasTotal
+        def horasPonto = horasTotal/3   //Fator de sobreaviso
+        Integer hPonto = horasPonto
+        Integer mPonto = (horasPonto - hPonto)*60 //transformar decimal para minutos
 
-        def horasPonto = horasTotal/3 + tempoTrabTotal
-
-//        Integer hPonto = horasPonto.getHours()
-//        def mPonto = horasTrabTotal.getMinutes()
-//        hTrabTotal = mTrabTotal/60 + hTrabTotal
-//        mTrabTotal = mTrabTotal % 60
-//        String tempoTrabTotal
-//        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
-//        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
-//        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
-
-        println "horasPonto: " + horasPonto
+        String tempoPonto
+        if(hPonto==0) tempoPonto = mPonto + " minutos"
+        if(mPonto==0) tempoPonto = hPonto + " horas"
+        if(hPonto>0 & mPonto>0) tempoPonto = hPonto + " horas, " + mPonto + " minutos"
+        println tempoPonto
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
-                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal])
+                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, tempoPonto: tempoPonto])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

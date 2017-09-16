@@ -115,7 +115,7 @@
                         <tr align="center">
                             <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
                             <td> ${relatorio.periodo} </td>
-                            <td> ${relatorio.hora} </td>
+                            <td> ${relatorio.hora} h</td>
                         </tr>
                     </g:each>
                     <tr>
@@ -127,10 +127,8 @@
                         </tr>
                         <tr>
                             <td colspan="2"><b>Lançamento no ponto</b></td>
-                            <td><b>${horasTotal}</b></td>
+                            <td><b>${tempoPonto}</b></td>
                         </tr>
-                    </tr>
-                    <tr>
                     </tr>
                 </table>
                 <div>
