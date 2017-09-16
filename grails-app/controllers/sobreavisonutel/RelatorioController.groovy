@@ -111,7 +111,11 @@ class RelatorioController {
         String tempoTrabTotal
         if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
         if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
+        if(hTrabTotal==1) tempoTrabTotal = mTrabTotal + " minuto"
+        if(mTrabTotal==1) tempoTrabTotal = hTrabTotal + " hora"
         if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
+        if(hTrabTotal>0 & mTrabTotal==1) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minuto"
+        if(hTrabTotal==1 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " hora, " + mTrabTotal + " minutos"
 
 
 //        println tempoTrabTotal
@@ -193,8 +197,12 @@ class RelatorioController {
 
         String tempoPonto
         if(hPonto==0) tempoPonto = mPonto + " minutos"
+        if(hPonto==1) tempoPonto = mPonto + " minuto"
         if(mPonto==0) tempoPonto = hPonto + " horas"
+        if(mPonto==1) tempoPonto = hPonto + " hora"
         if(hPonto>0 & mPonto>0) tempoPonto = hPonto + " horas, " + mPonto + " minutos"
+        if(hPonto>0 & mPonto==1) tempoPonto = hPonto + " horas, " + mPonto + " minuto"
+        if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
         println tempoPonto
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
