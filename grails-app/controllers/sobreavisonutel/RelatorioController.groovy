@@ -51,6 +51,7 @@ class RelatorioController {
 //        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
         List listBusca = []
         def busca
+        def stringDataInicioFixa = dataInicio.format("yyyy-MM-dd").toString()
 
         while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
@@ -70,17 +71,18 @@ class RelatorioController {
         Date horaInicio, horaFim
         TimeDuration horasTrab
         TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
+        stringDataFim = dataFim.format("yyyy-MM-dd").toString()
 
-        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente'")
-//        println "diasTrabalhados: " + listDiasTrabalhados
+        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and data<='$stringDataFim'")
+        println "diasTrabalhados: " + listDiasTrabalhados
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
 //            println "diaTrabalhado: " + diaTrabalhado
             listDia << diaTrabalhado
-//             println "listDia: " + listDia
+             println "listDia: " + listDia
             stringHoraInicio = i[1]
-//            println "stringHoraInicio: " + stringHoraInicio
+            println "stringHoraInicio: " + stringHoraInicio
             stringHoraFim = i[2]
             horaInicio = Date.parse("yyyy-MM-dd HH:mm:ss", stringHoraInicio)
             stringHoraInicio = horaInicio.format("HH:mm")
@@ -98,9 +100,9 @@ class RelatorioController {
             if(hTrab==0) tempoTrab = mTrab + " minutos"
             if(mTrab==0) tempoTrab = hTrab + " horas"
             if(hTrab>0 & mTrab>0) tempoTrab = hTrab + " horas, " + mTrab + " minutos"
-//            println "horasTrab: " + horasTrab
+            println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
-//            println"horasTrabTotal: " + horasTrabTotal
+            println"horasTrabTotal: " + horasTrabTotal
             listHorasTrabalhadas << tempoTrab
         }
         Integer hTrabTotal = horasTrabTotal.getHours()
@@ -173,7 +175,7 @@ class RelatorioController {
             }
         }
         listHora << horas
-        println listData
+        println "listData: " + listData
 //        println listHora
 
 
@@ -189,7 +191,7 @@ class RelatorioController {
         }
 
 
-//        println "horasTotal: " + horasTotal
+        println "horasTotal: " + horasTotal
         def horasPonto = horasTotal/3   //Fator de sobreaviso
         Integer hPonto = horasPonto
         Integer mPonto = (horasPonto - hPonto)*60 //transformar decimal para minutos
