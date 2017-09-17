@@ -44,13 +44,17 @@ class OcorrenciasController {
         def id = params.values().getAt(3)
 //        println id
         Ocorrencias ocorrencia = Ocorrencias.findById(id as Long)
-        ocorrencia.delete()
-        println "Apagou registro"
+        ocorrencia.status = "Inativo"
+        ocorrencia.validate()
+        if(!ocorrencia.hasErrors()) {
+            ocorrencia.save flush: true
+        }
+        println "Inativou registro"
         redirect(action: "index")
     }
 
     def index() {
-        def listaOcorrencias = Ocorrencias.executeQuery("from Ocorrencias order by data desc")
+        def listaOcorrencias = Ocorrencias.executeQuery("from Ocorrencias where status='Ativo' order by data desc")
         render(view: "index", model: [listaOcorrencias:listaOcorrencias])
     }
 
@@ -65,6 +69,7 @@ class OcorrenciasController {
         Date dataModificacao = new Date()
 
         Ocorrencias ocorrencia = new Ocorrencias()
+        ocorrencia.status = "Ativo"
         ocorrencia.dataModificacao = dataModificacao
         ocorrencia.atendentes = atendente
         ocorrencia.data = Date.parse("dd/MM/yyyy", data)

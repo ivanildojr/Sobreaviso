@@ -29,9 +29,9 @@ class RelatorioController {
         def stringDataInicio = params.list("dataInicio").get(0)
         def stringDataFim = params.list("dataFim").get(0)
 
-//        println "dataInicio: " + dataInicio
-//        println "dataFim: $dataFim"
-//        println "atendente: $atendente"
+        println "dataInicio: " + stringDataInicio
+        println "dataFim: $stringDataFim"
+        println "atendente: $atendente"
 //        println "Parse: " + Date.parse("dd/MM/yyyy", dataInicio)
 //        println "Format: " + Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd")
         Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)           //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
@@ -52,12 +52,11 @@ class RelatorioController {
         List listBusca = []
         def busca
 
-
-
         while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
+            println "stringDataInicio: " + stringDataInicio
             busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
-
+            println "busca: " + busca
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
             dataInicio = dataInicio.plus(1)

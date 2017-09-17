@@ -4,6 +4,7 @@ import sobreavisonutel.Atendentes
 
 class Ocorrencias {
 
+    String status
     Date data //data da escala
     Date horaInicio
     Date horaFim
@@ -15,6 +16,7 @@ class Ocorrencias {
 
     static constraints = {
 
+        status nullable: false
         data nullable: false
         atendentes nullable: false
         horaInicio nullable: false
