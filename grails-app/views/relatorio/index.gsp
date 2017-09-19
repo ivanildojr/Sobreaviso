@@ -120,7 +120,7 @@
                     </g:each>
                     <tr>
                         <td colspan="2"><b>Total em sobreaviso</b></td>
-                        <td><b>${horasTotal} horas</b></td>
+                        <td><b>${horasTotal} h</b></td>
                         <tr>
                             <td colspan="2"><b>Total em acionamento</b></td>
                             <td><b>${tempoTrabTotal}</b></td>

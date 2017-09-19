@@ -120,10 +120,6 @@
                             <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" onclick="return confirm('Quer mesmo excluir o registro?')"><i class="icon-trash"></i></g:link></td>
                         </tr>
                     </g:each>
-                    <tr>
-                        %{--<td colspan="2"><b>Total em sobreaviso</b></td>--}%
-                        %{--<td><b>${horasTotal} horas</b></td>--}%
-                    </tr>
                 </table>
             %{--</g:if>--}%
         </div>
