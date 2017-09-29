@@ -44,6 +44,12 @@
          width: 70%;
     }
 
+    #divMsg{
+        text-align: center;
+        font-weight: bold;
+        font-size: medium;
+    }
+
     /*input[name=checkListI] {*/
     /*color: #0000FF;*/
     /*outline: 2px solid green;*/
@@ -132,7 +138,8 @@
                     </tr>
                 </table>
                 <div>
-                    <br><br>
+                <br><br>
+                <g:if test="${!ocorrenciaList.empty}">
                     <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
                         <th class="col-md-1">Data</th>
                         <th class="col-md-1">Início - Fim</th>
@@ -150,6 +157,12 @@
                             <td><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>
+                </g:if>
+                <g:else>
+                    <div id="divMsg">
+                        <p style="color:red;">Não existe ocorrências registradas no período!</p>
+                    </div>
+                </g:else>
                     <br>
                 </div>
 
