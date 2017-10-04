@@ -56,7 +56,7 @@ class RelatorioController {
         while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
             println "stringDataInicio: " + stringDataInicio
-            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
+            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
             println "busca: " + busca
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
