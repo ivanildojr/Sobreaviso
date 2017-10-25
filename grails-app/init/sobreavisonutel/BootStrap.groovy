@@ -14,11 +14,11 @@ class BootStrap {
 //        def testUser = new Usuario(username: 'ivanildo', password: 'senha').save()
 //
 //        UsuarioPerfil.create testUser, adminRole
-//
-//        UsuarioPerfil.withSession {
-//            it.flush()
-//            it.clear()
-//        }
+
+        UsuarioPerfil.withSession {
+            it.flush()
+            it.clear()
+        }
 //
 //        assert Usuario.count() == 1
 //        assert Perfil.count() == 2
