@@ -73,7 +73,7 @@ class RelatorioController {
         TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
         stringDataFim = dataFim.format("yyyy-MM-dd").toString()
 
-        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and data<='$stringDataFim'")
+        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and status='Ativo' and data<='$stringDataFim'")
         println "diasTrabalhados: " + listDiasTrabalhados
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
