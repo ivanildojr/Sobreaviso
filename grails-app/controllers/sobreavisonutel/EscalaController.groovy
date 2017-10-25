@@ -37,6 +37,7 @@ class EscalaController {
         println "Sobreaviso marcações: " + sobreavisoNutel
 
 
+
         /*Avaliar necessidade de limpar para o Historico, para Escala ainda persiste*/
         List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("yyyy-MM-dd", params.getProperty("domingo")),Date.parse("yyyy-MM-dd", params.getProperty("sabado")))
 
@@ -271,7 +272,7 @@ class EscalaController {
                     escalaSobreaviso.add(letraInicial+"-"+e.dia+"-"+e.hora)
             }
         }
-//        println escalaSobreaviso
+        //println escalaSobreaviso
         render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso])
     }
 
@@ -301,11 +302,11 @@ class EscalaController {
             dataFinal = new Date()
         }
 
-//        println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
+     //   println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
         List historico = Historico.findAllByDataEscalaBetween(dataInicial,dataFinal)
         List escalaSobreavisoHistorico = new ArrayList()
 
-//        println historico
+        println historico
 
 
         String letraInicial = ""
@@ -321,9 +322,11 @@ class EscalaController {
         }
 
         DateFormat df = new SimpleDateFormat ("dd/MM/yyyy");
-//        println df.format(dataInicial)
+
+
 
         render(view:'historico',model:[inicial:df.format(dataInicial),final:dataFinal,diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreavisoHistorico])
+
     }
 
     def datasAjax(String dataHistorico){
@@ -387,6 +390,8 @@ class EscalaController {
 
 
         jsonUtil.escalaSobreavisoHistorico = escalaSobreavisoHistorico
+//        println Historico.executeQuery("from Historico where ")
+        //println historico
         /*************************************/
 
         render jsonUtil as JSON
