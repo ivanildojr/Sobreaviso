@@ -18,6 +18,7 @@
     <asset:javascript src="prf/bootstrap-inputmask.min.js"/>
     <asset:javascript src="prf/alertify.min.js"/>
     <asset:javascript src="prf/prf.js"/>
+    <asset:link rel="shortcut icon" href="brasao_prf_ico.gif" type="image/x-icon"/>
 
 
     <g:layoutHead/>
