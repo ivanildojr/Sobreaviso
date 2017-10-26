@@ -38,6 +38,7 @@
     }
     .table th, .table td {
         text-align: center;
+        alignment: center;
     }
 
     #celOcorrencia{
@@ -112,29 +113,31 @@
             <g:if test="${horasTotal > 0}">
                 <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
-                        <th colspan="3"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
+                        <th colspan="4"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
                     </tr>
                     <th class="col-md-1">Data</th>
+                    <th class="col-md-1">Dia</th>
                     <th class="col-md-1">Período</th>
                     <th class="col-md-1">Horas em sobreaviso</th>
                     <g:each var="relatorio" status="j" in="${listaBusca}">
-                        <tr align="center">
+                        <tr align="center" >
                             <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
+                            <td> ${relatorio.diaSemana} </td>
                             <td> ${relatorio.periodo} </td>
                             <td> ${relatorio.hora} h</td>
                         </tr>
                     </g:each>
-                    <tr>
-                        <td colspan="2"><b>Total em sobreaviso</b></td>
+                    <tr align="center">
+                        <td colspan="3"><b>Total em sobreaviso</b></td>
                         <td><b>${horasTotal} h</b></td>
-                        <tr>
-                            <td colspan="2"><b>Total em acionamento</b></td>
+                    <tr align="center">
+                            <td colspan="3"><b>Total em acionamento</b></td>
                             <td><b>${tempoTrabTotal}</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Lançamento no ponto</b></td>
+                    </tr>
+                    <tr align="center">
+                            <td colspan="3"><b>Lançamento no ponto</b></td>
                             <td><b>${tempoPonto}</b></td>
-                        </tr>
+                    </tr>
                     </tr>
                 </table>
                 <div>

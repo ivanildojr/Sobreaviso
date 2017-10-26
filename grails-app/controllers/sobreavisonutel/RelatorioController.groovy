@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 import groovy.time.Duration
 import groovy.time.TimeCategory
 import groovy.time.TimeDuration
-
+import sobreavisonutel.seguranca.Usuario
 
 import static java.time.LocalDate.now
 
@@ -40,15 +40,6 @@ class RelatorioController {
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-
-//        Calendar cal = Calendar.getInstance()
-//        cal.setTime(dataInicio)
-//        cal.setFirstDayOfWeek (Calendar.SUNDAY);
-//        int diaSemana = cal.get(Calendar.DAY_OF_WEEK);                       //pega o numero do dia de semana de 1:domingo a 7:sabado
-//        cal.add (Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
-////        println "dia da semana: " + Calendar.SUNDAY - diaSemana
-//        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
-//        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
         List listBusca = []
         def busca
         def stringDataInicioFixa = dataInicio.format("yyyy-MM-dd").toString()
@@ -88,7 +79,7 @@ class RelatorioController {
 
         /////////////////////////////////TRATANDO AS HORAS TRABALHADAS   /////////////////////////////////////////
         def listDiasTrabalhados
-        String diaTrabalhado
+        String diaTrabalhado, diaSemana
         List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = []
         String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
@@ -104,6 +95,9 @@ class RelatorioController {
 //            println "diaTrabalhado: " + diaTrabalhado
             listDia << diaTrabalhado
              println "listDia: " + listDia
+
+
+
             stringHoraInicio = i[1]
             println "stringHoraInicio: " + stringHoraInicio
             stringHoraFim = i[2]
@@ -167,6 +161,9 @@ class RelatorioController {
 
         def listData = []
         def listHora = []
+        def listSemana = []
+        List semana = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"]
+
         List list_i = []
         Date data
         def horas = 0
@@ -195,6 +192,13 @@ class RelatorioController {
                 listData << data                        //inclui data na listData
                 listHora << horas
                 listPeriodo << periodoInicio + " - " + periodoFim + "h"
+
+                Calendar calen = Calendar.getInstance();
+                calen.setTime(data);
+                int day = calen.get(Calendar.DAY_OF_WEEK);
+                String diaDaSemana = semana[day-1]
+                listSemana << diaDaSemana
+                println "diaDaSemana: " + diaDaSemana
             }
         }
         listHora << horas
@@ -208,6 +212,7 @@ class RelatorioController {
 //            println data
             relatorio = new Relatorio()
             relatorio.data = data
+            relatorio.diaSemana = listSemana.getAt(index)
             relatorio.hora = listHora.getAt(index)
             relatorio.periodo = listPeriodo.getAt(index)
             relatorioList.add(relatorio)
@@ -228,6 +233,8 @@ class RelatorioController {
         if(hPonto>0 & mPonto==1) tempoPonto = hPonto + " horas, " + mPonto + " minuto"
         if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
         println tempoPonto
+
+//        println "usuarios: " + Usuario.list()
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
                                       ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, tempoPonto: tempoPonto])
