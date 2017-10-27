@@ -44,7 +44,7 @@ class RelatorioController {
         def busca
         def stringDataInicioFixa = dataInicio.format("yyyy-MM-dd").toString()
 
-        while(dataFim >= dataInicio){
+        while(dataFim >= dataInicio) {
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
             println "stringDataInicio: " + stringDataInicio
 
@@ -52,26 +52,28 @@ class RelatorioController {
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(dataInicial)
-            cal.setFirstDayOfWeek (Calendar.SUNDAY);
+            cal.setFirstDayOfWeek(Calendar.SUNDAY);
             int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
-            cal.add (Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
+            cal.add(Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
             dataInicial = cal.getTime()
 
-            cal.add (Calendar.DAY_OF_MONTH, 6)
+            cal.add(Calendar.DAY_OF_MONTH, 6)
 
             def dataFinal = cal.getTime()
             println "dataInicial: " + dataInicial.format("yyyy-MM-dd")
             println "dataFinal: " + dataFinal.format("yyyy-MM-dd")
 
             def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
-                    [data1:dataInicial,data2:dataFinal]).get(0)
+                    [data1: dataInicial, data2: dataFinal]).get(0)
 
+            def dataMaisRecenteString = ''
+            if (dataMaisRecente != null) {
+                dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
+                println "dataMaisRecente: " + dataMaisRecenteString
+            }
+                busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
+                println "busca: " + busca
 
-            def dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
-            println "dataMaisRecente: " + dataMaisRecenteString
-
-            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
-            println "busca: " + busca
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
             dataInicio = dataInicio.plus(1)
