@@ -349,6 +349,7 @@ class EscalaController {
 
         DateFormat df = new SimpleDateFormat ("dd/MM/yyyy");
 
+        println "Data da pesquisa passada como parametro: " + dataHistorico
 
         Date dataInicial
         Date dataFinal
@@ -372,6 +373,9 @@ class EscalaController {
         }
 
 
+        println "Data Inicial: " + dataInicial
+        println "Data Final: " + dataFinal
+
         JsonUtil jsonUtil = new JsonUtil()
         jsonUtil.dataInicial = dataInicial
         jsonUtil.dataFinal = dataFinal
@@ -388,7 +392,7 @@ class EscalaController {
 
 
 
-
+        println "Data mais Recente: " + dataMaisRecente
 
 
         List escalaSobreavisoHistorico = new ArrayList()
