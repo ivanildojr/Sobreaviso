@@ -45,6 +45,11 @@
          width: 70%;
     }
 
+    #celFixo {
+        width: 85px;
+        vertical-align: middle;
+    }
+
     #divMsg{
         text-align: center;
         font-weight: bold;
@@ -111,7 +116,7 @@
         <br>
         <div>
             <g:if test="${horasTotal > 0}">
-                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+                <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
                         <th colspan="4"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
                     </tr>
@@ -143,9 +148,9 @@
                 <div>
                 <br><br>
                 <g:if test="${!ocorrenciaList.empty}">
-                    <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
-                        <th class="col-md-1">Data</th>
-                        <th class="col-md-1">Início - Fim</th>
+                    <table align="center" border="1" cellpadding="5" cellspacing="0" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
+                        <th class="col-md-1" id="celFixo">Data</th>
+                        <th class="col-md-1" id="celFixo">Início - Fim</th>
                         <th class="col-md-1">Duração</th>
                         <th class="col-md-1"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
@@ -156,8 +161,8 @@
                                 <td> ${ocorrencia.relato} </td>
                             </tr>
                         </g:each>
-                            <td colspan="2"><b>Total em acionamento</b></td>
-                            <td><b>${tempoTrabTotal}</b></td>
+                            <td colspan="2" align="center" valign="middle" ><b>Total em acionamento</b></td>
+                            <td align="center"><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>
                 </g:if>

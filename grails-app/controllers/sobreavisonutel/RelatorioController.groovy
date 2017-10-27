@@ -94,7 +94,7 @@ class RelatorioController {
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
 //            println "diaTrabalhado: " + diaTrabalhado
             listDia << diaTrabalhado
-             println "listDia: " + listDia
+            println "listDia: " + listDia
 
 
 
