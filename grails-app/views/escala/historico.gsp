@@ -65,7 +65,14 @@
             <table align="center">
                 <tr>
                     <td>
-                        <div>Informe a data de pesquisa:</div><input id="dataHistorico" data-provide="datepicker">
+                        <div>Informe a data de pesquisa:</div>
+                        <div style="text-align: center;display: inline-block;position: absolute;">
+                            <input id="dataHistorico" data-provide="datepicker"><br>
+                            <button id="semanaAntes" class="button"><</button>
+                            <button id="semanaDepois" class="button">></button>
+                            <button id="copiarSemanaAnt" class="button">Copiar</button>
+                        </div>
+
                     </td>
                     <td>
                         <g:form action="sobreavisoHistorico">
@@ -144,13 +151,13 @@
                                                 <g:each var="dia" status="i" in="${diasListNum}">
                                                     <td align="center">
                                                         <span id="I">
-                                                            I: <g:checkBox name="checkListI" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
+                                                            I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
                                                         </span>
                                                         <span id="T">
-                                                            T: <g:checkBox name="checkListT" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
+                                                            T: <g:checkBox name="checkList" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
                                                         </span>
                                                         <span id="R">
-                                                            R: <g:checkBox name="checkListR" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                                            R: <g:checkBox name="checkList" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
                                                         </span>
                                                     </td>
                                                 </g:each>
@@ -182,6 +189,34 @@
 
 <g:javascript>
 
+    function checkMarcacoes(dataR){
+                var resposta = confirm("Deseja copiar os valores da semana anterior?");
+                if(resposta){
+                    var domingoAjax = dataR.getDate()+'/'+(dataR.getMonth()+1)+'/'+dataR.getUTCFullYear();
+                     console.log("Domingo enviado por Ajax: " + domingoAjax);
+                     $.ajax({
+                          url:'${g.createLink(controller: 'escala', action: 'datasAjax')}',
+                          dataType: 'json',
+                          data: {dataHistorico: domingoAjax}
+                          ,
+                          success: function (data) {
+                            $.each(data.escalaSobreavisoHistorico, function( index, value ) {
+                                var pessoa = value.charAt(0)
+                                var dia = value.charAt(2)
+                                var hora = value.substring(4,6)
+                                $("input[value|="+pessoa+'-'+dia+'-'+hora+']').prop('checked', true)
+                            });
+                          },
+                          error: function (request, status, error) {
+                           console.log(request)
+                           console.log(error)
+                          }
+                        });
+
+                }
+
+    }
+
    $(document).ready(function() {
        /*var dataAtual = new Date()
        var dataHistorico = $('#dataHistorico');
@@ -192,7 +227,134 @@
        $('#alertaData').hide()
 
 
-        $('#alterarBtn').on('click',function (e) {
+       $('#copiarSemanaAnt').on('click',function (e) {
+                e.preventDefault();
+                var domingo = $("input[name=domingo]").val();
+                //console.log("Valor no campo Domingo: "+domingo);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
+
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoAnterior = new Date(domingo+'T03:00:00Z')
+                domingoAnterior.setDate(domingoData.getDate() - 7);
+
+                checkMarcacoes(domingoAnterior);
+       });
+
+
+
+        $('#semanaAntes').on('click',function (e) {
+            if($('#dataHistorico').val().length != 0){
+                e.preventDefault();
+                var domingo = $("input[name=domingo]").val();
+                //console.log("Valor no campo Domingo: "+domingo);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
+
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoAnterior = new Date(domingo+'T03:00:00Z')
+                domingoAnterior.setDate(domingoData.getDate() - 7);
+
+
+                // console.log("Domingo Anterior: "+domingoAnterior);
+                // console.log(domingoAnterior.getDate()+'/'+(domingoAnterior.getUTCMonth()+1)+'/'+domingoAnterior.getFullYear());
+
+                var dia = domingoAnterior.getDate();
+                var mes = domingoAnterior.getUTCMonth()+1;
+                if(dia < 10){
+                    dia = '0' + dia;
+                }
+                if(mes < 10){
+                    mes = '0' + mes;
+
+                }
+                var ano = domingoAnterior.getFullYear();
+
+                $('#dataHistorico').val(dia+'/'+mes+'/'+ano); /*Estou aqui!*/
+                $('#dataHistorico').trigger("change");
+
+            }
+        });
+       $('#semanaDepois').on('click',function (e) {
+            if($('#dataHistorico').val().length != 0){
+                e.preventDefault();
+                var domingo = $("input[name=domingo]").val();
+                // console.log("Valor no campo Domingo: "+domingo);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
+
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoPosterior = new Date(domingo+'T03:00:00Z')
+                domingoPosterior.setDate(domingoData.getDate() + 7);
+
+
+                // console.log("Domingo Anterior: "+domingoPosterior);
+                // console.log(domingoPosterior.getDate()+'/'+(domingoPosterior.getUTCMonth()+1)+'/'+domingoPosterior.getFullYear());
+
+                var dia = domingoPosterior.getDate();
+                var mes = domingoPosterior.getUTCMonth()+1;
+                if(dia < 10){
+                    dia = '0' + dia;
+                }
+                if(mes < 10){
+                    mes = '0' + mes;
+
+                }
+                var ano = domingoPosterior.getFullYear();
+
+                $('#dataHistorico').val(dia+'/'+mes+'/'+ano); /*Estou aqui!*/
+                $('#dataHistorico').trigger("change");
+
+
+            }
+        });
+
+       $('#alterarBtn').on('click',function (e) {
 
             if($('#dataHistorico').val().length == 0){
                 e.preventDefault()
@@ -213,6 +375,8 @@
        $('#dataHistorico').on('change',function(){
 
                 var dados = $('#dataHistorico').val();
+
+
 
                 /*Para apagar o preenchimento da tabela*/
                 $.each(["1","2","3","4","5","6","7"], function( i, vi ) {
@@ -292,7 +456,9 @@
                    console.log(error)
                   }
                 });
-              });
+
+
+       });
 
 
 
