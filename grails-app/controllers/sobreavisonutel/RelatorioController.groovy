@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 import groovy.time.Duration
 import groovy.time.TimeCategory
 import groovy.time.TimeDuration
-
+import sobreavisonutel.seguranca.Usuario
 
 import static java.time.LocalDate.now
 
@@ -40,15 +40,6 @@ class RelatorioController {
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-
-//        Calendar cal = Calendar.getInstance()
-//        cal.setTime(dataInicio)
-//        cal.setFirstDayOfWeek (Calendar.SUNDAY);
-//        int diaSemana = cal.get(Calendar.DAY_OF_WEEK);                       //pega o numero do dia de semana de 1:domingo a 7:sabado
-//        cal.add (Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
-////        println "dia da semana: " + Calendar.SUNDAY - diaSemana
-//        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
-//        dataInicio = cal.getTime()                                          //pega a primeira semana da data inicial
         List listBusca = []
         def busca
         def stringDataInicioFixa = dataInicio.format("yyyy-MM-dd").toString()
@@ -56,7 +47,30 @@ class RelatorioController {
         while(dataFim >= dataInicio){
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
             println "stringDataInicio: " + stringDataInicio
-            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>=(select max(dataModificacao) from Historico where atendentes_id='$atendenteId' and dataEscala='$stringDataInicio' ) order by dataEscala")
+
+            def dataInicial = Date.parse('yyyy-MM-dd', stringDataInicio)
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dataInicial)
+            cal.setFirstDayOfWeek (Calendar.SUNDAY);
+            int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
+            cal.add (Calendar.DAY_OF_MONTH, Calendar.SUNDAY - diaSemana)
+            dataInicial = cal.getTime()
+
+            cal.add (Calendar.DAY_OF_MONTH, 6)
+
+            def dataFinal = cal.getTime()
+            println "dataInicial: " + dataInicial.format("yyyy-MM-dd")
+            println "dataFinal: " + dataFinal.format("yyyy-MM-dd")
+
+            def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
+                    [data1:dataInicial,data2:dataFinal]).get(0)
+
+
+            def dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
+            println "dataMaisRecente: " + dataMaisRecenteString
+
+            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
             println "busca: " + busca
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
@@ -65,7 +79,7 @@ class RelatorioController {
 
         /////////////////////////////////TRATANDO AS HORAS TRABALHADAS   /////////////////////////////////////////
         def listDiasTrabalhados
-        String diaTrabalhado
+        String diaTrabalhado, diaSemana
         List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = []
         String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
@@ -80,7 +94,10 @@ class RelatorioController {
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
 //            println "diaTrabalhado: " + diaTrabalhado
             listDia << diaTrabalhado
-             println "listDia: " + listDia
+            println "listDia: " + listDia
+
+
+
             stringHoraInicio = i[1]
             println "stringHoraInicio: " + stringHoraInicio
             stringHoraFim = i[2]
@@ -144,6 +161,9 @@ class RelatorioController {
 
         def listData = []
         def listHora = []
+        def listSemana = []
+        List semana = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"]
+
         List list_i = []
         Date data
         def horas = 0
@@ -172,6 +192,13 @@ class RelatorioController {
                 listData << data                        //inclui data na listData
                 listHora << horas
                 listPeriodo << periodoInicio + " - " + periodoFim + "h"
+
+                Calendar calen = Calendar.getInstance();
+                calen.setTime(data);
+                int day = calen.get(Calendar.DAY_OF_WEEK);
+                String diaDaSemana = semana[day-1]
+                listSemana << diaDaSemana
+                println "diaDaSemana: " + diaDaSemana
             }
         }
         listHora << horas
@@ -185,6 +212,7 @@ class RelatorioController {
 //            println data
             relatorio = new Relatorio()
             relatorio.data = data
+            relatorio.diaSemana = listSemana.getAt(index)
             relatorio.hora = listHora.getAt(index)
             relatorio.periodo = listPeriodo.getAt(index)
             relatorioList.add(relatorio)
@@ -205,6 +233,8 @@ class RelatorioController {
         if(hPonto>0 & mPonto==1) tempoPonto = hPonto + " horas, " + mPonto + " minuto"
         if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
         println tempoPonto
+
+//        println "usuarios: " + Usuario.list()
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
                                       ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, tempoPonto: tempoPonto])

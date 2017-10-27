@@ -38,10 +38,16 @@
     }
     .table th, .table td {
         text-align: center;
+        alignment: center;
     }
 
     #celOcorrencia{
          width: 70%;
+    }
+
+    #celFixo {
+        width: 85px;
+        vertical-align: middle;
     }
 
     #divMsg{
@@ -110,39 +116,41 @@
         <br>
         <div>
             <g:if test="${horasTotal > 0}">
-                <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:30%">
+                <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
-                        <th colspan="3"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
+                        <th colspan="4"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
                     </tr>
                     <th class="col-md-1">Data</th>
+                    <th class="col-md-1">Dia</th>
                     <th class="col-md-1">Período</th>
                     <th class="col-md-1">Horas em sobreaviso</th>
                     <g:each var="relatorio" status="j" in="${listaBusca}">
-                        <tr align="center">
+                        <tr align="center" >
                             <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
+                            <td> ${relatorio.diaSemana} </td>
                             <td> ${relatorio.periodo} </td>
                             <td> ${relatorio.hora} h</td>
                         </tr>
                     </g:each>
-                    <tr>
-                        <td colspan="2"><b>Total em sobreaviso</b></td>
+                    <tr align="center">
+                        <td colspan="3"><b>Total em sobreaviso</b></td>
                         <td><b>${horasTotal} h</b></td>
-                        <tr>
-                            <td colspan="2"><b>Total em acionamento</b></td>
+                    <tr align="center">
+                            <td colspan="3"><b>Total em acionamento</b></td>
                             <td><b>${tempoTrabTotal}</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Lançamento no ponto</b></td>
+                    </tr>
+                    <tr align="center">
+                            <td colspan="3"><b>Lançamento no ponto</b></td>
                             <td><b>${tempoPonto}</b></td>
-                        </tr>
+                    </tr>
                     </tr>
                 </table>
                 <div>
                 <br><br>
                 <g:if test="${!ocorrenciaList.empty}">
-                    <table align="center" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
-                        <th class="col-md-1">Data</th>
-                        <th class="col-md-1">Início - Fim</th>
+                    <table align="center" border="1" cellpadding="5" cellspacing="0" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
+                        <th class="col-md-1" id="celFixo">Data</th>
+                        <th class="col-md-1" id="celFixo">Início - Fim</th>
                         <th class="col-md-1">Duração</th>
                         <th class="col-md-1"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
@@ -153,8 +161,8 @@
                                 <td> ${ocorrencia.relato} </td>
                             </tr>
                         </g:each>
-                            <td colspan="2"><b>Total em acionamento</b></td>
-                            <td><b>${tempoTrabTotal}</b></td>
+                            <td colspan="2" align="center" valign="middle" ><b>Total em acionamento</b></td>
+                            <td align="center"><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>
                 </g:if>

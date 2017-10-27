@@ -31,15 +31,16 @@ class EscalaController {
     def sobreavisoHistorico(){
 
 
-        def sobreavisoNutel = params.list('checkList')
+        def sobreavisoNutel = params.getProperty("checkList")//params.getList()
         println "Domingo: " + params.getProperty("domingo")
+        println "Marcado: " + params.getProperty("checkList")
         println "Sabado: " + params.getProperty("sabado")
         println "Sobreaviso marcações: " + sobreavisoNutel
 
 
 
         /*Avaliar necessidade de limpar para o Historico, para Escala ainda persiste*/
-        List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("yyyy-MM-dd", params.getProperty("domingo")),Date.parse("yyyy-MM-dd", params.getProperty("sabado")))
+        List limpaEscala = Historico.findAllByDataEscalaBetween(Date.parse("dd/MM/yyyy", params.getProperty("domingo")),Date.parse("dd/MM/yyyy", params.getProperty("sabado")))
 
         /*limpaEscala.each{
             Historico historico = it
@@ -134,10 +135,10 @@ class EscalaController {
         render(view:'agenda',model:[diasListNum:diasNum,horasListNum:horasNum,escalaLista:escalaSobreaviso,usuarioLogado:springSecurityService.currentUser])*/
 
         def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
-                [data1:Date.parse("yyyy-MM-dd", params.getProperty("domingo")),data2:Date.parse("yyyy-MM-dd", params.getProperty("sabado"))]).get(0)
+                [data1:Date.parse("dd/MM/yyyy", params.getProperty("domingo")),data2:Date.parse("dd/MM/yyyy", params.getProperty("sabado"))]).get(0)
         List historico = Historico.executeQuery("""
             from Historico where dataModificacao = :dataModificacao and dataEscala between :data1 and :data2 order by dataModificacao desc""",
-                [dataModificacao:dataMaisRecente,data1:Date.parse("yyyy-MM-dd", params.getProperty("domingo")),data2:Date.parse("yyyy-MM-dd", params.getProperty("sabado"))])
+                [dataModificacao:dataMaisRecente,data1:Date.parse("dd/MM/yyyy", params.getProperty("domingo")),data2:Date.parse("dd/MM/yyyy", params.getProperty("sabado"))])
 
 
 
@@ -166,19 +167,19 @@ class EscalaController {
 
     private Date dataByDia(String dia, Date dataDia) {
         switch (dia) {
-            case '1': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("domingo"))
+            case '1': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("domingo"))
                 break;
-            case '2': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("segunda"))
+            case '2': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("segunda"))
                 break;
-            case '3': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("terca"))
+            case '3': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("terca"))
                 break;
-            case '4': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("quarta"))
+            case '4': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("quarta"))
                 break;
-            case '5': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("quinta"))
+            case '5': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("quinta"))
                 break;
-            case '6': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("sexta"))
+            case '6': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("sexta"))
                 break;
-            case '7': dataDia = Date.parse("yyyy-MM-dd", params.getProperty("sabado"))
+            case '7': dataDia = Date.parse("dd/MM/yyyy", params.getProperty("sabado"))
                 break;
         }
         dataDia
@@ -206,9 +207,20 @@ class EscalaController {
                     Atendentes atendente = Atendentes.findByNome("Ivanildo")
                     Escala escala = Escala.findByDiaAndHora(s.toString().charAt(2)/*Dia*/,s.toString().substring(4,6).toInteger()/*Hora*/)
                     escala.atendentes = atendente
-                    escala.save flush:true
 
-                break;
+                    escala.validate()
+                    if(!escala.hasErrors()) {
+                        escala.save flush:true
+                        println "Salvou com sucesso"
+                    }
+                    else {
+                        println escala.errors
+                        println "Não salvou"
+                    }
+
+//                    escala.save flush:true
+
+                    break;
                 case 'T':/*Torres*/
                     Atendentes atendente = Atendentes.findByNome("Torres")
                     Escala escala = Escala.findByDiaAndHora(s.toString().charAt(2)/*Dia*/,s.toString().substring(4,6).toInteger()/*Hora*/)
@@ -278,11 +290,14 @@ class EscalaController {
 
     def historico(String dtInicial, String dtFinal){
 
+        println "HISTORICO"
+
         String[] diasNum = ["1","2","3","4","5","6","7"]
         String[] horasNum = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
         String dataHistorico = params.get('dataHistorico')
         Date dataInicial
         Date dataFinal
+        println "dataInicial: " + dataInicial
         if(dataHistorico) {
             dataInicial = Date.parse('dd/MM/yyyy', dataHistorico)
 
@@ -302,11 +317,11 @@ class EscalaController {
             dataFinal = new Date()
         }
 
-     //   println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
+        println "Primeiro dia: " + dataInicial + " Data: " + dataHistorico + " Ultimo dia: " + dataFinal
         List historico = Historico.findAllByDataEscalaBetween(dataInicial,dataFinal)
         List escalaSobreavisoHistorico = new ArrayList()
 
-        println historico
+//        println historico
 
 
         String letraInicial = ""
@@ -330,6 +345,7 @@ class EscalaController {
     }
 
     def datasAjax(String dataHistorico){
+        println "dataHistorico: " + dataHistorico
 
         DateFormat df = new SimpleDateFormat ("dd/MM/yyyy");
 
@@ -372,7 +388,7 @@ class EscalaController {
                 [data1:dataInicial,data2:dataFinal]).get(0)
         List historico = Historico.executeQuery("""
             from Historico where dataModificacao = :dataModificacao and dataEscala between :data1 and :data2 order by dataModificacao desc""",
-        [dataModificacao:dataMaisRecente,data1:dataInicial,data2:dataFinal])
+                [dataModificacao:dataMaisRecente,data1:dataInicial,data2:dataFinal])
 
 
 
@@ -395,7 +411,7 @@ class EscalaController {
 
         jsonUtil.escalaSobreavisoHistorico = escalaSobreavisoHistorico
 //        println Historico.executeQuery("from Historico where ")
-        //println historico
+        println historico
         /*************************************/
 
         render jsonUtil as JSON
@@ -408,22 +424,26 @@ class EscalaController {
     }
 
     def show(Escala escala) {
+        println "show!"
         respond escala
     }
 
     def create() {
+        println "create!"
         respond new Escala(params)
     }
 
     @Transactional
     def save(Escala escala) {
         if (escala == null) {
+            println "não houve erro no save!"
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
         if (escala.hasErrors()) {
+            println "houve erro no save!"
             transactionStatus.setRollbackOnly()
             respond escala.errors, view:'create'
             return
@@ -441,24 +461,39 @@ class EscalaController {
     }
 
     def edit(Escala escala) {
+        println "edit escala!"
         respond escala
     }
 
     @Transactional
     def update(Escala escala) {
+
         if (escala == null) {
+            println "não houve erro no update!"
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
         if (escala.hasErrors()) {
+            println "houve erro no update!"
             transactionStatus.setRollbackOnly()
             respond escala.errors, view:'edit'
             return
         }
 
-        escala.save flush:true
+        escala.validate()
+        if(!escala.hasErrors()) {
+            escala.save flush:true
+            println "Salvou com sucesso"
+        }
+        else {
+            println escala.errors
+            println "Não salvou"
+        }
+
+
+//        escala.save flush:true
 
         request.withFormat {
             form multipartForm {
