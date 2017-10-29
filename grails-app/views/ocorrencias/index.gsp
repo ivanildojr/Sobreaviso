@@ -15,7 +15,11 @@
     }
 
     .table th, .table td {
+        /*text-align: center;*/
+        /*align-items: center;*/
         text-align: center;
+        vertical-align: middle;
+        horiz-align: center;
     }
     #celOcorrencia{
         width: 72%;

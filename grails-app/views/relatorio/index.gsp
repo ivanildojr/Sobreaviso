@@ -36,9 +36,13 @@
     span[id=colunas] {
         color: red;
     }
+
     .table th, .table td {
+        /*text-align: center;*/
+        /*align-items: center;*/
         text-align: center;
-        alignment: center;
+        vertical-align: middle;
+        horiz-align: center;
     }
 
     #celOcorrencia{
