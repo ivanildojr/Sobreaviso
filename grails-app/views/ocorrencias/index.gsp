@@ -84,7 +84,7 @@
                     FIM: <input required=true class="input-small" type="time" id="horaFim" name="horaFim">
                 </div>
                 <br>
-                OCORRÊNCIA: <input required=true class="input-xxlarge" type="text" id="inputOcorrencia" name="ocorrencia">
+                OCORRÊNCIA: <g:textArea rows="4" class="input-xxlarge" id="inputOcorrencia" name="ocorrencia"/>
                 <br><br>
 
                 <div align="center" name="registrarBtn">
