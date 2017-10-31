@@ -71,8 +71,8 @@ class RelatorioController {
                 dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
                 println "dataMaisRecente: " + dataMaisRecenteString
             }
-                busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
-                println "busca: " + busca
+            busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
+            println "busca: " + busca
 
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
@@ -119,26 +119,29 @@ class RelatorioController {
             if(hTrab==0) tempoTrab = mTrab + " minutos"
             if(mTrab==0) tempoTrab = hTrab + " horas"
             if(hTrab>0 & mTrab>0) tempoTrab = hTrab + " horas, " + mTrab + " minutos"
+            if(hTrab==1 & mTrab==0) tempoTrab = hTrab + " hora"
             println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
-            println"horasTrabTotal: " + horasTrabTotal
             listHorasTrabalhadas << tempoTrab
         }
         Integer hTrabTotal = horasTrabTotal.getHours()
+        println "horasTrabTotal: " + horasTrabTotal
         def mTrabTotal = horasTrabTotal.getMinutes()
-        hTrabTotal = mTrabTotal/60 + hTrabTotal
         mTrabTotal = mTrabTotal % 60
+        hTrabTotal = mTrabTotal/60 + hTrabTotal
+        println "hTrabTotal: " + hTrabTotal
+        println "mTrabTotal: " + mTrabTotal
         String tempoTrabTotal
         if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
         if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
         if(hTrabTotal==1) tempoTrabTotal = mTrabTotal + " minuto"
-        if(mTrabTotal==1) tempoTrabTotal = hTrabTotal + " hora"
+        if(hTrabTotal==1 & mTrabTotal==0) tempoTrabTotal = hTrabTotal + " hora"
         if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
         if(hTrabTotal>0 & mTrabTotal==1) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minuto"
         if(hTrabTotal==1 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " hora, " + mTrabTotal + " minutos"
 
 
-//        println tempoTrabTotal
+        println "tempoTrabTotal: " + tempoTrabTotal
 
 //        println "listHoraInicio: " + listHoraInicio
 //        println "listHoraFim: " + listHoraFim
@@ -222,9 +225,12 @@ class RelatorioController {
 
 
         println "horasTotal: " + horasTotal
-        def horasPonto = horasTotal/3   //Fator de sobreaviso
+
+        def horasPonto = horasTotal/3 + hTrabTotal + mTrabTotal/60   //Fator de sobreaviso mais as horas efetivemente trabalhadas
+        println "horasPonto: " + horasPonto
+        println "hTrabTotal: " + hTrabTotal
         Integer hPonto = horasPonto
-        Integer mPonto = (horasPonto - hPonto)*60 //transformar decimal para minutos
+        Integer mPonto = (horasPonto - hPonto)*60   //transformar decimal para minutos
 
         String tempoPonto
         if(hPonto==0) tempoPonto = mPonto + " minutos"
@@ -234,12 +240,30 @@ class RelatorioController {
         if(hPonto>0 & mPonto>0) tempoPonto = hPonto + " horas, " + mPonto + " minutos"
         if(hPonto>0 & mPonto==1) tempoPonto = hPonto + " horas, " + mPonto + " minuto"
         if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
-        println tempoPonto
+        println "tempoPonto: " + tempoPonto
+
+        String stringSobreAvisoDiv3
+        mTrabTotal = mTrabTotal % 60
+        hTrabTotal = mTrabTotal/60 + hTrabTotal
+        def sobreAvisoDiv3 = horasTotal/3
+        Integer hSobreavisoDiv3 = sobreAvisoDiv3
+        Integer mSobreavisoDiv3 = (sobreAvisoDiv3 - hSobreavisoDiv3)*60 //transformar decimal para minutos
+        println "hSobreavisoDiv3: " + hSobreavisoDiv3
+        println "mSobreavisoDiv3: " + mSobreavisoDiv3
+        if(hSobreavisoDiv3==0) stringSobreAvisoDiv3 = mSobreavisoDiv3 + " minutos"
+        if(hSobreavisoDiv3==1) stringSobreAvisoDiv3 = mSobreavisoDiv3 + " minuto"
+        if(mSobreavisoDiv3==0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas"
+        if(mSobreavisoDiv3==1) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " hora"
+        if(hSobreavisoDiv3>0 & mSobreavisoDiv3>0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas, " + mSobreavisoDiv3 + " minutos"
+        if(hSobreavisoDiv3>0 & mSobreavisoDiv3==1) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas, " + mSobreavisoDiv3 + " minuto"
+        if(hSobreavisoDiv3==1 & mSobreavisoDiv3>0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " hora, " + mSobreavisoDiv3 + " minutos"
+        println "stringSobreAvisoDiv3: " + stringSobreAvisoDiv3
+
 
 //        println "usuarios: " + Usuario.list()
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
-                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, tempoPonto: tempoPonto])
+                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, stringSobreAvisoDiv3: stringSobreAvisoDiv3, tempoPonto: tempoPonto])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 }

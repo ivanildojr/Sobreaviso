@@ -14,6 +14,12 @@ class Ocorrencias {
     String detalhado
     String login //Login de quem alterou a escala
 
+    static mapping = {
+        detalhado sqlType: 'longtext', length: 10000
+        resumido sqlType: 'longtext', length: 10000
+    }
+
+
     static constraints = {
 
         status nullable: false
