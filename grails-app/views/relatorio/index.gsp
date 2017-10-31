@@ -140,11 +140,14 @@
                         <td colspan="3"><b>Total em sobreaviso</b></td>
                         <td><b>${horasTotal} h</b></td>
                     <tr align="center">
-                            <td colspan="3"><b>Total em acionamento</b></td>
+                        <td colspan="3"><b>Total em sobreaviso &#247 3 (A)</b></td>
+                        <td><b>${stringSobreAvisoDiv3}</b></td>
+                    <tr align="center">
+                            <td colspan="3"><b>Total em acionamento (B)</b></td>
                             <td><b>${tempoTrabTotal}</b></td>
                     </tr>
                     <tr align="center">
-                            <td colspan="3"><b>Lançamento no ponto</b></td>
+                            <td colspan="3"><b>Lançamento no ponto (A+B)</b></td>
                             <td><b>${tempoPonto}</b></td>
                     </tr>
                     </tr>
