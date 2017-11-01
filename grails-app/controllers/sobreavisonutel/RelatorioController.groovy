@@ -203,18 +203,25 @@ class RelatorioController {
                 int day = calen.get(Calendar.DAY_OF_WEEK);
                 String diaDaSemana = semana[day-1]
                 listSemana << diaDaSemana
-                println "diaDaSemana: " + diaDaSemana
+//                println "diaDaSemana: " + diaDaSemana
             }
         }
         listHora << horas
         println "listData: " + listData
 //        println listHora
+//        listDia.each { k->
+//            println "listDia: " + listDia
+//            println "k: " + k
+//            k = Date.parse("dd-MM-yyyy", k).format("yyyy-MM-dd HH:mm:ss")
+//            println "k: " + k
+//            if(!listData.contains(k)) println "A data não existe na escala: " + k
+//        }
 
 
         List<Relatorio> relatorioList = new ArrayList<Relatorio>()
         listData.eachWithIndex {dia, index->
             data = listData.getAt(index)
-//            println data
+            println "data: " + data
             relatorio = new Relatorio()
             relatorio.data = data
             relatorio.diaSemana = listSemana.getAt(index)
@@ -223,15 +230,13 @@ class RelatorioController {
             relatorioList.add(relatorio)
         }
 
-
+        ////////////////////// Lançamento no ponto
         println "horasTotal: " + horasTotal
-
         def horasPonto = horasTotal/3 + hTrabTotal + mTrabTotal/60   //Fator de sobreaviso mais as horas efetivemente trabalhadas
         println "horasPonto: " + horasPonto
         println "hTrabTotal: " + hTrabTotal
         Integer hPonto = horasPonto
         Integer mPonto = (horasPonto - hPonto)*60   //transformar decimal para minutos
-
         String tempoPonto
         if(hPonto==0) tempoPonto = mPonto + " minutos"
         if(hPonto==1) tempoPonto = mPonto + " minuto"
@@ -242,6 +247,7 @@ class RelatorioController {
         if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
         println "tempoPonto: " + tempoPonto
 
+        ////////////////////// Total em acionamento
         String stringSobreAvisoDiv3
         mTrabTotal = mTrabTotal % 60
         hTrabTotal = mTrabTotal/60 + hTrabTotal
@@ -258,6 +264,22 @@ class RelatorioController {
         if(hSobreavisoDiv3>0 & mSobreavisoDiv3==1) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas, " + mSobreavisoDiv3 + " minuto"
         if(hSobreavisoDiv3==1 & mSobreavisoDiv3>0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " hora, " + mSobreavisoDiv3 + " minutos"
         println "stringSobreAvisoDiv3: " + stringSobreAvisoDiv3
+
+
+
+        //verifica se a ocorrência está em dia da escala
+        listDia.each {dia->
+            println "tipo dia: " + dia.getClass().getName()
+            println "tipo listData: " + listData[0].getClass().getName()
+            println "dia: " + dia
+            def diaF = Date.parse("dd-MM-yyyy", dia)
+            diaF.format("yyyy-MM-dd HH:mm:ss.S")
+            println "tipo diaF: " + diaF.getClass().getName()
+            println "listData: " + listData
+            if(!listData.contains(diaF)) println "A data não existe na escala: " + diaF
+            println "diaF: " + diaF
+        }
+
 
 
 //        println "usuarios: " + Usuario.list()
