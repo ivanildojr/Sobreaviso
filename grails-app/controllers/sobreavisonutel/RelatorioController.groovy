@@ -291,7 +291,7 @@ class RelatorioController {
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 
-    //////////FUNÇÃO PARA CONVERTER FLOAT EM HORA E MINUTOS
+    //////////MÉTODO PARA CONVERTER FLOAT EM HORAS E MINUTOS
     static def resultado(def numero) {
 //        numero = Math.round(numero)
         println "numero: " + numero

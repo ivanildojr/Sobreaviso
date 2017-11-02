@@ -60,6 +60,7 @@
     /*}*/
 
     #divMsg{
+        margin: 0 auto !important;
         text-align: center;
         font-weight: bold;
         font-size: medium;
@@ -142,24 +143,24 @@
                         </tr>
                     </g:each>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso</b></td>
-                        <td><b>${horasTotal} h</b></td>
+                        <td colspan="3">Sobreaviso</td>
+                        <td>${horasTotal} h</td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Acionamentos em escala</b></td>
-                        <td><b>${stringacionamentoNaEscala}</b></td>
+                        <td colspan="3">Acionamentos em escala</td>
+                        <td>${stringacionamentoNaEscala}</td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso - Acionamentos em escala</b></td>
-                        <td><b>${tempoSobreavisoMenosAcionamento}</b></td>
+                        <td colspan="3">Sobreaviso - Acionamentos em escala</td>
+                        <td>${tempoSobreavisoMenosAcionamento}</td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso sem acionamentos &#247 3</b></td>
-                        <td><b>${stringSobreAvisoDiv3}</b></td>
+                        <td colspan="3">Sobreaviso sem acionamentos &#247 3</td>
+                        <td>${stringSobreAvisoDiv3}</td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Acionamentos fora da escala</b></td>
-                        <td><b>${stringHoraForaEscala}</b></td>
+                        <td colspan="3">Acionamentos fora da escala</td>
+                        <td>${stringHoraForaEscala}</td>
                     </tr>
                     <tr align="center">
                         <td colspan="3"><b>Lançamento no ponto</b></td>
@@ -199,8 +200,8 @@
                     </table>
                 </g:if>
                 <g:else>
-                    <div id="divMsg">
-                        <p style="color:red;">Não existe ocorrências registradas no período!</p>
+                    <div id="divMsg" align="center" style="width:30%">
+                        <div class="alert alert-danger" role="alert">Não existe ocorrências registradas no período!</div>
                     </div>
                 </g:else>
                     <br>
