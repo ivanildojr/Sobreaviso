@@ -54,10 +54,10 @@
         vertical-align: middle;
     }
 
-    #celFixo2 {
-        width: 90px;
-        vertical-align: middle;
-    }
+    /*#celFixo2 {*/
+        /*width: 90px;*/
+        /*vertical-align: middle;*/
+    /*}*/
 
     #divMsg{
         text-align: center;
@@ -154,7 +154,7 @@
                         <td><b>${stringHoraForaEscala}</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso - Acionamentos fora da escala (C)</b></td>
+                        <td colspan="3"><b>Sobreaviso - Acionamentos em escala (C)</b></td>
                         <td><b>${tempoSobreavisoMenosAcionamento}</b></td>
                     </tr>
                     <tr align="center">

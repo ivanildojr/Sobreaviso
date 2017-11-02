@@ -266,7 +266,8 @@ class RelatorioController {
         println "horasTrabTotal: " + horasTrabTotal
         def floatHorasTrabTotal = hTrabTotal + mTrabTotal/60
         println "floatHorasTrabTotal: " + floatHorasTrabTotal
-        def horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabTotal
+        def floatHorasTrabEscala = floatHorasTrabTotal - horaForaEscala
+        def horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabEscala
         println "horasSobreavisoMenosAcionamento: " + horasSobreavisoMenosAcionamento
         def horasPonto = horasSobreavisoMenosAcionamento/3 + horaForaEscala   //Fator de sobreaviso mais as horas efetivemente trabalhadas
         String tempoPonto = resultado(horasPonto)
