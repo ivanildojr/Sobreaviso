@@ -137,18 +137,28 @@
                         </tr>
                     </g:each>
                     <tr align="center">
-                        <td colspan="3"><b>Total em sobreaviso</b></td>
+                        <td colspan="3"><b>Sobreaviso</b></td>
                         <td><b>${horasTotal} h</b></td>
-                    <tr align="center">
-                        <td colspan="3"><b>Total em sobreaviso &#247 3 (A)</b></td>
-                        <td><b>${stringSobreAvisoDiv3}</b></td>
-                    <tr align="center">
-                            <td colspan="3"><b>Total em acionamento (B)</b></td>
-                            <td><b>${tempoTrabTotal}</b></td>
                     </tr>
                     <tr align="center">
-                            <td colspan="3"><b>Lançamento no ponto (A+B)</b></td>
-                            <td><b>${tempoPonto}</b></td>
+                        <td colspan="3"><b>Acionamentos em escala (A)</b></td>
+                        <td><b>${stringacionamentoNaEscala}</b></td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3"><b>Acionamentos fora da escala (B)</b></td>
+                        <td><b>${stringHoraForaEscala}</b></td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3"><b>Sobreaviso - Acionamentos (C)</b></td>
+                        <td><b>${tempoSobreavisoMenosAcionamento}</b></td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3"><b>Sobreaviso sem ocorrências &#247 3 (B &#247 3)</b></td>
+                        <td><b>${stringSobreAvisoDiv3}</b></td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3"><b>Lançamento no ponto (A+B)</b></td>
+                        <td><b>${tempoPonto}</b></td>
                     </tr>
                     </tr>
                 </table>
@@ -161,14 +171,24 @@
                         <th class="col-md-1">Duração</th>
                         <th class="col-md-1"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
-                            <tr align="center">
-                                <td> ${ocorrencia.data} </td>
-                                <td> ${ocorrencia.horaInicio} - ${ocorrencia.horaFim} </td>
-                                <td> ${ocorrencia.duracao} </td>
-                                <td> ${ocorrencia.relato} </td>
-                            </tr>
+                            %{--<g:if test="${}">--}%
+                                %{--<tr align="center" FONT COLOR="red">--}%
+                                    %{--<td> ${ocorrencia.data} </td>--}%
+                                    %{--<td> ${ocorrencia.horaInicio} - ${ocorrencia.horaFim} </td>--}%
+                                    %{--<td> ${ocorrencia.duracao} </td>--}%
+                                    %{--<td> ${ocorrencia.relato} </td>--}%
+                                %{--</tr>--}%
+                            %{--</g:if>--}%
+                            %{--<g:else>--}%
+                                <tr align="center">
+                                    <td> ${ocorrencia.data} </td>
+                                    <td> ${ocorrencia.horaInicio} - ${ocorrencia.horaFim} </td>
+                                    <td> ${ocorrencia.duracao} </td>
+                                    <td> ${ocorrencia.relato} </td>
+                                </tr>
+                            %{--</g:else>--}%
                         </g:each>
-                            <td colspan="2" align="center" valign="middle" ><b>Total em acionamento</b></td>
+                            <td colspan="2" align="center" valign="middle" ><b>Acionamentos</b></td>
                             <td align="center"><b>${tempoTrabTotal}</b></td>
                             <td></td>
                     </table>

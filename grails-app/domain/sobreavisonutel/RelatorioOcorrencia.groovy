@@ -8,7 +8,9 @@ class RelatorioOcorrencia {
     String horaInicio
     String horaFim
     String duracao
+    Float floatDuracao
     String relato
+    Boolean acionamentoExtra
     static constraints = {
     }
 }

@@ -46,7 +46,7 @@ class RelatorioController {
 
         while(dataFim >= dataInicio) {
             stringDataInicio = dataInicio.format("yyyy-MM-dd").toString()
-            println "stringDataInicio: " + stringDataInicio
+//            println "stringDataInicio: " + stringDataInicio
 
             def dataInicial = Date.parse('yyyy-MM-dd', stringDataInicio)
 
@@ -60,8 +60,8 @@ class RelatorioController {
             cal.add(Calendar.DAY_OF_MONTH, 6)
 
             def dataFinal = cal.getTime()
-            println "dataInicial: " + dataInicial.format("yyyy-MM-dd")
-            println "dataFinal: " + dataFinal.format("yyyy-MM-dd")
+//            println "dataInicial: " + dataInicial.format("yyyy-MM-dd")
+//            println "dataFinal: " + dataFinal.format("yyyy-MM-dd")
 
             def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala between :data1 and :data2",
                     [data1: dataInicial, data2: dataFinal]).get(0)
@@ -69,10 +69,10 @@ class RelatorioController {
             def dataMaisRecenteString = ''
             if (dataMaisRecente != null) {
                 dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
-                println "dataMaisRecente: " + dataMaisRecenteString
+//                println "dataMaisRecente: " + dataMaisRecenteString
             }
             busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
-            println "busca: " + busca
+//            println "busca: " + busca
 
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
@@ -82,7 +82,7 @@ class RelatorioController {
         /////////////////////////////////TRATANDO AS HORAS TRABALHADAS   /////////////////////////////////////////
         def listDiasTrabalhados
         String diaTrabalhado, diaSemana
-        List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = []
+        List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = [], listfloatTempoTrab = []
         String stringHoraInicio, stringHoraFim, resumido
         Date horaInicio, horaFim
         TimeDuration horasTrab
@@ -90,7 +90,7 @@ class RelatorioController {
         stringDataFim = dataFim.format("yyyy-MM-dd").toString()
 
         listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and status='Ativo' and data<='$stringDataFim'")
-        println "diasTrabalhados: " + listDiasTrabalhados
+//        println "diasTrabalhados: " + listDiasTrabalhados
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
             diaTrabalhado = Date.parse("yyyy-MM-dd HH:mm:ss", diaTrabalhado).format("dd-MM-yyyy")
@@ -115,6 +115,8 @@ class RelatorioController {
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
             def hTrab = horasTrab.getHours()
             def mTrab = horasTrab.getMinutes()
+            def floatTempoTrab = hTrab + mTrab/60
+            println "floatTempoTrab: " + floatTempoTrab
             String tempoTrab
             if(hTrab==0) tempoTrab = mTrab + " minutos"
             if(mTrab==0) tempoTrab = hTrab + " horas"
@@ -123,12 +125,15 @@ class RelatorioController {
             println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
             listHorasTrabalhadas << tempoTrab
+            listfloatTempoTrab << floatTempoTrab
         }
         Integer hTrabTotal = horasTrabTotal.getHours()
         println "horasTrabTotal: " + horasTrabTotal
         def mTrabTotal = horasTrabTotal.getMinutes()
         mTrabTotal = mTrabTotal % 60
         hTrabTotal = mTrabTotal/60 + hTrabTotal
+        def floatHTrabTotal = hTrabTotal + mTrabTotal/60  //tempo acionamento total
+        println "floatHTrabTotal: " + floatHTrabTotal
         println "hTrabTotal: " + hTrabTotal
         println "mTrabTotal: " + mTrabTotal
         String tempoTrabTotal
@@ -142,6 +147,7 @@ class RelatorioController {
 
 
         println "tempoTrabTotal: " + tempoTrabTotal
+
 
 //        println "listHoraInicio: " + listHoraInicio
 //        println "listHoraFim: " + listHoraFim
@@ -157,18 +163,18 @@ class RelatorioController {
             relatorioOcorrencia.horaInicio = listHoraInicio.getAt(index)
             relatorioOcorrencia.horaFim = listHoraFim.getAt(index)
             relatorioOcorrencia.duracao = listHorasTrabalhadas.getAt(index)
+            relatorioOcorrencia.floatDuracao = listfloatTempoTrab.getAt(index)
             relatorioOcorrencia.relato = listResumido.getAt(index)
+//            relatorioOcorrencia.acionamentoExtra = listResumido.getAt(index)
             ocorrenciaList.add(relatorioOcorrencia)
         }
 
         /////////////////////////////////TRATANDO AS HORAS EM SOBREAVISO/////////////////////////////////////////
 //        println "listBusca: " + listBusca
-
         def listData = []
         def listHora = []
         def listSemana = []
         List semana = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"]
-
         List list_i = []
         Date data
         def horas = 0
@@ -190,7 +196,6 @@ class RelatorioController {
             periodoFim = (periodoFim[1] as Integer) + 1
 //            print "periodo: " + periodoInicio + " - "
 //            println periodoFim
-
 //            println "listdata: " + listData
 
             if(!listData.contains(data)) {              //se a lista de datas ainda nao tem a data
@@ -208,17 +213,9 @@ class RelatorioController {
         }
         listHora << horas
         println "listData: " + listData
-//        println listHora
-//        listDia.each { k->
-//            println "listDia: " + listDia
-//            println "k: " + k
-//            k = Date.parse("dd-MM-yyyy", k).format("yyyy-MM-dd HH:mm:ss")
-//            println "k: " + k
-//            if(!listData.contains(k)) println "A data não existe na escala: " + k
-//        }
-
 
         List<Relatorio> relatorioList = new ArrayList<Relatorio>()
+
         listData.eachWithIndex {dia, index->
             data = listData.getAt(index)
             println "data: " + data
@@ -230,62 +227,87 @@ class RelatorioController {
             relatorioList.add(relatorio)
         }
 
-        ////////////////////// Lançamento no ponto
-        println "horasTotal: " + horasTotal
-        def horasPonto = horasTotal/3 + hTrabTotal + mTrabTotal/60   //Fator de sobreaviso mais as horas efetivemente trabalhadas
-        println "horasPonto: " + horasPonto
-        println "hTrabTotal: " + hTrabTotal
-        Integer hPonto = horasPonto
-        Integer mPonto = (horasPonto - hPonto)*60   //transformar decimal para minutos
-        String tempoPonto
-        if(hPonto==0) tempoPonto = mPonto + " minutos"
-        if(hPonto==1) tempoPonto = mPonto + " minuto"
-        if(mPonto==0) tempoPonto = hPonto + " horas"
-        if(mPonto==1) tempoPonto = hPonto + " hora"
-        if(hPonto>0 & mPonto>0) tempoPonto = hPonto + " horas, " + mPonto + " minutos"
-        if(hPonto>0 & mPonto==1) tempoPonto = hPonto + " horas, " + mPonto + " minuto"
-        if(hPonto==1 & mPonto>0) tempoPonto = hPonto + " hora, " + mPonto + " minutos"
-        println "tempoPonto: " + tempoPonto
+        //verifica se a ocorrência não está em dia da escala
+        Float horaForaEscala=0
+        Float horaDentroEscala=0
+
+        listDia.each {dia->
+            println "tipo dia: " + dia.getClass().getName()
+            println "tipo listDia: " + listDia[0].getClass().getName()
+            println "dia: " + dia
+            def diaF = Date.parse("dd-MM-yyyy", dia)
+            diaF.format("dd-MM-yyyy HH:mm:ss.S")
+            println "tipo diaF: " + diaF.getClass().getName()
+            println "listData: " + listData
+//            diaF = diaF.format("yyyy-MM-dd HH:mm:ss.S")
+            println "diaF: " + diaF
+            if(!listData.contains(diaF)) {
+                println "A data não existe na escala: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + diaF
+                ocorrenciaList.findAll().each { oc->                       //busca todas as ocorrencias
+                    def dateOcData = Date.parse("dd-MM-yyyy", oc.data)
+//                    println "listData: " + listData
+                    println "dateOcData: " + dateOcData
+                    println "tipo dOcData: " + dateOcData.getClass().getName()
+                    println "diaF: " + diaF
+                    println "tipo diaF: " + diaF.getClass().getName()
+                    if(dateOcData==diaF) {
+                        println "Datas Iguais: " + oc.data + " ** " + diaF
+                        println "oc.floatDuracao: " + oc.floatDuracao
+                        horaForaEscala += oc.floatDuracao
+                        println "horaForaEscala: " + horaForaEscala
+                    }
+                }
+            }
+        }
+        String stringHoraForaEscala = resultado(horaForaEscala)
+
+        def acionamentoNaEscala = floatHTrabTotal - horaForaEscala
+        String stringacionamentoNaEscala = resultado(acionamentoNaEscala)
+        println "stringacionamentoNaEscala: " + stringacionamentoNaEscala
+
+                ////////////////////// Lançamento no ponto
+        println "horasTrabTotal: " + horasTrabTotal
+        def floatHorasTrabTotal = hTrabTotal + mTrabTotal/60
+        println "floatHorasTrabTotal: " + floatHorasTrabTotal
+        def horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabTotal
+        println "horasSobreavisoMenosAcionamento: " + horasSobreavisoMenosAcionamento
+        def horasPonto = horasSobreavisoMenosAcionamento/3 + horaForaEscala   //Fator de sobreaviso mais as horas efetivemente trabalhadas
+        String tempoPonto = resultado(horasPonto)
+        String tempoSobreavisoMenosAcionamento = resultado(horasSobreavisoMenosAcionamento)
 
         ////////////////////// Total em acionamento
         String stringSobreAvisoDiv3
-        mTrabTotal = mTrabTotal % 60
-        hTrabTotal = mTrabTotal/60 + hTrabTotal
-        def sobreAvisoDiv3 = horasTotal/3
-        Integer hSobreavisoDiv3 = sobreAvisoDiv3
-        Integer mSobreavisoDiv3 = (sobreAvisoDiv3 - hSobreavisoDiv3)*60 //transformar decimal para minutos
-        println "hSobreavisoDiv3: " + hSobreavisoDiv3
-        println "mSobreavisoDiv3: " + mSobreavisoDiv3
-        if(hSobreavisoDiv3==0) stringSobreAvisoDiv3 = mSobreavisoDiv3 + " minutos"
-        if(hSobreavisoDiv3==1) stringSobreAvisoDiv3 = mSobreavisoDiv3 + " minuto"
-        if(mSobreavisoDiv3==0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas"
-        if(mSobreavisoDiv3==1) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " hora"
-        if(hSobreavisoDiv3>0 & mSobreavisoDiv3>0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas, " + mSobreavisoDiv3 + " minutos"
-        if(hSobreavisoDiv3>0 & mSobreavisoDiv3==1) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " horas, " + mSobreavisoDiv3 + " minuto"
-        if(hSobreavisoDiv3==1 & mSobreavisoDiv3>0) stringSobreAvisoDiv3 = hSobreavisoDiv3 + " hora, " + mSobreavisoDiv3 + " minutos"
-        println "stringSobreAvisoDiv3: " + stringSobreAvisoDiv3
-
-
-
-        //verifica se a ocorrência está em dia da escala
-        listDia.each {dia->
-            println "tipo dia: " + dia.getClass().getName()
-            println "tipo listData: " + listData[0].getClass().getName()
-            println "dia: " + dia
-            def diaF = Date.parse("dd-MM-yyyy", dia)
-            diaF.format("yyyy-MM-dd HH:mm:ss.S")
-            println "tipo diaF: " + diaF.getClass().getName()
-            println "listData: " + listData
-            if(!listData.contains(diaF)) println "A data não existe na escala: " + diaF
-            println "diaF: " + diaF
-        }
-
-
+//        mTrabTotal = mTrabTotal % 60
+//        hTrabTotal = mTrabTotal/60 + hTrabTotal
+//        def sobreAvisoDiv3 = horasTotal/3
+        stringSobreAvisoDiv3 = resultado(horasSobreavisoMenosAcionamento/3)
 
 //        println "usuarios: " + Usuario.list()
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
-                                      ocorrenciaList: ocorrenciaList, tempoTrabTotal:tempoTrabTotal, stringSobreAvisoDiv3: stringSobreAvisoDiv3, tempoPonto: tempoPonto])
+        ocorrenciaList: ocorrenciaList, stringacionamentoNaEscala:stringacionamentoNaEscala, stringSobreAvisoDiv3: stringSobreAvisoDiv3,
+        tempoPonto: tempoPonto, tempoSobreavisoMenosAcionamento: tempoSobreavisoMenosAcionamento, stringHoraForaEscala: stringHoraForaEscala])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
+
+    //////////FUNÇÃO PARA CONVERTER FLOAT EM HORA E MINUTOS
+    static def resultado(def numero) {
+        String resultado
+        Integer hNumero = numero
+        Integer mNumero = Math.round((numero - hNumero)*60) //transformar decimal para minutos
+        println "hNumero: " + hNumero
+        println "mNumero: " + mNumero
+        if(hNumero==0) resultado = mNumero + " minutos"
+        if(hNumero==1) resultado = mNumero + " minuto"
+        if(mNumero==0) resultado = hNumero + " horas"
+        if(mNumero==1) resultado = hNumero + " hora"
+        if(hNumero>0 & mNumero>0) resultado = hNumero + " horas, " + mNumero + " minutos"
+        if(hNumero>0 & mNumero==1) resultado = hNumero + " horas, " + mNumero + " minuto"
+        if(hNumero==1 & mNumero>0) resultado = hNumero + " hora, " + mNumero + " minutos"
+        if(hNumero==0 & mNumero==0) resultado = "---"
+        println "resultado: " + resultado
+        return resultado
+    }
+
+
 }
