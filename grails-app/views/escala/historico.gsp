@@ -207,16 +207,27 @@
        $('#copiarSemanaAnt').on('click',function (e) {
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
-                // console.log("Valor no campo Domingo: "+domingo);
-                var dia = domingo.substring(0,2);
-                var mes = domingo.substring(3,5);
-                var ano = domingo.substring(6,10);
-                var domingoFormatado = ano + "-" + mes + "-" + dia
-                // console.log("Domingo Formatado: " + domingoFormatado);
+                //console.log("Valor no campo Domingo: "+domingo);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
 
-                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
-                // console.log("Domingo Data: "+ domingoData);
-                var domingoAnterior = new Date(domingoFormatado+'T03:00:00Z')
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
+
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoAnterior = new Date(domingo+'T03:00:00Z')
                 domingoAnterior.setDate(domingoData.getDate() - 7);
 
                 checkMarcacoes(domingoAnterior);
@@ -228,17 +239,27 @@
             if($('#dataHistorico').val().length != 0){
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
-                // console.log("Valor no campo Domingo: "+domingo);
-                var dia = domingo.substring(0,2);
-                var mes = domingo.substring(3,5);
-                var ano = domingo.substring(6,10);
-                var domingoFormatado = ano + "-" + mes + "-" + dia
+                //console.log("Valor no campo Domingo: "+domingo);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
 
-                // console.log("Domingo Formatado: " + domingoFormatado);
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
 
-                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
-                // console.log("Domingo Data: "+ domingoData);
-                var domingoAnterior = new Date(domingoFormatado+'T03:00:00Z')
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoAnterior = new Date(domingo+'T03:00:00Z')
                 domingoAnterior.setDate(domingoData.getDate() - 7);
 
 
@@ -266,15 +287,26 @@
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
                 // console.log("Valor no campo Domingo: "+domingo);
-                var dia = domingo.substring(0,2);
-                var mes = domingo.substring(3,5);
-                var ano = domingo.substring(6,10);
-                var domingoFormatado = ano + "-" + mes + "-" + dia
-                // console.log("Domingo Formatado: " + domingoFormatado);
+                var diaMes = domingo.substring(5,6);
+                var diaCampo = domingo.substring(8,10);
+                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
+                    diaCampo = domingo.substring(7,9);
+                }
+                if(diaMes > 1){
+                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
+                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
+                }
+                if(diaCampo < 10){
+                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
+                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
 
-                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
-                // console.log("Domingo Data: "+ domingoData);
-                var domingoPosterior = new Date(domingoFormatado+'T03:00:00Z')
+                }
+                // console.log("Dia: " + diaCampo);
+                // console.log("Mes: " + diaMes);
+
+                var domingoData = new Date(domingo+'T03:00:00Z');
+                // console.log("Domingo Data: "+domingoData);
+                var domingoPosterior = new Date(domingo+'T03:00:00Z')
                 domingoPosterior.setDate(domingoData.getDate() + 7);
 
 
@@ -294,6 +326,7 @@
 
                 $('#dataHistorico').val(dia+'/'+mes+'/'+ano); /*Estou aqui!*/
                 $('#dataHistorico').trigger("change");
+
 
             }
         });

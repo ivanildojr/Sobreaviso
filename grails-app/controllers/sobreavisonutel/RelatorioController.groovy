@@ -117,36 +117,33 @@ class RelatorioController {
             def mTrab = horasTrab.getMinutes()
             def floatTempoTrab = hTrab + mTrab/60
             println "floatTempoTrab: " + floatTempoTrab
-            String tempoTrab
-            if(hTrab==0) tempoTrab = mTrab + " minutos"
-            if(mTrab==0) tempoTrab = hTrab + " horas"
-            if(hTrab>0 & mTrab>0) tempoTrab = hTrab + " horas, " + mTrab + " minutos"
-            if(hTrab==1 & mTrab==0) tempoTrab = hTrab + " hora"
+            String tempoTrab = resultado(floatTempoTrab)
+            println "tempoTrab: " + tempoTrab
             println "horasTrab: " + horasTrab
             horasTrabTotal = horasTrabTotal.plus(horasTrab)
             listHorasTrabalhadas << tempoTrab
             listfloatTempoTrab << floatTempoTrab
         }
-        Integer hTrabTotal = horasTrabTotal.getHours()
         println "horasTrabTotal: " + horasTrabTotal
-        def mTrabTotal = horasTrabTotal.getMinutes()
-        mTrabTotal = mTrabTotal % 60
-        hTrabTotal = mTrabTotal/60 + hTrabTotal
+        Integer hTrabTotal = horasTrabTotal.getHours()
+        Integer mTrabTotal = horasTrabTotal.getMinutes()
         def floatHTrabTotal = hTrabTotal + mTrabTotal/60  //tempo acionamento total
-        println "floatHTrabTotal: " + floatHTrabTotal
-        println "hTrabTotal: " + hTrabTotal
-        println "mTrabTotal: " + mTrabTotal
-        String tempoTrabTotal
-        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
-        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
-        if(hTrabTotal==1) tempoTrabTotal = mTrabTotal + " minuto"
-        if(hTrabTotal==1 & mTrabTotal==0) tempoTrabTotal = hTrabTotal + " hora"
-        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
-        if(hTrabTotal>0 & mTrabTotal==1) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minuto"
-        if(hTrabTotal==1 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " hora, " + mTrabTotal + " minutos"
+        String stringHTrabTotal = resultado(floatHTrabTotal)
+        println "stringHTrabTotal: " + stringHTrabTotal
 
-
-        println "tempoTrabTotal: " + tempoTrabTotal
+//        println "hTrabTotal: " + hTrabTotal
+//        println "mTrabTotal: " + mTrabTotal
+//        String tempoTrabTotal
+//        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
+//        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
+//        if(hTrabTotal==1) tempoTrabTotal = mTrabTotal + " minuto"
+//        if(hTrabTotal==1 & mTrabTotal==0) tempoTrabTotal = hTrabTotal + " hora"
+//        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
+//        if(hTrabTotal>0 & mTrabTotal==1) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minuto"
+//        if(hTrabTotal==1 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " hora, " + mTrabTotal + " minutos"
+//
+//
+//        println "tempoTrabTotal: " + tempoTrabTotal
 
 
 //        println "listHoraInicio: " + listHoraInicio
@@ -304,6 +301,8 @@ class RelatorioController {
         if(hNumero>0 & mNumero>0) resultado = hNumero + " horas, " + mNumero + " minutos"
         if(hNumero>0 & mNumero==1) resultado = hNumero + " horas, " + mNumero + " minuto"
         if(hNumero==1 & mNumero>0) resultado = hNumero + " hora, " + mNumero + " minutos"
+        if(hNumero==1 & mNumero==0) resultado = hNumero + " hora"
+        if(hNumero==0 & mNumero==1) resultado = mNumero + " minuto"
         if(hNumero==0 & mNumero==0) resultado = "---"
         println "resultado: " + resultado
         return resultado
