@@ -274,6 +274,9 @@ class RelatorioController {
 
         ////////////////////// Total em acionamento
         String stringSobreAvisoDiv3
+//        def floatTempoTrab = hTrab + mTrab/60
+//        println "floatTempoTrab: " + floatTempoTrab
+//        String tempoTrab = resultado(floatTempoTrab)
 //        mTrabTotal = mTrabTotal % 60
 //        hTrabTotal = mTrabTotal/60 + hTrabTotal
 //        def sobreAvisoDiv3 = horasTotal/3
@@ -289,9 +292,15 @@ class RelatorioController {
 
     //////////FUNÇÃO PARA CONVERTER FLOAT EM HORA E MINUTOS
     static def resultado(def numero) {
+//        numero = Math.round(numero)
+        println "numero: " + numero
         String resultado
         Integer hNumero = numero
         Integer mNumero = Math.round((numero - hNumero)*60) //transformar decimal para minutos
+        if(mNumero==60) {
+            hNumero += 1
+            mNumero = 0
+        }
         println "hNumero: " + hNumero
         println "mNumero: " + mNumero
         if(hNumero==0) resultado = mNumero + " minutos"

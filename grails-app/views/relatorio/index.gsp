@@ -54,6 +54,11 @@
         vertical-align: middle;
     }
 
+    #celFixo2 {
+        width: 90px;
+        vertical-align: middle;
+    }
+
     #divMsg{
         text-align: center;
         font-weight: bold;
@@ -149,7 +154,7 @@
                         <td><b>${stringHoraForaEscala}</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso - Acionamentos (C)</b></td>
+                        <td colspan="3"><b>Sobreaviso - Acionamentos fora da escala (C)</b></td>
                         <td><b>${tempoSobreavisoMenosAcionamento}</b></td>
                     </tr>
                     <tr align="center">
@@ -168,7 +173,7 @@
                     <table align="center" border="1" cellpadding="5" cellspacing="0" id="tabelaOcorrencia" class="table table-condensed" style="width:90%">
                         <th class="col-md-1" id="celFixo">Data</th>
                         <th class="col-md-1" id="celFixo">Início - Fim</th>
-                        <th class="col-md-1">Duração</th>
+                        <th class="col-md-1" id="celFixo2">Duração</th>
                         <th class="col-md-1"id="celOcorrencia">Ocorrência</th>
                         <g:each var="ocorrencia" status="k" in="${ocorrenciaList}">
                             %{--<g:if test="${}">--}%
