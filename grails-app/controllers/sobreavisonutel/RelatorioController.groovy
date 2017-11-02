@@ -41,7 +41,7 @@ class RelatorioController {
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
 //        def atendenteNomeCompleto = sobreavisonutel.seguranca.Usuario.executeQuery("select nome from Usuario where nome ILIKE = '%$atendente%'")
-        println "atendenteNomeCompleto: " + atendenteNomeCompleto
+//        println "atendenteNomeCompleto: " + atendenteNomeCompleto
         List listBusca = []
         def busca
         def stringDataInicioFixa = dataInicio.format("yyyy-MM-dd").toString()
@@ -285,7 +285,7 @@ class RelatorioController {
 //        def sobreAvisoDiv3 = horasTotal/3
         stringSobreAvisoDiv3 = resultado(horasSobreavisoMenosAcionamento/3)
 
-        println "atendenteNomeCompleto: " + atendenteNomeCompleto
+//        println "atendenteNomeCompleto: " + atendenteNomeCompleto
 
 //        println "usuarios: " + Usuario.list()
 
