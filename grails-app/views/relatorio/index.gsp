@@ -146,23 +146,23 @@
                         <td><b>${horasTotal} h</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Acionamentos em escala (A)</b></td>
+                        <td colspan="3"><b>Acionamentos em escala</b></td>
                         <td><b>${stringacionamentoNaEscala}</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Acionamentos fora da escala (B)</b></td>
-                        <td><b>${stringHoraForaEscala}</b></td>
-                    </tr>
-                    <tr align="center">
-                        <td colspan="3"><b>Sobreaviso - Acionamentos em escala (C)</b></td>
+                        <td colspan="3"><b>Sobreaviso - Acionamentos em escala</b></td>
                         <td><b>${tempoSobreavisoMenosAcionamento}</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Sobreaviso sem ocorrências &#247 3 (B &#247 3)</b></td>
+                        <td colspan="3"><b>Sobreaviso sem acionamentos &#247 3</b></td>
                         <td><b>${stringSobreAvisoDiv3}</b></td>
                     </tr>
                     <tr align="center">
-                        <td colspan="3"><b>Lançamento no ponto (A+B)</b></td>
+                        <td colspan="3"><b>Acionamentos fora da escala</b></td>
+                        <td><b>${stringHoraForaEscala}</b></td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3"><b>Lançamento no ponto</b></td>
                         <td><b>${tempoPonto}</b></td>
                     </tr>
                     </tr>
