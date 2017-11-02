@@ -194,9 +194,9 @@
                                 </tr>
                             %{--</g:else>--}%
                         </g:each>
-                            <td colspan="2" align="center" valign="middle" ><b>Acionamentos</b></td>
-                            <td align="center"><b>${tempoTrabTotal}</b></td>
-                            <td></td>
+                            %{--<td colspan="2" align="center" valign="middle" ><b>Acionamentos</b></td>--}%
+                            %{--<td align="center"><b>${tempoTrabTotal}</b></td>--}%
+                            %{--<td></td>--}%
                     </table>
                 </g:if>
                 <g:else>
