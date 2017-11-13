@@ -40,7 +40,7 @@ class RelatorioController {
 
         def atendenteId = Atendentes.findByNome(atendente)
         atendenteId = atendenteId.id
-//        def atendenteNomeCompleto = sobreavisonutel.seguranca.Usuario.executeQuery("select nome from Usuario where nome ILIKE = '%$atendente%'")
+        def atendenteNomeCompleto = sobreavisonutel.seguranca.Usuario.executeQuery("select nome from Usuario where nome LIKE '%$atendente%'").get(0)
 //        println "atendenteNomeCompleto: " + atendenteNomeCompleto
         List listBusca = []
         def busca
@@ -133,21 +133,8 @@ class RelatorioController {
         String stringHTrabTotal = resultado(floatHTrabTotal)
         println "stringHTrabTotal: " + stringHTrabTotal
 
-//        println "hTrabTotal: " + hTrabTotal
-//        println "mTrabTotal: " + mTrabTotal
-//        String tempoTrabTotal
-//        if(hTrabTotal==0) tempoTrabTotal = mTrabTotal + " minutos"
-//        if(mTrabTotal==0) tempoTrabTotal = hTrabTotal + " horas"
-//        if(hTrabTotal==1) tempoTrabTotal = mTrabTotal + " minuto"
-//        if(hTrabTotal==1 & mTrabTotal==0) tempoTrabTotal = hTrabTotal + " hora"
-//        if(hTrabTotal>0 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minutos"
-//        if(hTrabTotal>0 & mTrabTotal==1) tempoTrabTotal = hTrabTotal + " horas, " + mTrabTotal + " minuto"
-//        if(hTrabTotal==1 & mTrabTotal>0) tempoTrabTotal = hTrabTotal + " hora, " + mTrabTotal + " minutos"
-//
-//
+
 //        println "tempoTrabTotal: " + tempoTrabTotal
-
-
 //        println "listHoraInicio: " + listHoraInicio
 //        println "listHoraFim: " + listHoraFim
 //        println "diaTrabalhado: " + diaTrabalhado
@@ -285,13 +272,14 @@ class RelatorioController {
 //        def sobreAvisoDiv3 = horasTotal/3
         stringSobreAvisoDiv3 = resultado(horasSobreavisoMenosAcionamento/3)
 
-//        println "atendenteNomeCompleto: " + atendenteNomeCompleto
+        println "atendenteNomeCompleto: " + atendenteNomeCompleto
 
 //        println "usuarios: " + Usuario.list()
 
         render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
         ocorrenciaList: ocorrenciaList, stringacionamentoNaEscala:stringacionamentoNaEscala, stringSobreAvisoDiv3: stringSobreAvisoDiv3,
-        tempoPonto: tempoPonto, tempoSobreavisoMenosAcionamento: tempoSobreavisoMenosAcionamento, stringHoraForaEscala: stringHoraForaEscala])
+        tempoPonto: tempoPonto, tempoSobreavisoMenosAcionamento: tempoSobreavisoMenosAcionamento, stringHoraForaEscala: stringHoraForaEscala,
+        atendenteNomeCompleto: atendenteNomeCompleto])
 //        respond model: [listaBusca:relatorioList, horasTotal:horasTotal]
     }
 

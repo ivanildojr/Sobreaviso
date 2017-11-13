@@ -128,7 +128,10 @@
             <g:if test="${horasTotal > 0}">
                 <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
-                        <th colspan="4"><b> ${atendente} - ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)}</b></th>
+                        <th colspan="4"><b> ${atendenteNomeCompleto} </th>
+                    </tr>
+                    <tr>
+                        <th colspan="4"><b> ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)} </b></th>
                     </tr>
                     <th class="col-md-1">Data</th>
                     <th class="col-md-1">Dia</th>
