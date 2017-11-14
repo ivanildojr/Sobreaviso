@@ -48,8 +48,8 @@
     #mesAno {
         font-size: large;
         text-align: center;
-        vertical-align: middle;
-        horiz-align: center;
+        /*vertical-align: middle;*/
+        /*horiz-align: center;*/
     }
 
     #celOcorrencia{
@@ -136,7 +136,7 @@
                         <th colspan="4"><b> ${atendenteNomeCompleto} </th>
                     </tr>
                     <tr>
-                        <th colspan="4">
+                        <th colspan="4"> MÊS DE REFERÊNCIA:
                             <span id=mesAno class="label label-info"> ${mesAno} </span>
                         </th>
                     </tr>
