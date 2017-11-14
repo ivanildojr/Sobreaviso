@@ -45,19 +45,26 @@
         horiz-align: center;
     }
 
+    #mesAno {
+        font-size: large;
+        text-align: center;
+        vertical-align: middle;
+        horiz-align: center;
+    }
+
     #celOcorrencia{
          width: 70%;
     }
 
     #celFixo {
-        width: 85px;
+        width: 7%;
         vertical-align: middle;
     }
 
-    /*#celFixo2 {*/
-        /*width: 90px;*/
-        /*vertical-align: middle;*/
-    /*}*/
+    #celFixo2 {
+        width: 10%;
+        vertical-align: middle;
+    }
 
     #divMsg{
         margin: 0 auto !important;
@@ -113,9 +120,7 @@
                 <br><br>
                 <div class="input-daterange" id="calendario" >
                     PERÍODO:
-                    <input required=true type="text" class="input-small" name="dataInicio" />
-                    <span class="add-on" style="vertical-align: top; height:20px"> ATÉ </span>
-                    <input required=true type="text" class="input-small" name="dataFim" />
+                    <input required=true type="text" class="input-medium" name="dataInicio" />
                 </div>
                 <br>
                 <div align="center" name="gerarBtn">
@@ -131,7 +136,9 @@
                         <th colspan="4"><b> ${atendenteNomeCompleto} </th>
                     </tr>
                     <tr>
-                        <th colspan="4"><b> ${formatDate(format:'dd-MM-yyyy',date:dataInicio)} à ${formatDate(format:'dd-MM-yyyy',date:dataFim)} </b></th>
+                        <th colspan="4">
+                            <span id=mesAno class="label label-info"> ${mesAno} </span>
+                        </th>
                     </tr>
                     <th class="col-md-1">Data</th>
                     <th class="col-md-1">Dia</th>
@@ -240,9 +247,11 @@
         });
 
        $('#calendario').datepicker({
-           language: "pt-BR",
            format: "dd/mm/yyyy",
-           clearBtn: true,
+           minViewMode: 1,
+           maxViewMode: 2,
+           language: "pt-BR",
+           autoclose: true,
            todayHighlight: true,
            orientation: "bottom left"
        });

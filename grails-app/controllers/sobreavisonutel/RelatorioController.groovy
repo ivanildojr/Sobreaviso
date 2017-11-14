@@ -27,15 +27,23 @@ class RelatorioController {
 
         def atendente = params.list("atendente").get(0)  //recebe atendentes e dataInicio da view e tira da list
         def stringDataInicio = params.list("dataInicio").get(0)
-        def stringDataFim = params.list("dataFim").get(0)
+        String mesAno = stringDataInicio.drop(3)
+        println "mesAno: " + mesAno
+        Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)           //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
+
+        Calendar calend = Calendar.getInstance();
+        calend.setTime(dataInicio);
+        Integer ultimoDia = calend.getActualMaximum(calend.DAY_OF_MONTH);
+        String stringDataFim = ultimoDia.toString() + "/" + mesAno
 
         println "dataInicio: " + stringDataInicio
-        println "dataFim: $stringDataFim"
+        println "stringDataFim:  " + stringDataFim
         println "atendente: $atendente"
 //        println "Parse: " + Date.parse("dd/MM/yyyy", dataInicio)
 //        println "Format: " + Date.parse("dd/MM/yyyy", dataInicio).format("yyyy-MM-dd")
-        Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)           //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
+//        Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)           //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
         Date dataFim = Date.parse("dd/MM/yyyy", stringDataFim)
+        println "dataFim: " + dataFim
         Date dataIni = dataInicio
 
         def atendenteId = Atendentes.findByNome(atendente)
@@ -276,7 +284,7 @@ class RelatorioController {
 
 //        println "usuarios: " + Usuario.list()
 
-        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, dataFim:dataFim, listaBusca:relatorioList, horasTotal:horasTotal,
+        render(view: "index", model: [atendente:atendente, dataInicio:dataIni, mesAno:mesAno, listaBusca:relatorioList, horasTotal:horasTotal,
         ocorrenciaList: ocorrenciaList, stringacionamentoNaEscala:stringacionamentoNaEscala, stringSobreAvisoDiv3: stringSobreAvisoDiv3,
         tempoPonto: tempoPonto, tempoSobreavisoMenosAcionamento: tempoSobreavisoMenosAcionamento, stringHoraForaEscala: stringHoraForaEscala,
         atendenteNomeCompleto: atendenteNomeCompleto])
