@@ -45,6 +45,10 @@
         horiz-align: center;
     }
 
+    .Texto_Centralizado_Maiusculas {
+        text-align: center;
+    }
+
     #mesAno {
         font-size: large;
         text-align: center;
@@ -112,25 +116,33 @@
     <div class="box">
         <div align="center">
             <br>
-            <g:form>
-                ATENDENTE:
-                <g:select name="atendente" optionKey="nome" optionValue="nome"
-                          from="${sobreavisonutel.Atendentes.listOrderByNome()}"
-                />
-                <br><br>
-                <div class="input-daterange" id="calendario" >
-                    PERÍODO:
-                    <input required=true type="text" class="input-medium" name="dataInicio" />
-                </div>
-                <br>
-                <div align="center" name="gerarBtn">
-                    <g:actionSubmit value="Gerar" action="gerador"/>
-                </div>
-            </g:form>
+            <g:if test="${horasTotal < 0}">
+                <g:form>
+                    ATENDENTE:
+                    <g:select name="atendente" optionKey="nome" optionValue="nome"
+                              from="${sobreavisonutel.Atendentes.listOrderByNome()}"
+                    />
+                    <br><br>
+                    <div class="input-daterange" id="calendario" >
+                        PERÍODO:
+                        <input required=true type="text" class="input-medium" name="dataInicio" />
+                    </div>
+                    <br>
+                    <div align="center" name="gerarBtn">
+                        <g:actionSubmit value="Gerar" action="gerador"/>
+                    </div>
+                </g:form>
+            </g:if>
         </div>
         <br>
         <div>
             <g:if test="${horasTotal > 0}">
+
+                <p class="Texto_Centralizado_Maiusculas"><strong>RELAT&Oacute;RIO&nbsp;DE SOBREAVISO</strong></p>
+                <p class="Texto_Centralizado_Maiusculas">Instru&ccedil;&atilde;o Normativa n&ordm; 82/2016/DG (SEI <span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=4852264&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=043142d87140b8620760e5a64c094a8b056993eabba9b2a6a0e8f874cf614efc" target="_blank"  style="text-indent:0;">3771574</a></span>)&nbsp;</p>
+                <p class="Texto_Centralizado_Maiusculas">Instru&ccedil;&atilde;o de Servi&ccedil;o n&ordm; 5/2017/SRPRF-RN (SEI&nbsp;<span contenteditable="false" style="text-indent:0px;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0px;" target="_blank"></a><span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0;">6040794</a></span>)</p>
+                <p>&nbsp;</p>
+
                 <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
                         <th colspan="4"><b> ${atendenteNomeCompleto} </th>
@@ -211,7 +223,7 @@
                 </g:if>
                 <g:else>
                     <div id="divMsg" align="center" style="width:30%">
-                        <div class="alert alert-danger" role="alert">Não existe ocorrências registradas no período!</div>
+                        <div class="alert alert-danger" role="alert">Não existem ocorrências registradas no período!</div>
                     </div>
                 </g:else>
                     <br>

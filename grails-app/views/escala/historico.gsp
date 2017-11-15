@@ -8,23 +8,23 @@
     <asset:javascript src="datepicker/js/bootstrap-datepicker.min.js"/>
     <asset:javascript src="datepicker/locales/bootstrap-datepicker.pt-BR.min.js"/>
     <style>
-        input[type=text] {
-            width: auto;
-            padding: 1px 1px;
-            box-sizing: border-box;
-            border: none;
-            background-color: #ffffff;
-            box-shadow: none;
-            text-align: center;
-            font-weight: bold;
-            font-size: xx-small;
-        }
-        input[id=dataHistorico]{
-            width: auto;
-            text-align: center;
-            font-weight: bold;
-            font-size: xx-small;
-        }
+    input[type=text] {
+        width: auto;
+        padding: 1px 1px;
+        box-sizing: border-box;
+        border: none;
+        background-color: #ffffff;
+        box-shadow: none;
+        text-align: center;
+        font-weight: bold;
+        font-size: xx-small;
+    }
+    input[id=dataHistorico]{
+        width: auto;
+        text-align: center;
+        font-weight: bold;
+        font-size: xx-small;
+    }
     </style>
 
 </head>
@@ -35,132 +35,132 @@
 
 
 
-    <!-- Conteúdo da página    ================================================== -->
-    <div id="page-content" class="clearfix fixed">
-        ﻿
-        <div class="page-header">
-            <h1> Sobreaviso
-                <small><i class="icon-double-angle-right"></i> Sistema de Abertura e Acompanhamento de Chamados - NUTEL-RN</small>
-            </h1>
-        </div>
-        <div class="box">
-
-
-            <table align="center">
-                <tr>
-                    <td>
-                        <div>Informe a data de pesquisa:</div>
-                        <div style="text-align: center;display: inline-block;position: absolute;">
-                            <input id="dataHistorico" data-provide="datepicker"><br>
-                            <button id="semanaAntes" class="button"><</button>
-                            <button id="semanaDepois" class="button">></button>
-                            <button id="copiarSemanaAnt" class="button">Copiar</button>
-                        </div>
-
-                    </td>
-                    <td>
-                        <g:form action="sobreavisoHistorico">
-
-                            <fieldset class="form">
-                                <div align="center">
-                                    <table id="tabelaSobreaviso" class=".table-condensed" border="1">
-                                        <tr>
-
-                                            <th>Horas/Dias</th>
-                                            <g:each var="dia" status="i" in="${diasListNum}">
-                                                <th>
-                                                    <g:if test="${dia == '1'}">
-                                                        Domingo<br>
-                                                        <input align="center" type="text" readonly name="domingo" value=""/><br>
-                                                        I: <g:checkBox name="allI1" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT1" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR1" value="R" checked="false"/>
-                                                    </g:if>
-                                                    <g:elseif test="${dia == '2'}">
-                                                        Segunda-feira
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="segunda" value=""/><br>
-                                                        I: <g:checkBox name="allI2" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT2" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR2" value="R" checked="false"/>
-                                                    </g:elseif>
-                                                    <g:elseif test="${dia == '3'}">
-                                                        Terça-feira
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="terca" value=""/><br>
-                                                        I: <g:checkBox name="allI3" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT3" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR3" value="R" checked="false"/>
-                                                    </g:elseif>
-                                                    <g:elseif test="${dia == '4'}">
-                                                        Quarta-feira
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="quarta" value=""/><br>
-                                                        I: <g:checkBox name="allI4" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT4" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR4" value="R" checked="false"/>
-                                                    </g:elseif>
-                                                    <g:elseif test="${dia == '5'}">
-                                                        Quinta-feira
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="quinta" value=""/><br>
-                                                        I: <g:checkBox name="allI5" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT5" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR5" value="R" checked="false"/>
-                                                    </g:elseif>
-                                                    <g:elseif test="${dia == '6'}">
-                                                        Sexta-feira
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="sexta" value=""/><br>
-                                                        I: <g:checkBox name="allI6" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT6" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR6" value="R" checked="false"/>
-                                                    </g:elseif>
-                                                    <g:elseif test="${dia == '7'}">
-                                                        Sábado
-                                                        <br>
-                                                        <input align="center" type="text" readonly name="sabado" value=""/><br>
-                                                        I: <g:checkBox name="allI7" value="I" checked="false"/>
-                                                        T: <g:checkBox name="allT7" value="T" checked="false"/>
-                                                        R: <g:checkBox name="allR7" value="R" checked="false"/>
-                                                    </g:elseif>
-
-                                                </th>
-                                            </g:each>
-
-                                        </tr>
-                                        <g:each var="hora" status="j" in="${horasListNum}">
-                                            <tr>
-                                                <td>${hora}:00</td>
-                                                <g:each var="dia" status="i" in="${diasListNum}">
-                                                    <td align="center">
-                                                        I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
-                                                        T: <g:checkBox name="checkList" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
-                                                        R: <g:checkBox name="checkList" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
-                                                    </td>
-                                                </g:each>
-                                            </tr>
-                                        </g:each>
-                                    </table>
-                                </div>
-                            </fieldset>
-                            <fieldset class="buttons">
-                                <div align="center"><g:submitButton id="alterarBtn" name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
-                            </fieldset>
-
-                        </g:form>
-                    </td>
-                </tr>
-            </table>
-
-            <div id="alertaData" class="alert alert-danger" role="alert">
-
-                <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
-            </div>
-        </div>
-
+<!-- Conteúdo da página    ================================================== -->
+<div id="page-content" class="clearfix fixed">
+    ﻿
+    <div class="page-header">
+        <h1> Sobreaviso
+            <small><i class="icon-double-angle-right"></i> Sistema de Abertura e Acompanhamento de Chamados - NUTEL-RN</small>
+        </h1>
     </div>
-    <!-- Fim do conteúdo da página ================================================== -->
+    <div class="box">
+
+
+        <table align="center">
+            <tr>
+                <td>
+                    <div>Informe a data de pesquisa:</div>
+                    <div style="text-align: center;display: inline-block;position: absolute;">
+                        <input id="dataHistorico" data-provide="datepicker"><br>
+                        <button id="semanaAntes" class="button"><</button>
+                        <button id="semanaDepois" class="button">></button>
+                        <button id="copiarSemanaAnt" class="button">Copiar</button>
+                    </div>
+
+                </td>
+                <td>
+                    <g:form action="sobreavisoHistorico">
+
+                        <fieldset class="form">
+                            <div align="center">
+                                <table id="tabelaSobreaviso" class=".table-condensed" border="1">
+                                    <tr>
+
+                                        <th>Horas/Dias</th>
+                                        <g:each var="dia" status="i" in="${diasListNum}">
+                                            <th>
+                                                <g:if test="${dia == '1'}">
+                                                    Domingo<br>
+                                                    <input align="center" type="text" readonly name="domingo" value=""/><br>
+                                                    I: <g:checkBox name="allI1" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT1" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR1" value="R" checked="false"/>
+                                                </g:if>
+                                                <g:elseif test="${dia == '2'}">
+                                                    Segunda-feira
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="segunda" value=""/><br>
+                                                    I: <g:checkBox name="allI2" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT2" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR2" value="R" checked="false"/>
+                                                </g:elseif>
+                                                <g:elseif test="${dia == '3'}">
+                                                    Terça-feira
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="terca" value=""/><br>
+                                                    I: <g:checkBox name="allI3" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT3" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR3" value="R" checked="false"/>
+                                                </g:elseif>
+                                                <g:elseif test="${dia == '4'}">
+                                                    Quarta-feira
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="quarta" value=""/><br>
+                                                    I: <g:checkBox name="allI4" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT4" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR4" value="R" checked="false"/>
+                                                </g:elseif>
+                                                <g:elseif test="${dia == '5'}">
+                                                    Quinta-feira
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="quinta" value=""/><br>
+                                                    I: <g:checkBox name="allI5" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT5" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR5" value="R" checked="false"/>
+                                                </g:elseif>
+                                                <g:elseif test="${dia == '6'}">
+                                                    Sexta-feira
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="sexta" value=""/><br>
+                                                    I: <g:checkBox name="allI6" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT6" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR6" value="R" checked="false"/>
+                                                </g:elseif>
+                                                <g:elseif test="${dia == '7'}">
+                                                    Sábado
+                                                    <br>
+                                                    <input align="center" type="text" readonly name="sabado" value=""/><br>
+                                                    I: <g:checkBox name="allI7" value="I" checked="false"/>
+                                                    T: <g:checkBox name="allT7" value="T" checked="false"/>
+                                                    R: <g:checkBox name="allR7" value="R" checked="false"/>
+                                                </g:elseif>
+
+                                            </th>
+                                        </g:each>
+
+                                    </tr>
+                                    <g:each var="hora" status="j" in="${horasListNum}">
+                                        <tr>
+                                            <td>${hora}:00</td>
+                                            <g:each var="dia" status="i" in="${diasListNum}">
+                                                <td align="center">
+                                                    I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
+                                                    T: <g:checkBox name="checkList" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
+                                                    R: <g:checkBox name="checkList" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                                </td>
+                                            </g:each>
+                                        </tr>
+                                    </g:each>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <fieldset class="buttons">
+                            <div align="center"><g:submitButton id="alterarBtn" name="create" class="save" value="${message(code: 'default.button.update.label', default: 'update')}" /></div>
+                        </fieldset>
+
+                    </g:form>
+                </td>
+            </tr>
+        </table>
+
+        <div id="alertaData" class="alert alert-danger" role="alert">
+
+            <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
+        </div>
+    </div>
+
+</div>
+<!-- Fim do conteúdo da página ================================================== -->
 
 
 
@@ -207,27 +207,16 @@
        $('#copiarSemanaAnt').on('click',function (e) {
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
-                //console.log("Valor no campo Domingo: "+domingo);
-                var diaMes = domingo.substring(5,6);
-                var diaCampo = domingo.substring(8,10);
-                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
-                    diaCampo = domingo.substring(7,9);
-                }
-                if(diaMes > 1){
-                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
-                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
-                }
-                if(diaCampo < 10){
-                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
-                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+                // console.log("Valor no campo Domingo: "+domingo);
+                var dia = domingo.substring(0,2);
+                var mes = domingo.substring(3,5);
+                var ano = domingo.substring(6,10);
+                var domingoFormatado = ano + "-" + mes + "-" + dia
+                // console.log("Domingo Formatado: " + domingoFormatado);
 
-                }
-                // console.log("Dia: " + diaCampo);
-                // console.log("Mes: " + diaMes);
-
-                var domingoData = new Date(domingo+'T03:00:00Z');
-                // console.log("Domingo Data: "+domingoData);
-                var domingoAnterior = new Date(domingo+'T03:00:00Z')
+                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
+                // console.log("Domingo Data: "+ domingoData);
+                var domingoAnterior = new Date(domingoFormatado+'T03:00:00Z')
                 domingoAnterior.setDate(domingoData.getDate() - 7);
 
                 checkMarcacoes(domingoAnterior);
@@ -239,27 +228,17 @@
             if($('#dataHistorico').val().length != 0){
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
-                //console.log("Valor no campo Domingo: "+domingo);
-                var diaMes = domingo.substring(5,6);
-                var diaCampo = domingo.substring(8,10);
-                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
-                    diaCampo = domingo.substring(7,9);
-                }
-                if(diaMes > 1){
-                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
-                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
-                }
-                if(diaCampo < 10){
-                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
-                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+                // console.log("Valor no campo Domingo: "+domingo);
+                var dia = domingo.substring(0,2);
+                var mes = domingo.substring(3,5);
+                var ano = domingo.substring(6,10);
+                var domingoFormatado = ano + "-" + mes + "-" + dia
 
-                }
-                // console.log("Dia: " + diaCampo);
-                // console.log("Mes: " + diaMes);
+                // console.log("Domingo Formatado: " + domingoFormatado);
 
-                var domingoData = new Date(domingo+'T03:00:00Z');
-                // console.log("Domingo Data: "+domingoData);
-                var domingoAnterior = new Date(domingo+'T03:00:00Z')
+                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
+                // console.log("Domingo Data: "+ domingoData);
+                var domingoAnterior = new Date(domingoFormatado+'T03:00:00Z')
                 domingoAnterior.setDate(domingoData.getDate() - 7);
 
 
@@ -287,26 +266,15 @@
                 e.preventDefault();
                 var domingo = $("input[name=domingo]").val();
                 // console.log("Valor no campo Domingo: "+domingo);
-                var diaMes = domingo.substring(5,6);
-                var diaCampo = domingo.substring(8,10);
-                if(diaMes > 1/*Mes so tem um digito e é antes de Out.*/){
-                    diaCampo = domingo.substring(7,9);
-                }
-                if(diaMes > 1){
-                    // console.log("Mes menor do que 10: "+ domingo.substring(0,5)+'0'+domingo.substring(5,10));
-                    domingo = domingo.substring(0,5)+'0'+domingo.substring(5,10);
-                }
-                if(diaCampo < 10){
-                    // console.log("Dia menor do que 10: "+ domingo.substring(0,8)+'0'+domingo.substring(8,10));
-                    domingo = domingo.substring(0,8)+'0'+domingo.substring(8,10);
+                var dia = domingo.substring(0,2);
+                var mes = domingo.substring(3,5);
+                var ano = domingo.substring(6,10);
+                var domingoFormatado = ano + "-" + mes + "-" + dia
+                // console.log("Domingo Formatado: " + domingoFormatado);
 
-                }
-                // console.log("Dia: " + diaCampo);
-                // console.log("Mes: " + diaMes);
-
-                var domingoData = new Date(domingo+'T03:00:00Z');
-                // console.log("Domingo Data: "+domingoData);
-                var domingoPosterior = new Date(domingo+'T03:00:00Z')
+                var domingoData = new Date(domingoFormatado+'T03:00:00Z');
+                // console.log("Domingo Data: "+ domingoData);
+                var domingoPosterior = new Date(domingoFormatado+'T03:00:00Z')
                 domingoPosterior.setDate(domingoData.getDate() + 7);
 
 
@@ -326,7 +294,6 @@
 
                 $('#dataHistorico').val(dia+'/'+mes+'/'+ano); /*Estou aqui!*/
                 $('#dataHistorico').trigger("change");
-
 
             }
         });
@@ -444,4 +411,3 @@
    });
 </g:javascript>
 </body>
-</html>
