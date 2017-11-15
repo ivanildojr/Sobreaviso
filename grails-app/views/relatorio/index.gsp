@@ -116,6 +116,11 @@
     <div class="box">
         <div align="center">
             <br>
+            <g:if test="${horasTotal == 0}">
+                <div id="divMsg" align="center" style="width:50%">
+                    <div class="alert alert-danger" role="alert">Não existe sobreaviso cadastrado para o atendente <br> ${atendenteNomeCompleto} <br> no mês ${mesAno}</div>
+                </div>
+            </g:if>
             <g:if test="${horasTotal < 0}">
                 <g:form>
                     ATENDENTE:
