@@ -45,8 +45,13 @@
         horiz-align: center;
     }
 
-    .Texto_Centralizado_Maiusculas {
-        text-align: center;
+    p.Texto_Centralizado {
+        font-size:13pt;
+        font-family:Times New Roman;
+        text-align:center;
+        text-transform:uppercase;
+        margin:0pt;
+        word-wrap:normal;
     }
 
     #mesAno {
@@ -61,14 +66,14 @@
     }
 
     #celFixo {
-        width: 7%;
+        width: 85px;
         vertical-align: middle;
     }
 
-    #celFixo2 {
-        width: 10%;
-        vertical-align: middle;
-    }
+    /*#celFixo2 {*/
+        /*width: 10%;*/
+        /*vertical-align: middle;*/
+    /*}*/
 
     #divMsg{
         margin: 0 auto !important;
@@ -143,10 +148,12 @@
         <div>
             <g:if test="${horasTotal > 0}">
 
-                <p class="Texto_Centralizado_Maiusculas"><strong>RELAT&Oacute;RIO&nbsp;DE SOBREAVISO</strong></p>
-                <p class="Texto_Centralizado_Maiusculas">Instru&ccedil;&atilde;o Normativa n&ordm; 82/2016/DG (SEI <span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=4852264&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=043142d87140b8620760e5a64c094a8b056993eabba9b2a6a0e8f874cf614efc" target="_blank"  style="text-indent:0;">3771574</a></span>)&nbsp;</p>
-                <p class="Texto_Centralizado_Maiusculas">Instru&ccedil;&atilde;o de Servi&ccedil;o n&ordm; 5/2017/SRPRF-RN (SEI&nbsp;<span contenteditable="false" style="text-indent:0px;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0px;" target="_blank"></a><span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0;">6040794</a></span>)</p>
-                <p>&nbsp;</p>
+                <div>
+                    <p class="Texto_Centralizado"><strong>RELAT&Oacute;RIO&nbsp;DE SOBREAVISO</strong></p><br>
+                    <p class="Texto_Centralizado">Instru&ccedil;&atilde;o Normativa n&ordm; 82/2016/DG (SEI <span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=4852264&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=043142d87140b8620760e5a64c094a8b056993eabba9b2a6a0e8f874cf614efc" target="_blank"  style="text-indent:0;">3771574</a></span>)&nbsp;</p>
+                    <p class="Texto_Centralizado">Instru&ccedil;&atilde;o de Servi&ccedil;o n&ordm; 5/2017/SRPRF-RN (SEI&nbsp;<span contenteditable="false" style="text-indent:0px;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0px;" target="_blank"></a><span contenteditable="false" style="text-indent:0;"><a class="ancoraSei"  href="controlador.php?acao=protocolo_visualizar&id_protocolo=7712796&infra_sistema=100000100&infra_unidade_atual=110000645&infra_hash=f10663660dc95a8dc4e384e651839e1adf6bfdefcab4047b2894e6e83d4d5e59" target="_blank"  style="text-indent:0;">6040794</a></span>)</p>
+                    <p>&nbsp;</p>
+                </div>
 
                 <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                     <tr>
@@ -225,14 +232,17 @@
                             %{--<td align="center"><b>${tempoTrabTotal}</b></td>--}%
                             %{--<td></td>--}%
                     </table>
+                    <br><br>
                 </g:if>
-                <g:else>
+                    <div align="center">
+                        <p class="Texto_Centralizado">${atendenteNomeCompleto} <br> POLICIAL RODOVIÁRIO FEDERAL </p>
+                    </div>
+                <g:if test="${ocorrenciaList.empty}" >
+                    <br>
                     <div id="divMsg" align="center" style="width:30%">
                         <div class="alert alert-danger" role="alert">Não existem ocorrências registradas no período!</div>
                     </div>
-                </g:else>
-                    <br>
-                </div>
+                </g:if>
 
             </g:if>
         </div>
