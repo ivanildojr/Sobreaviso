@@ -65,13 +65,13 @@
                             <div align="center">
                                 <table id="tabelaSobreaviso" class=".table-condensed" border="1">
                                     <tr>
-
                                         <th>Horas/Dias</th>
                                         <g:each var="dia" status="i" in="${diasListNum}">
                                             <th>
                                                 <g:if test="${dia == '1'}">
                                                     Domingo<br>
                                                     <input align="center" type="text" readonly name="domingo" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="0" value=""></label><br>
                                                     I: <g:checkBox name="allI1" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT1" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR1" value="R" checked="false"/>
@@ -80,6 +80,7 @@
                                                     Segunda-feira
                                                     <br>
                                                     <input align="center" type="text" readonly name="segunda" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="1" value=""></label><br>
                                                     I: <g:checkBox name="allI2" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT2" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR2" value="R" checked="false"/>
@@ -88,6 +89,7 @@
                                                     Terça-feira
                                                     <br>
                                                     <input align="center" type="text" readonly name="terca" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="2" value=""></label><br>
                                                     I: <g:checkBox name="allI3" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT3" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR3" value="R" checked="false"/>
@@ -96,6 +98,7 @@
                                                     Quarta-feira
                                                     <br>
                                                     <input align="center" type="text" readonly name="quarta" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="3" value=""></label><br>
                                                     I: <g:checkBox name="allI4" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT4" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR4" value="R" checked="false"/>
@@ -104,6 +107,7 @@
                                                     Quinta-feira
                                                     <br>
                                                     <input align="center" type="text" readonly name="quinta" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="4" value=""></label><br>
                                                     I: <g:checkBox name="allI5" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT5" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR5" value="R" checked="false"/>
@@ -112,6 +116,7 @@
                                                     Sexta-feira
                                                     <br>
                                                     <input align="center" type="text" readonly name="sexta" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="5" value=""></label><br>
                                                     I: <g:checkBox name="allI6" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT6" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR6" value="R" checked="false"/>
@@ -120,6 +125,7 @@
                                                     Sábado
                                                     <br>
                                                     <input align="center" type="text" readonly name="sabado" value=""/><br>
+                                                    <label class="label label-warning" align="center" type="text" readonly name="6" value=""></label><br>
                                                     I: <g:checkBox name="allI7" value="I" checked="false"/>
                                                     T: <g:checkBox name="allT7" value="T" checked="false"/>
                                                     R: <g:checkBox name="allR7" value="R" checked="false"/>
@@ -131,7 +137,7 @@
                                     </tr>
                                     <g:each var="hora" status="j" in="${horasListNum}">
                                         <tr>
-                                            <td>${hora}:00</td>
+                                            <td align="center">${hora}:00</td>
                                             <g:each var="dia" status="i" in="${diasListNum}">
                                                 <td align="center">
                                                     I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
@@ -333,6 +339,7 @@
                         });
                 });
 
+                var feriados = []
 
                 /*Pega os dados do banco e preenche a tabela*/
                 $.ajax({
@@ -341,7 +348,7 @@
                   data: {dataHistorico: $('#dataHistorico').val()}
                   ,
                   success: function (data) {
-                    // console.log(data);
+                    console.log(data);
                     // console.log(data.dataInicial);
 
                     var domingo = new Date(data.dataInicial);
@@ -357,10 +364,10 @@
                     sexta.setDate(sexta.getDate() + 5);
                     var sabado = new Date(data.dataFinal);
 
-
                     $("input[name=domingo]").html(domingo.toLocaleDateString());
                     $("input[name=domingo]").val(domingo.toLocaleDateString());
                     $("input[name=domingo]").prop('value',domingo.toLocaleDateString());
+
                     $("input[name=segunda]").html(segunda.toLocaleDateString());
                     $("input[name=segunda]").val(segunda.toLocaleDateString());
                     $("input[name=segunda]").prop('value',segunda.toLocaleDateString());
@@ -385,6 +392,13 @@
                     $("input[name=sabado]").val(sabado.toLocaleDateString());
                     $("input[name=sabado]").prop('value',sabado.toLocaleDateString());
 
+                    $("label[name=0]").text(data.feriados[0]);
+                    $("label[name=1]").text(data.feriados[1]);
+                    $("label[name=2]").text(data.feriados[2]);
+                    $("label[name=3]").text(data.feriados[3]);
+                    $("label[name=4]").text(data.feriados[4]);
+                    $("label[name=5]").text(data.feriados[5]);
+                    $("label[name=6]").text(data.feriados[6]);
 
                     $.each(data.escalaSobreavisoHistorico, function( index, value ) {
                         var pessoa = value.charAt(0)
