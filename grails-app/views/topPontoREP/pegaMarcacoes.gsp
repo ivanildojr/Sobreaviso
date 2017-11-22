@@ -9,6 +9,17 @@
     <asset:javascript src="rivescript-contrib-coffeescript.min.js"/>
     <asset:stylesheet src="bot.css"/>
 
+<style>
+
+.table th, .table td {
+    /*text-align: center;*/
+    /*align-items: center;*/
+    text-align: center;
+    vertical-align: middle;
+    horiz-align: center;
+}
+
+</style>
 
 </head>
 <body>
@@ -28,8 +39,9 @@
 
 
         <div>
-            <div align="center">Saldo horário da semana até <br> <g:formatDate format="dd-MM-yyyy" date="${new Date()}"/></div>
-            <table align="center"  class=".table-condensed" border="1">
+            <br>
+            <div align="center">Saldo horário da semana até <g:formatDate format="dd-MM-yyyy" date="${new Date()}"/></div>
+            <table align="center" border="1" cellpadding="5" cellspacing="0" class="table table-condensed" style="width:30%">
                 <tr>
                     <th>Nome Servidor</th>
                     <th>Horas Trabalhadas</th>
@@ -66,7 +78,7 @@
         </div>
         <br>
             <div align="center">Banco de Horas mês de <g:formatDate format="dd-MM-yyyy" date="${new Date()}"/></div>
-            <table align="center"  class=".table-condensed" border="1">
+            <table align="center" border="1" cellpadding="5" cellspacing="0" class="table table-condensed" style="width:30%">
                 <tr>
                     <th>Nome Servidor</th>
                     <th>Saldo Banco Horas</th>
@@ -85,6 +97,7 @@
                     <td>${bh[2].intValue()} Horas e ${((bh[2]-(bh[2].intValue()))*60).round()} Minutos</td>
                 </tr>
             </table>
+            <br>
 
         </div>
 
