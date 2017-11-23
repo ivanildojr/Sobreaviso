@@ -25,15 +25,16 @@ class BoletimController {
 
         println "Parâmetros da view: " + params.list()  //imprime tudo que foi retornado do formulario da view
         def stringDataInicio = params.list("dataInicio").get(0)
-        String mesAno = stringDataInicio.drop(3)
-        println "mesAno: " + mesAno
+        String mes = stringDataInicio.substring(3,5)
+        String ano = stringDataInicio.substring(6,10)
+        println "mes/ano: " + mes + "/" + ano
         Date dataInicio = Date.parse("dd/MM/yyyy", stringDataInicio)
         //passa a string datainicio pro formato de data, depois coloca na formatacao do banco
 
         Calendar calend = Calendar.getInstance();
         calend.setTime(dataInicio);
         Integer ultimoDia = calend.getActualMaximum(calend.DAY_OF_MONTH);
-        String stringDataFim = ultimoDia.toString() + "/" + mesAno
+        String stringDataFim = ultimoDia.toString() + "/" + mes + "/" + ano
 
         println "dataInicio: " + stringDataInicio
         println "stringDataFim:  " + stringDataFim
@@ -140,8 +141,13 @@ class BoletimController {
                     println "Contem data"
                     listData << data                        //inclui data na listData
                     listHora << horas
-                    listPeriodo << periodoInicio + " - " + periodoFim + "h"
                     listAtendentes << atendente
+                    if(periodoInicio.toInteger() < 12) {
+                        listPeriodo << "0" + periodoInicio + " - " + periodoFim + "h"
+                    }
+                    else {
+                        listPeriodo << periodoInicio + " - " + periodoFim + "h"
+                    }
 
                     Calendar calen = Calendar.getInstance();
                     calen.setTime(data);
@@ -168,6 +174,10 @@ class BoletimController {
             relatorio.atendente = listAtendentes.getAt(index)
             relatorioList.add(relatorio)
         }
+
+        List meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"]
+
+        String mesAno = meses.get(mes.toInteger() - 1) + "/" + ano
 
         render(view: "index", model: [atendente: atendente, dataInicio: dataIni, mesAno: mesAno, listaBusca: relatorioList])
 

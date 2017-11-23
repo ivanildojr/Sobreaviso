@@ -47,7 +47,7 @@
     }
 
     #mesAno {
-        font-size: large;
+        font-size: medium;
         text-align: center;
         /*vertical-align: middle;*/
         /*horiz-align: center;*/
@@ -126,13 +126,12 @@
         <br>
         <div>
                 <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
-                <tr>
-                    <th colspan="4"> MÊS DE REFERÊNCIA:
-                        <span id=mesAno class="label label-info"> ${mesAno} </span>
+                <tr style="background-color: #ddd;">
+                    <th colspan="4">
+                        <span id=mesAno > ${mesAno} </span>
                     </th>
                 </tr>
-                <th class="col-md-1">Data</th>
-                <th class="col-md-1">Dia</th>
+                <th colspan="2" class="col-md-1">Dia</th>
                 <th class="col-md-1">Período</th>
                 <th class="col-md-1">Atendente</th>
                 <g:each var="relatorio" status="j" in="${listaBusca}">
@@ -142,8 +141,7 @@
                     <g:else>
                         <tr align="center" >
                     </g:else>
-
-                        <td> ${formatDate(format:'dd-MM-yyyy',date:relatorio.data)} </td>
+                        <td> ${formatDate(format:'dd',date:relatorio.data)} </td>
                         <td> ${relatorio.diaSemana} </td>
                         <td> ${relatorio.periodo} </td>
                         <td> ${relatorio.atendente}</td>
@@ -154,11 +152,6 @@
             <div>
             <br><br>
         </div>
-            <br>
-
-            <div id="alertaData" class="alert alert-danger" role="alert">
-                <strong>Operação não permitida!</strong> O campo data deve ser preenchido antes de alterar.
-            </div>
         </div>
     </div>
     <!-- Fim do conteúdo da página ================================================== -->
