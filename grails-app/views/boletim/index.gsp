@@ -144,7 +144,8 @@
                         <td> ${formatDate(format:'dd',date:relatorio.data)} </td>
                         <td> ${relatorio.diaSemana}
                             <g:if test="${relatorio.feriado}">
-                                <span class="label label-warning">${relatorio.feriado}</span>
+                                <br>
+                                <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span>
                             </g:if>
                         </td>
                         <td> ${relatorio.periodo} </td>
