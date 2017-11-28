@@ -21,6 +21,8 @@ class BoletimController {
         //render "some text"
     }
 
+    def FeriadosService feriadosService
+
     def boletim() {
 
         println "Parâmetros da view: " + params.list()  //imprime tudo que foi retornado do formulario da view
@@ -172,6 +174,9 @@ class BoletimController {
             relatorio.hora = listHora.getAt(index)
             relatorio.periodo = listPeriodo.getAt(index)
             relatorio.atendente = listAtendentes.getAt(index)
+            def dataString = data.format("dd/MM/yyyy")
+            relatorio.feriado = feriadosService.feriado(dataString)
+            println relatorio.feriado
             relatorioList.add(relatorio)
         }
 
