@@ -127,11 +127,12 @@
         <div>
                 <table align="center" border="1" cellpadding="5" cellspacing="0"  id="tabelaRelatorio" class="table table-condensed" style="width:30%">
                 <tr style="background-color: #ddd;">
-                    <th colspan="4">
+                    <th colspan="5">
                         <span id=mesAno > ${mesAno} </span>
                     </th>
                 </tr>
                 <th colspan="2" class="col-md-1">Dia</th>
+                <th class="col-md-1">Feriado</th>
                 <th class="col-md-1">Período</th>
                 <th class="col-md-1">Atendente</th>
                 <g:each var="relatorio" status="j" in="${listaBusca}">
@@ -142,12 +143,14 @@
                         <tr align="center" >
                     </g:else>
                         <td> ${formatDate(format:'dd',date:relatorio.data)} </td>
-                        <td> ${relatorio.diaSemana}
-                            <g:if test="${relatorio.feriado}">
-                                <br>
-                                <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span>
-                            </g:if>
-                        </td>
+                    <td> ${relatorio.diaSemana} </td>
+                    <td> <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span> </td>
+
+                            %{--<g:if test="${relatorio.feriado}">--}%
+                                %{--<br>--}%
+                                %{--<span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span>--}%
+                            %{--</g:if>--}%
+                        %{--</td>--}%
                         <td> ${relatorio.periodo} </td>
                         <td> ${relatorio.atendente}</td>
                     </tr>
