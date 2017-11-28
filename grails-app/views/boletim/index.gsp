@@ -35,17 +35,6 @@
         horiz-align: center;
     }
 
-    p.Texto_Centralizado {
-        font-size:13pt;
-        font-family:Times New Roman;
-        text-align:center;
-        text-transform:uppercase;
-        margin:0pt;
-        word-wrap:normal;
-        vertical-align: middle;
-        horiz-align: center;
-    }
-
     #mesAno {
         font-size: medium;
         text-align: center;
@@ -53,39 +42,12 @@
         /*horiz-align: center;*/
     }
 
-    #celOcorrencia{
-        width: 70%;
-    }
-
-    #celFixo {
-        width: 85px;
-        vertical-align: middle;
-    }
-
-    /*#celFixo2 {*/
-    /*width: 10%;*/
-    /*vertical-align: middle;*/
-    /*}*/
-
     #divMsg{
         margin: 0 auto !important;
         text-align: center;
         font-weight: bold;
         font-size: medium;
     }
-
-    /*input[name=checkListI] {*/
-    /*color: #0000FF;*/
-    /*outline: 2px solid green;*/
-    /*}*/
-    /*input[name=checkListR] {*/
-    /*color: #0000FF;*/
-    /*outline: 2px solid blue;*/
-    /*}*/
-    /*input[name=checkListT] {*/
-    /*color: #0000FF;*/
-    /*outline: 2px solid red;*/
-    /*}*/
 
     input[id=datepicker] {
         font-size: 14px;
@@ -132,27 +94,27 @@
                     </th>
                 </tr>
                 <th colspan="2" class="col-md-1">Dia</th>
-                <th class="col-md-1">Feriado</th>
                 <th class="col-md-1">Período</th>
                 <th class="col-md-1">Atendente</th>
+                <th class="col-md-1" id="tableNoBoard1">Feriado</th>
                 <g:each var="relatorio" status="j" in="${listaBusca}">
                     <g:if test="${relatorio.diaSemana == 'Domingo' || relatorio.diaSemana == 'Sábado'}">
                         <tr align="center" class="success" style="font-weight: bold">
+                            <td> <strong> ${formatDate(format:'dd',date:relatorio.data)} </strong> </td>
+                            <td> <strong> ${relatorio.diaSemana} </strong></td>
+                            <td> <strong> ${relatorio.periodo} </strong></td>
+                            <td> <strong> ${relatorio.atendente} </strong></td>
+                            <td> <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span> </td>
+                        </tr>
                     </g:if>
                     <g:else>
                         <tr align="center" >
-                    </g:else>
                         <td> ${formatDate(format:'dd',date:relatorio.data)} </td>
-                    <td> ${relatorio.diaSemana} </td>
-                    <td> <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span> </td>
-
-                            %{--<g:if test="${relatorio.feriado}">--}%
-                                %{--<br>--}%
-                                %{--<span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span>--}%
-                            %{--</g:if>--}%
-                        %{--</td>--}%
+                        <td> ${relatorio.diaSemana}</td>
                         <td> ${relatorio.periodo} </td>
                         <td> ${relatorio.atendente}</td>
+                        <td> <span class="label label-warning" style="font-size: smaller">${relatorio.feriado}</span> </td>
+                    </g:else>
                     </tr>
                 </g:each>
                 </tr>
