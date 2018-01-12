@@ -29,6 +29,7 @@ class OcorrenciasController {
         dataF = dataF.format("dd/MM/yyyy")
         horaInicioF = horaInicioF.format("HH:mm")
         horaFimF = horaFimF.format("HH:mm")
+
         mapRetorno << [atendentes: atendentes]
         mapRetorno << [diaF: dataF]
         mapRetorno << [horaInicioF: horaInicioF]
@@ -66,15 +67,26 @@ class OcorrenciasController {
         def horaInicio = params.list("horaInicio").get(0)
         def horaFim = params.list("horaFim").get(0)
         def relato = params.list("ocorrencia").get(0)
+
+        data = Date.parse("dd/MM/yyyy", data)
+        horaInicio = Date.parse("HH:ss", horaInicio)
+        horaFim = Date.parse("HH:ss", horaFim)
+
+        ////////////// VERIFICA SE PASSOU DE UM DIA PRO OUTRO
+        if(horaFim<horaInicio) {
+            horaFim = data+1
+            println "horaFim: " + horaFim
+        }
+
         Date dataModificacao = new Date()
 
         Ocorrencias ocorrencia = new Ocorrencias()
         ocorrencia.status = "Ativo"
         ocorrencia.dataModificacao = dataModificacao
         ocorrencia.atendentes = atendente
-        ocorrencia.data = Date.parse("dd/MM/yyyy", data)
-        ocorrencia.horaInicio = Date.parse("HH:mm", horaInicio)
-        ocorrencia.horaFim = Date.parse("HH:mm", horaFim)
+        ocorrencia.data = data
+        ocorrencia.horaInicio = horaInicio
+        ocorrencia.horaFim = horaFim
         ocorrencia.resumido = relato
         ocorrencia.detalhado = relato
         ocorrencia.login = springSecurityService.currentUser
