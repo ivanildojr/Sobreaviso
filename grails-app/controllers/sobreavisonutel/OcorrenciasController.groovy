@@ -67,15 +67,28 @@ class OcorrenciasController {
         def horaInicio = params.list("horaInicio").get(0)
         def horaFim = params.list("horaFim").get(0)
         def relato = params.list("ocorrencia").get(0)
+        def hInicio = horaInicio.substring(0,2)
+        def mInicio = horaInicio.substring(3,5)
+        def hFim = horaFim.substring(0,2)
+        def mFim = horaFim.substring(3,5)
+//        println "HoraInicio e HoraFim: " + hInicio + mInicio + "-" + hFim + mFim
 
         data = Date.parse("dd/MM/yyyy", data)
-        horaInicio = Date.parse("HH:ss", horaInicio)
-        horaFim = Date.parse("HH:ss", horaFim)
+
+        Calendar calenInicio = Calendar.getInstance();
+        calenInicio.setTime(data);
+        calenInicio.set(Calendar.HOUR, hInicio as Integer)
+        calenInicio.set(Calendar.MINUTE, mInicio as Integer)
+
+        Calendar calenFim = Calendar.getInstance();
+        calenFim.setTime(data);
+        calenFim.set(Calendar.HOUR, hFim as Integer)
+        calenFim.set(Calendar.MINUTE, mFim as Integer)
 
         ////////////// VERIFICA SE PASSOU DE UM DIA PRO OUTRO
-        if(horaFim<horaInicio) {
-            horaFim = data+1
-            println "horaFim: " + horaFim
+        if(calenFim<calenInicio) {
+            calenFim.add(calenFim.DATE,1)
+            println "calenFIm: " + calenFim
         }
 
         Date dataModificacao = new Date()
@@ -85,8 +98,8 @@ class OcorrenciasController {
         ocorrencia.dataModificacao = dataModificacao
         ocorrencia.atendentes = atendente
         ocorrencia.data = data
-        ocorrencia.horaInicio = horaInicio
-        ocorrencia.horaFim = horaFim
+        ocorrencia.horaInicio = calenInicio.getTime()
+        ocorrencia.horaFim = calenFim.getTime()
         ocorrencia.resumido = relato
         ocorrencia.detalhado = relato
         ocorrencia.login = springSecurityService.currentUser
