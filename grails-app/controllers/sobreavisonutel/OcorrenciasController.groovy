@@ -21,6 +21,7 @@ class OcorrenciasController {
 //        println "ocorrencias: " + params.id
 //        def ocorrencia = Ocorrencias.findAllById(params.id)
         def ocorrencia = Ocorrencias.executeQuery("from Ocorrencias where id='$params.id'")
+        def id = ocorrencia.id.get(0)
         def atendentes = ocorrencia.atendentes.get(0)
         def dataF = ocorrencia.data.getAt(0)
         def horaInicioF = ocorrencia.horaInicio.get(0)
@@ -30,6 +31,7 @@ class OcorrenciasController {
         horaInicioF = horaInicioF.format("HH:mm")
         horaFimF = horaFimF.format("HH:mm")
 
+        mapRetorno << [id: id]
         mapRetorno << [atendentes: atendentes]
         mapRetorno << [diaF: dataF]
         mapRetorno << [horaInicioF: horaInicioF]
@@ -41,7 +43,7 @@ class OcorrenciasController {
     }
 
     def excluirOcorrencia() {
-//        println params.values()
+        println params.values()
         def id = params.values().getAt(3)
 //        println id
         Ocorrencias ocorrencia = Ocorrencias.findById(id as Long)
@@ -62,6 +64,10 @@ class OcorrenciasController {
     def ocorrencias() {
 
         println params.values() //imprime tudo que foi retornado do formulario da view
+
+        def id = params.list("idN").get(0)
+        if(!id=="") id as Long
+        println "id: " + id
         def atendente = params.list("atendente").get(0)  //recebe atendentes e dataInicio da view e tira da list
         def data = params.list("data").get(0)
         def horaInicio = params.list("horaInicio").get(0)
@@ -93,28 +99,50 @@ class OcorrenciasController {
 
         Date dataModificacao = new Date()
 
-        Ocorrencias ocorrencia = new Ocorrencias()
-        ocorrencia.status = "Ativo"
-        ocorrencia.dataModificacao = dataModificacao
-        ocorrencia.atendentes = atendente
-        ocorrencia.data = data
-        ocorrencia.horaInicio = calenInicio.getTime()
-        ocorrencia.horaFim = calenFim.getTime()
-        ocorrencia.resumido = relato
-        ocorrencia.detalhado = relato
-        ocorrencia.login = springSecurityService.currentUser
-
-        ocorrencia.validate()
-        if(!ocorrencia.hasErrors()) {
-            ocorrencia.save flush:true
-            println "Salvou com sucesso"
+        if(id=="") {
+            Ocorrencias ocorrencia = new Ocorrencias()
+            ocorrencia.status = "Ativo"
+            ocorrencia.dataModificacao = dataModificacao
+            ocorrencia.atendentes = atendente
+            ocorrencia.data = data
+            ocorrencia.horaInicio = calenInicio.getTime()
+            ocorrencia.horaFim = calenFim.getTime()
+            ocorrencia.resumido = relato
+            ocorrencia.detalhado = relato
+            ocorrencia.login = springSecurityService.currentUser
+            ocorrencia.validate()
+            if(!ocorrencia.hasErrors()) {
+                ocorrencia.save flush:true
+                println "Salvou com sucesso"
+            }
+            else {
+                println ocorrencia.errors
+                println "Não salvou"
+            }
+            redirect(action: "index")
         }
         else {
-            println ocorrencia.errors
-            println "Não salvou"
+            Ocorrencias ocorrencia = Ocorrencias.findById(id)
+            ocorrencia.status = "Ativo"
+            ocorrencia.dataModificacao = dataModificacao
+            ocorrencia.atendentes = atendente
+            ocorrencia.data = data
+            ocorrencia.horaInicio = calenInicio.getTime()
+            ocorrencia.horaFim = calenFim.getTime()
+            ocorrencia.resumido = relato
+            ocorrencia.detalhado = relato
+            ocorrencia.login = springSecurityService.currentUser
+            ocorrencia.validate()
+            if(!ocorrencia.hasErrors()) {
+                ocorrencia.save flush:true
+                println "Salvou com sucesso"
+            }
+            else {
+                println ocorrencia.errors
+                println "Não salvou"
+            }
+            redirect(action: "index")
         }
-
-        redirect(action: "index")
 
     }
 }
