@@ -72,6 +72,7 @@
                 <li id="menuHistorico"><g:link controller="escala" action="historico"><i class="icon-tasks"></i>Escala</g:link></li>
                 <li id="menuRelatorio"><g:link controller="relatorio" action="index"><i class="icon-list-alt"></i>Relatório</g:link></li>
                 <li id="menuOcorrencias"><g:link controller="ocorrencias" action="index"><i class="icon-fire"></i>Ocorrências</g:link></li>
+                <li id="menuOcorrencias"><g:link controller="boletim" action="index"><i class="icon-file-alt"></i>Boletim</g:link></li>
 
                 <li id="menuTopPontoREP"><g:link controller="topPontoREP" action="pegaMarcacoes"><i class="icon-calendar"></i>Saldo Horário Semana</g:link></li>
 

@@ -8,6 +8,8 @@ class Relatorio {
     String diaSemana
     String hora
     String periodo
+    String atendente
+    String feriado
     static constraints = {
     }
 }

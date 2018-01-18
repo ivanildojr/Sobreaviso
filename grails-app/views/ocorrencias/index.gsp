@@ -42,6 +42,7 @@
                 success: function(data){
 //                    alert("funcionou")
                     console.log(data)
+                    jQuery('[name=idN]').val(data.id)
                     jQuery('[name=atendente]').val(data.atendentes)
                     jQuery('[name=data]').val(data.diaF)
                     jQuery('[name=horaInicio]').val(data.horaInicioF)
@@ -72,9 +73,12 @@
             <br>
             <g:form id="formOcorrencia" class="form-inline">
                 <div class="form-group">
-                ATENDENTE:
-                <g:select name="atendente" optionKey="nome" optionValue="nome"
-                          from="${sobreavisonutel.Atendentes.listOrderByNome()}"/>
+                    <input id="idN" class="input-small form-control" name="idN" style="visibility: hidden">
+                </div>
+                <div class="form-group">
+                    ATENDENTE:
+                    <g:select name="atendente" optionKey="nome" optionValue="nome"
+                              from="${sobreavisonutel.Atendentes.listOrderByNome()}"/>
                 </div>
                 <br>
                 <div class="form-group input-group date" id="calendario">

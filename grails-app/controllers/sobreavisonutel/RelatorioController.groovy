@@ -123,6 +123,7 @@ class RelatorioController {
             listResumido << resumido
 
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
+//            println "horasTrab: " + horasTrab
             def hTrab = horasTrab.getHours()
             def mTrab = horasTrab.getMinutes()
             def floatTempoTrab = hTrab + mTrab/60
