@@ -16,8 +16,6 @@ import static java.time.LocalDate.now
 @Secured('ROLE_ADMIN')
 class RelatorioController {
 
-    TimeDuration horasTrabDentroSobreaviso, horasTrabForaSobreaviso
-
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     def springSecurityService
 
@@ -168,8 +166,8 @@ class RelatorioController {
             ocorrenciaList.add(relatorioOcorrencia)
         }
 
-        println "relatorioOcorrencia: " + relatorioOcorrencia.data
-        println "relatorioOcorrencia.horaFim: " + relatorioOcorrencia.horaFim
+//        println "relatorioOcorrencia: " + relatorioOcorrencia.data
+//        println "relatorioOcorrencia.horaFim: " + relatorioOcorrencia.horaFim
 
         /////////////////////////////////TRATANDO AS HORAS EM SOBREAVISO/////////////////////////////////////////
 //        println "listBusca: " + listBusca
@@ -230,11 +228,8 @@ class RelatorioController {
         }
 
         ///////////////////////////verifica se a ocorrência não está em dia da escala /////////////////////////////
-        Float horaForaEscala=0
-        Float horaDentroEscala=0
         def nDiasdeOcorrencia=0
-        def horasTrabDentroSobreaviso = 0
-        def horasTrabForaSobreaviso = 0
+        def floatTempoTrabForaSobreaviso=0, floatTempoTrabDentroSobreaviso=0
 
         listDia.each {dia->                //cada dia de ocorrencia
 //            println "tipo dia: " + dia.getClass().getName()
@@ -265,7 +260,7 @@ class RelatorioController {
             horaOcorrenciaInicio = ocorrenciaList.getAt(nDiasdeOcorrencia).horaInicio
             horaOcorrenciaFim = ocorrenciaList.getAt(nDiasdeOcorrencia).horaFim
 
-            if(!buscaDia.empty) {   //se tiver escala no dia   else
+            if(!buscaDia.empty) {   //se tiver escala no dia
                 def horaEscalaInicio = buscaDia[0].getAt(1)
                 println "horaEscalaInicio: " + horaEscalaInicio
                 def horaEscalaFim = buscaDia[buscaDia.lastIndexOf()].getAt(1)
@@ -286,70 +281,44 @@ class RelatorioController {
                 dataFimEscala = calFimEscala.getTime()
                 println "dataFimEscala: " + dataFimEscala
                 println "ocorrenciaList.horaInicio: " + ocorrenciaList.horaInicio
-                println "dataFimEscala: " + dataFimEscala
-                List<TimeDuration> rudsom = calculaDiaComEscala(diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim,dataFimEscala)
-//                println "horasTrab[0]: " + rudsom.get(0)
-
-                horasTrabDentroSobreaviso += rudsom.get(0).plus(horasTrabDentroSobreaviso)
-                horasTrabForaSobreaviso += rudsom.get(1).plus(horasTrabForaSobreaviso)
+                List<TimeDuration> rudsom = calculaDiaComEscala(diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim,dataInicioEscala,dataFimEscala)
+                println "ESCALA ******************"
+                floatTempoTrabDentroSobreaviso += rudsom.get(0)
+                floatTempoTrabForaSobreaviso += rudsom.get(1)
             }
             else {  //se não tem escala no dia
-                horasTrabForaSobreaviso = calculaDiaSemEscala(diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim)
-                horasTrabForaSobreaviso += horasTrabForaSobreaviso
-                println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+                println "SEM ESCALA ******************"
+                def floatTempoFora = calculaDiaSemEscala(diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim)
+                println "floatTempoTrabForaSobreaviso: " + floatTempoFora
+                floatTempoTrabForaSobreaviso += floatTempoFora
+                println "******************"
             }
             nDiasdeOcorrencia++
-
+            println "floatFora: " + floatTempoTrabForaSobreaviso
+            println "floatDentro: " + floatTempoTrabDentroSobreaviso
             /////////////////////////////
-
-            println "listData: " + listData
-//            diaF = diaF.format("yyyy-MM-dd HH:mm:ss.S")
-            println "diaF: " + diaF
-            if(!listData.contains(diaF)) {
-                println "A data não existe na escala: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + diaF
-                ocorrenciaList.findAll().each { oc->                       //busca todas as ocorrencias
-                    def dateOcData = Date.parse("dd-MM-yyyy", oc.data)
-//                    println "listData: " + listData
-                    println "dateOcData: " + dateOcData
-                    println "tipo dOcData: " + dateOcData.getClass().getName()
-                    println "diaF: " + diaF
-                    println "tipo diaF: " + diaF.getClass().getName()
-                    if(dateOcData==diaF) {
-                        println "Datas Iguais: " + oc.data + " ** " + diaF
-                        println "oc.floatDuracao: " + oc.floatDuracao
-                        horaForaEscala += oc.floatDuracao
-                        println "horaForaEscala: " + horaForaEscala
-                    }
-                }
-            }
+//
         }
-        String stringHoraForaEscala = resultado(horaForaEscala)
+        String stringHoraForaEscala = resultado(floatTempoTrabForaSobreaviso)
 
-        def acionamentoNaEscala = floatHTrabTotal - horaForaEscala
+        def acionamentoNaEscala = floatHTrabTotal - floatTempoTrabForaSobreaviso
         String stringacionamentoNaEscala = resultado(acionamentoNaEscala)
         println "stringacionamentoNaEscala: " + stringacionamentoNaEscala
 
-                ////////////////////// Lançamento no ponto
+        ////////////////////// Lançamento no ponto
         println "horasTrabTotal: " + horasTrabTotal
         def floatHorasTrabTotal = hTrabTotal + mTrabTotal/60
         println "floatHorasTrabTotal: " + floatHorasTrabTotal
-        def floatHorasTrabEscala = floatHorasTrabTotal - horaForaEscala
-        def horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabEscala
+        def floatHorasTrabEscala = floatHorasTrabTotal - floatTempoTrabForaSobreaviso
+        float horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabEscala
         println "horasSobreavisoMenosAcionamento: " + horasSobreavisoMenosAcionamento
-        def horasPonto = horasSobreavisoMenosAcionamento/3 + horaForaEscala   //Fator de sobreaviso mais as horas efetivemente trabalhadas
+        def horasPonto = horasSobreavisoMenosAcionamento/3 + floatTempoTrabForaSobreaviso   //Fator de sobreaviso mais as horas efetivemente trabalhadas
         String tempoPonto = resultado(horasPonto)
         String tempoSobreavisoMenosAcionamento = resultado(horasSobreavisoMenosAcionamento)
 
         ////////////////////// Total em acionamento
         String stringSobreAvisoDiv3
-//        def floatTempoTrab = hTrab + mTrab/60
-//        println "floatTempoTrab: " + floatTempoTrab
-//        String tempoTrab = resultado(floatTempoTrab)
-//        mTrabTotal = mTrabTotal % 60
-//        hTrabTotal = mTrabTotal/60 + hTrabTotal
-//        def sobreAvisoDiv3 = horasTotal/3
         stringSobreAvisoDiv3 = resultado(horasSobreavisoMenosAcionamento/3)
-
         println "atendenteNomeCompleto: " + atendenteNomeCompleto
 
 //        println "usuarios: " + Usuario.list()
@@ -389,8 +358,10 @@ class RelatorioController {
     }
 
     //////////MÉTODO PARA HORAS TRABALHADAS QUE HÁ SOBREAVISO
-    static def calculaDiaComEscala (def data, def horaInicio, def horaFim, def dataFimEscala) {
+    static def calculaDiaComEscala (def data, def horaInicio, def horaFim, def dataInicioEscala, def dataFimEscala) {
+        println "METODO COM SOBREAVISO ******************"
         def dataF = data + " " + horaInicio
+        println "dataFimEscala: " + dataFimEscala
         Date dataOcorrenciaInicio = Date.parse("dd-MM-yyyy HH:mm", dataF)
         println "dataOcorrenciaInicio: " + dataOcorrenciaInicio
         dataF = data + " " + horaFim
@@ -404,24 +375,56 @@ class RelatorioController {
         }
 
         TimeDuration horasTrabDentroSobreaviso, horasTrabForaSobreaviso
-        horasTrabDentroSobreaviso = TimeCategory.minus(dataFimEscala, dataOcorrenciaInicio)
+        if(dataFimEscala>dataOcorrenciaFim & dataOcorrenciaInicio>dataInicioEscala) {                 //    |--------------------------|    Escala
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)   //              |-------|             Ocorrencia
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "1 ******************"
+        }
+        if(dataOcorrenciaInicio>dataFimEscala & dataOcorrenciaInicio>dataInicioEscala) {              //    |--------------------------|                 Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)     //                                   |-------|     Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "2 ******************"
+        }
+        if(dataInicioEscala>dataOcorrenciaInicio & dataInicioEscala>dataOcorrenciaFim) {              //                |--------------------------|     Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)     //    |-------|                                    Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "3 ******************"
+            TimeCategory.equals(0)
+        }
+        if(dataOcorrenciaFim>dataFimEscala & dataFimEscala>dataOcorrenciaInicio) {                    //    |--------------------------|         Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataFimEscala)            //                           |-------|     Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataFimEscala, dataOcorrenciaInicio)
+            println "4 ******************"
+        }
+        if(dataOcorrenciaFim>dataInicioEscala & dataInicioEscala>dataOcorrenciaInicio) {              //                |--------------------------|     Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataInicioEscala,dataOcorrenciaInicio)       //            |-------|                            Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataInicioEscala)
+            println "5 ******************"
+        }
         println "horasTrabDentroSobreaviso: " + horasTrabDentroSobreaviso
-        horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio) - horasTrabDentroSobreaviso
         println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+        def hTrab = horasTrabDentroSobreaviso.getHours()
+        if(!hTrab==null) hTrab=0
+        def mTrab = horasTrabDentroSobreaviso.getMinutes()
+        if(!mTrab==null) mTrab=0
+        def floatTempoTrabDentroSobreaviso = hTrab + mTrab/60
+        println "floatTempoTrabDentroSobreaviso: " + floatTempoTrabDentroSobreaviso
+        hTrab = horasTrabForaSobreaviso.getHours()
+        if(!hTrab==null) hTrab=0
+        mTrab = horasTrabForaSobreaviso.getMinutes()
+        if(!mTrab==null) mTrab=0
+        def floatTempoTrabForaSobreaviso = hTrab + mTrab/60
+        println "floatTempoTrabForaSobreaviso: " + floatTempoTrabForaSobreaviso
+
         List<TimeDuration> horasTrab = new ArrayList<TimeDuration>()
-        horasTrab.add(horasTrabDentroSobreaviso)
-        horasTrab.add(horasTrabForaSobreaviso)
+        horasTrab.add(floatTempoTrabDentroSobreaviso)
+        horasTrab.add(floatTempoTrabForaSobreaviso)
         return horasTrab
-
-
-//        Calendar calOcorrenciaInicio = Calendar.getInstance();
-//        calOcorrenciaInicio.setTime(dataOcorrenciaInicio)
-//        calOcorrenciaInicio.set(Calendar.HOUR, horaInicio as Integer)
-//        println "calOcorrenciaInicio: " + calOcorrenciaInicio.getTime()
     }
 
     //////////MÉTODO PARA HORAS TRABALHADAS QUE NÃO HÁ SOBREAVISO
     static def calculaDiaSemEscala (def data, def horaInicio, def horaFim) {
+        println "METODO SEM SOBREAVISO ******************"
         def dataF = data + " " + horaInicio
         Date dataOcorrenciaInicio = Date.parse("dd-MM-yyyy HH:mm", dataF)
         println "dataOcorrenciaInicio: " + dataOcorrenciaInicio
@@ -436,7 +439,12 @@ class RelatorioController {
         }
         TimeDuration horasTrabForaSobreaviso
         horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)
-        return horasTrabForaSobreaviso
+        println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+        def hTrab = horasTrabForaSobreaviso.getHours()
+        def mTrab = horasTrabForaSobreaviso.getMinutes()
+        def floatTempoTrabForaSobreaviso = hTrab + mTrab/60
+//        println "floatTempoTrabForaSobreaviso: " + floatTempoTrabForaSobreaviso
+        return floatTempoTrabForaSobreaviso
 //        println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
     }
 
