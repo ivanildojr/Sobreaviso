@@ -416,29 +416,35 @@ class RelatorioController {
 
             def buscaDiaSeguinte = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$dataOcorrenciaFimSeguinte' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteStringDiaSeguinte' ) order by dataEscala")
             println "buscaDiaSeguinte: " + buscaDiaSeguinte
+            def horaEscalaInicio, horaEscalaFim
 
-                def horaEscalaInicio = buscaDiaSeguinte[0].getAt(1)
+            if(!buscaDiaSeguinte.empty) {   //se tiver escala no dia seguinte
+                horaEscalaInicio = buscaDiaSeguinte[0].getAt(1)
                 println "horaEscalaInicio: " + horaEscalaInicio
-                def horaEscalaFim = buscaDiaSeguinte[buscaDiaSeguinte.lastIndexOf()].getAt(1)
+                horaEscalaFim = buscaDiaSeguinte[buscaDiaSeguinte.lastIndexOf()].getAt(1)
                 println "horaEscalaFim: " + horaEscalaFim
+            }
+//            else{          //se nao tiver escala no dia seguinte
+//                def diaF = dataInicioEscala
+//                println "diaF: " + diaF
+//                Calendar calInicioEscala = Calendar.getInstance();
+//                calInicioEscala.setTime(diaF)
+//                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
+//                dataInicioEscala = calInicioEscala.getTime()
+//                println "dataInicioEscala: " + dataInicioEscala
+//
+//                Calendar calFimEscala = Calendar.getInstance();
+//                calFimEscala.setTime(diaF)
+//                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
+//                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
+//                    calFimEscala.add(calFimEscala.DATE,1)
+//                }
+//                dataFimEscala = calFimEscala.getTime()
+//                println "dataFimEscala: " + dataFimEscala
+//            }
 
-                def diaF = buscaDiaSeguinte[0].getAt(0)
-//                def diaF = Date.parse("dd-MM-yyyy", dia)
 
-                Calendar calInicioEscala = Calendar.getInstance();
-                calInicioEscala.setTime(diaF)
-                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
-                dataInicioEscala = calInicioEscala.getTime()
-                println "dataInicioEscala: " + dataInicioEscala
 
-                Calendar calFimEscala = Calendar.getInstance();
-                calFimEscala.setTime(diaF)
-                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
-                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
-                    calFimEscala.add(calFimEscala.DATE,1)
-                }
-                dataFimEscala = calFimEscala.getTime()
-                println "dataFimEscala: " + dataFimEscala
             }
         }
 
