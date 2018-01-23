@@ -8,6 +8,8 @@ import groovy.time.TimeCategory
 import groovy.time.TimeDuration
 import sobreavisonutel.seguranca.Usuario
 
+import java.text.DateFormat
+
 import static java.time.LocalDate.now
 
 @Transactional(readOnly = true)
@@ -82,7 +84,7 @@ class RelatorioController {
 //                println "dataMaisRecente: " + dataMaisRecenteString
             }
             busca = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$stringDataInicio' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
-//            println "busca: " + busca
+            println "busca: " + busca
 
             if(busca!=[]) listBusca << busca
 //            println "dataInico: " + dataInicio
@@ -164,6 +166,9 @@ class RelatorioController {
             ocorrenciaList.add(relatorioOcorrencia)
         }
 
+//        println "relatorioOcorrencia: " + relatorioOcorrencia.data
+//        println "relatorioOcorrencia.horaFim: " + relatorioOcorrencia.horaFim
+
         /////////////////////////////////TRATANDO AS HORAS EM SOBREAVISO/////////////////////////////////////////
 //        println "listBusca: " + listBusca
         def listData = []
@@ -222,65 +227,129 @@ class RelatorioController {
             relatorioList.add(relatorio)
         }
 
-        //verifica se a ocorrência não está em dia da escala
-        Float horaForaEscala=0
-        Float horaDentroEscala=0
+        ///////////////////////////verifica se a ocorrência não está em dia da escala /////////////////////////////
+        def nDiasdeOcorrencia=0
+        def floatTempoTrabForaSobreaviso=0, floatTempoTrabDentroSobreaviso=0
 
-        listDia.each {dia->
-            println "tipo dia: " + dia.getClass().getName()
-            println "tipo listDia: " + listDia[0].getClass().getName()
+        listDia.each {dia->                //cada dia de ocorrencia
+//            println "tipo dia: " + dia.getClass().getName()
+//            println "tipo listDia: " + listDia[0].getClass().getName()
+
             println "dia: " + dia
             def diaF = Date.parse("dd-MM-yyyy", dia)
-            diaF.format("dd-MM-yyyy HH:mm:ss.S")
-            println "tipo diaF: " + diaF.getClass().getName()
-            println "listData: " + listData
-//            diaF = diaF.format("yyyy-MM-dd HH:mm:ss.S")
-            println "diaF: " + diaF
-            if(!listData.contains(diaF)) {
-                println "A data não existe na escala: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + diaF
-                ocorrenciaList.findAll().each { oc->                       //busca todas as ocorrencias
-                    def dateOcData = Date.parse("dd-MM-yyyy", oc.data)
-//                    println "listData: " + listData
-                    println "dateOcData: " + dateOcData
-                    println "tipo dOcData: " + dateOcData.getClass().getName()
-                    println "diaF: " + diaF
-                    println "tipo diaF: " + diaF.getClass().getName()
-                    if(dateOcData==diaF) {
-                        println "Datas Iguais: " + oc.data + " ** " + diaF
-                        println "oc.floatDuracao: " + oc.floatDuracao
-                        horaForaEscala += oc.floatDuracao
-                        println "horaForaEscala: " + horaForaEscala
-                    }
-                }
-            }
-        }
-        String stringHoraForaEscala = resultado(horaForaEscala)
+//            diaF.format("dd-MM-yyyy HH:mm:ss.S")
+//            println "tipo diaF: " + diaF.getClass().getName()
 
-        def acionamentoNaEscala = floatHTrabTotal - horaForaEscala
+//            ////////////////////////////////////// CALCULO DAS HORAS EFETIVAS E SOBREAVISO
+//
+            def diaFF = diaF.format("yyyy-MM-dd HH:mm:ss")
+            println "diaFF: " + diaFF
+            def dataMaisRecente = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala='$diaFF'").get(0)
+
+            def dataMaisRecenteString = ''
+            if (dataMaisRecente != null) {
+                dataMaisRecenteString = dataMaisRecente.format("yyyy-MM-dd HH:mm:ss")
+//                println "dataMaisRecente: " + dataMaisRecenteString
+            }
+            def buscaDia = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$diaFF' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteString' ) order by dataEscala")
+            println "buscaDia: " + buscaDia
+
+            Date dataFimEscala, dataInicioEscala
+            def diaOcorrenciaInicio, horaOcorrenciaInicio, horaOcorrenciaFim
+            diaOcorrenciaInicio =  ocorrenciaList.getAt(nDiasdeOcorrencia).data
+            horaOcorrenciaInicio = ocorrenciaList.getAt(nDiasdeOcorrencia).horaInicio
+            horaOcorrenciaFim = ocorrenciaList.getAt(nDiasdeOcorrencia).horaFim
+
+            if(!buscaDia.empty) {   //se tiver escala no dia
+                def horaEscalaInicio = buscaDia[0].getAt(1)
+                println "horaEscalaInicio: " + horaEscalaInicio
+                def horaEscalaFim = buscaDia[buscaDia.lastIndexOf()].getAt(1)
+                println "horaEscalaFim: " + horaEscalaFim
+
+                Calendar calInicioEscala = Calendar.getInstance();
+                calInicioEscala.setTime(diaF)
+                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
+                dataInicioEscala = calInicioEscala.getTime()
+                println "dataInicioEscala: " + dataInicioEscala
+
+                Calendar calFimEscala = Calendar.getInstance();
+                calFimEscala.setTime(diaF)
+                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
+                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
+                    calFimEscala.add(calFimEscala.DATE,1)
+                }
+                dataFimEscala = calFimEscala.getTime()
+                println "dataFimEscala: " + dataFimEscala
+                println "ocorrenciaList.horaInicio: " + ocorrenciaList.horaInicio
+                List<TimeDuration> rudsom = calculaDiaComEscala(atendenteId, diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim,dataInicioEscala,dataFimEscala)
+                println ""
+                println "COM ESCALA ******************"
+                floatTempoTrabDentroSobreaviso += rudsom.get(0)
+                floatTempoTrabForaSobreaviso += rudsom.get(1)
+            }
+            else {  //se não tem escala no dia
+                println ""
+                println "SEM ESCALA ******************"
+                def dataF = diaOcorrenciaInicio + " " + horaOcorrenciaInicio
+                Date dataOcorrenciaInicio = Date.parse("dd-MM-yyyy HH:mm", dataF)
+                println "dataOcorrenciaInicio: " + dataOcorrenciaInicio
+                dataF = diaOcorrenciaInicio + " " + horaOcorrenciaFim
+                Date dataOcorrenciaFim = Date.parse("dd-MM-yyyy HH:mm", dataF)
+                println "dataOcorrenciaFim: " + dataOcorrenciaFim
+                List<TimeDuration> rudsom = calculaDiaComEscala(atendenteId, diaOcorrenciaInicio,horaOcorrenciaInicio,horaOcorrenciaFim,dataInicioEscala,dataFimEscala)
+                floatTempoTrabDentroSobreaviso += rudsom.get(0)
+                floatTempoTrabForaSobreaviso += rudsom.get(1)
+//                if (dataOcorrenciaFim < dataOcorrenciaInicio) {  //se passar da meia noite considere como o dia seguinte
+//                    Calendar calOcorrenciaFim = Calendar.getInstance();
+//                    calOcorrenciaFim.setTime(dataOcorrenciaFim)
+//                    calOcorrenciaFim.add(calOcorrenciaFim.DATE, 1)
+//                    dataOcorrenciaFim = calOcorrenciaFim.getTime()
+//                    def dataOcorrenciaFimSeguinte = dataOcorrenciaFim.format("yyyy-MM-dd")
+//                    println "dataOcorrenciaFimSeguinte: " + dataOcorrenciaFimSeguinte
+//
+//                    def dataMaisRecenteDiaSeguinte = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala='$dataOcorrenciaFimSeguinte'").get(0)
+//                    println "dataMaisRecenteDiaSeguinte: " + dataMaisRecenteDiaSeguinte
+//
+//                    def dataMaisRecenteStringDiaSeguinte = ''
+//                    if (dataMaisRecenteDiaSeguinte != null) {
+//                        dataMaisRecenteStringDiaSeguinte = dataMaisRecenteDiaSeguinte.format("yyyy-MM-dd HH:mm:ss")
+//                        println "dataMaisRecenteStringDiaSeguinte: " + dataMaisRecenteStringDiaSeguinte
+//                    }
+//                    def buscaDiaSeguinte = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$dataOcorrenciaFimSeguinte' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteStringDiaSeguinte' ) order by dataEscala")
+//                    println "buscaDiaSeguinte: " + buscaDiaSeguinte
+//                }
+//
+////                def floatTempoFora = calculaDiaSemEscala(dataOcorrenciaInicio,dataOcorrenciaFim)
+////                println "floatTempoTrabForaSobreaviso: " + floatTempoFora
+////                floatTempoTrabForaSobreaviso += floatTempoFora
+////                println "******************"
+            }
+            nDiasdeOcorrencia++
+            println "floatFora: " + floatTempoTrabForaSobreaviso
+            println "floatDentro: " + floatTempoTrabDentroSobreaviso
+            /////////////////////////////
+//
+        }
+        String stringHoraForaEscala = resultado(floatTempoTrabForaSobreaviso)
+
+        def acionamentoNaEscala = floatHTrabTotal - floatTempoTrabForaSobreaviso
         String stringacionamentoNaEscala = resultado(acionamentoNaEscala)
         println "stringacionamentoNaEscala: " + stringacionamentoNaEscala
 
-                ////////////////////// Lançamento no ponto
+        ////////////////////// Lançamento no ponto
         println "horasTrabTotal: " + horasTrabTotal
         def floatHorasTrabTotal = hTrabTotal + mTrabTotal/60
         println "floatHorasTrabTotal: " + floatHorasTrabTotal
-        def floatHorasTrabEscala = floatHorasTrabTotal - horaForaEscala
-        def horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabEscala
+        def floatHorasTrabEscala = floatHorasTrabTotal - floatTempoTrabForaSobreaviso
+        float horasSobreavisoMenosAcionamento = horasTotal - floatHorasTrabEscala
         println "horasSobreavisoMenosAcionamento: " + horasSobreavisoMenosAcionamento
-        def horasPonto = horasSobreavisoMenosAcionamento/3 + horaForaEscala   //Fator de sobreaviso mais as horas efetivemente trabalhadas
+        def horasPonto = horasSobreavisoMenosAcionamento/3 + floatTempoTrabForaSobreaviso   //Fator de sobreaviso mais as horas efetivemente trabalhadas
         String tempoPonto = resultado(horasPonto)
         String tempoSobreavisoMenosAcionamento = resultado(horasSobreavisoMenosAcionamento)
 
         ////////////////////// Total em acionamento
         String stringSobreAvisoDiv3
-//        def floatTempoTrab = hTrab + mTrab/60
-//        println "floatTempoTrab: " + floatTempoTrab
-//        String tempoTrab = resultado(floatTempoTrab)
-//        mTrabTotal = mTrabTotal % 60
-//        hTrabTotal = mTrabTotal/60 + hTrabTotal
-//        def sobreAvisoDiv3 = horasTotal/3
         stringSobreAvisoDiv3 = resultado(horasSobreavisoMenosAcionamento/3)
-
         println "atendenteNomeCompleto: " + atendenteNomeCompleto
 
 //        println "usuarios: " + Usuario.list()
@@ -295,7 +364,7 @@ class RelatorioController {
     //////////MÉTODO PARA CONVERTER FLOAT EM HORAS E MINUTOS
     static def resultado(def numero) {
 //        numero = Math.round(numero)
-        println "numero: " + numero
+//        println "numero: " + numero
         String resultado
         Integer hNumero = numero
         Integer mNumero = Math.round((numero - hNumero)*60) //transformar decimal para minutos
@@ -303,8 +372,8 @@ class RelatorioController {
             hNumero += 1
             mNumero = 0
         }
-        println "hNumero: " + hNumero
-        println "mNumero: " + mNumero
+//        println "hNumero: " + hNumero
+//        println "mNumero: " + mNumero
         if(hNumero==0) resultado = mNumero + " minutos"
         if(hNumero==1) resultado = mNumero + " minuto"
         if(mNumero==0) resultado = hNumero + " horas"
@@ -315,9 +384,148 @@ class RelatorioController {
         if(hNumero==1 & mNumero==0) resultado = hNumero + " hora"
         if(hNumero==0 & mNumero==1) resultado = mNumero + " minuto"
         if(hNumero==0 & mNumero==0) resultado = "---"
-        println "resultado: " + resultado
+//        println "resultado: " + resultado
         return resultado
     }
 
+    //////////MÉTODO PARA HORAS TRABALHADAS QUE HÁ SOBREAVISO
+    static def calculaDiaComEscala (def atendenteId, def data, def horaInicio, def horaFim, def dataInicioEscala, def dataFimEscala) {
+        println "METODO COM SOBREAVISO ******************"
+        def dataF = data + " " + horaInicio
+        println "dataFimEscala: " + dataFimEscala
+        Date dataOcorrenciaInicio = Date.parse("dd-MM-yyyy HH:mm", dataF)
+        println "dataOcorrenciaInicio: " + dataOcorrenciaInicio
+        dataF = data + " " + horaFim
+        Date dataOcorrenciaFim = Date.parse("dd-MM-yyyy HH:mm", dataF)
+        println "dataOcorrenciaFim: " + dataOcorrenciaFim
+        if (dataOcorrenciaFim < dataOcorrenciaInicio) {  //se passar da meia noite considere como o dia seguinte
+            Calendar calOcorrenciaFim = Calendar.getInstance();
+            calOcorrenciaFim.setTime(dataOcorrenciaFim)
+            calOcorrenciaFim.add(calOcorrenciaFim.DATE, 1)
+            dataOcorrenciaFim = calOcorrenciaFim.getTime()
+            def dataOcorrenciaFimSeguinte = dataOcorrenciaFim.format("yyyy-MM-dd")
+            println "dataOcorrenciaFimSeguinte: " + dataOcorrenciaFimSeguinte
+
+            def dataMaisRecenteDiaSeguinte = Historico.executeQuery("select max(dataModificacao) from Historico where dataEscala='$dataOcorrenciaFimSeguinte'").get(0)
+            println "dataMaisRecenteDiaSeguinte: " + dataMaisRecenteDiaSeguinte
+
+            def dataMaisRecenteStringDiaSeguinte = ''
+            if (dataMaisRecenteDiaSeguinte != null) {
+                dataMaisRecenteStringDiaSeguinte = dataMaisRecenteDiaSeguinte.format("yyyy-MM-dd HH:mm:ss")
+                println "dataMaisRecenteStringDiaSeguinte: " + dataMaisRecenteStringDiaSeguinte
+
+            def buscaDiaSeguinte = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$dataOcorrenciaFimSeguinte' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteStringDiaSeguinte' ) order by dataEscala")
+            println "buscaDiaSeguinte: " + buscaDiaSeguinte
+            def horaEscalaInicio, horaEscalaFim
+
+            if(!buscaDiaSeguinte.empty) {   //se tiver escala no dia seguinte
+                horaEscalaInicio = buscaDiaSeguinte[0].getAt(1)
+                println "horaEscalaInicio: " + horaEscalaInicio
+                horaEscalaFim = buscaDiaSeguinte[buscaDiaSeguinte.lastIndexOf()].getAt(1)
+                println "horaEscalaFim: " + horaEscalaFim
+            }
+//            else{          //se nao tiver escala no dia seguinte
+//                def diaF = dataInicioEscala
+//                println "diaF: " + diaF
+//                Calendar calInicioEscala = Calendar.getInstance();
+//                calInicioEscala.setTime(diaF)
+//                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
+//                dataInicioEscala = calInicioEscala.getTime()
+//                println "dataInicioEscala: " + dataInicioEscala
+//
+//                Calendar calFimEscala = Calendar.getInstance();
+//                calFimEscala.setTime(diaF)
+//                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
+//                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
+//                    calFimEscala.add(calFimEscala.DATE,1)
+//                }
+//                dataFimEscala = calFimEscala.getTime()
+//                println "dataFimEscala: " + dataFimEscala
+//            }
+
+
+
+            }
+        }
+
+        TimeDuration horasTrabDentroSobreaviso, horasTrabForaSobreaviso
+        if(dataFimEscala>dataOcorrenciaFim & dataOcorrenciaInicio>dataInicioEscala) {                 //    |--------------------------|    Escala
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)   //              |-------|             Ocorrencia
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "1 ******************"
+        }
+        if(dataOcorrenciaInicio>dataFimEscala & dataOcorrenciaInicio>dataInicioEscala) {              //    |--------------------------|                 Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)     //                                   |-------|     Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "2 ******************"
+        }
+        if(dataInicioEscala>dataOcorrenciaInicio & dataInicioEscala>dataOcorrenciaFim) {              //                |--------------------------|     Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)     //    |-------|                                    Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaFim) //forçar cast
+            println "3 ******************"
+            TimeCategory.equals(0)
+        }
+        if(dataOcorrenciaFim>dataFimEscala & dataFimEscala>dataOcorrenciaInicio) {                    //    |--------------------------|         Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataFimEscala)            //                           |-------|     Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataFimEscala, dataOcorrenciaInicio)
+            println "4 ******************"
+        }
+        if(dataOcorrenciaFim>dataInicioEscala & dataInicioEscala>dataOcorrenciaInicio) {              //                |--------------------------|     Escala
+            horasTrabForaSobreaviso = TimeCategory.minus(dataInicioEscala,dataOcorrenciaInicio)       //            |-------|                            Ocorrencia
+            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataInicioEscala)
+            println "5 ******************"
+        }
+        println "horasTrabDentroSobreaviso: " + horasTrabDentroSobreaviso
+        println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+        def hTrab = horasTrabDentroSobreaviso.getHours()
+        if(!hTrab==null) hTrab=0
+        def mTrab = horasTrabDentroSobreaviso.getMinutes()
+        if(!mTrab==null) mTrab=0
+        def floatTempoTrabDentroSobreaviso = hTrab + mTrab/60
+        println "floatTempoTrabDentroSobreaviso: " + floatTempoTrabDentroSobreaviso
+        hTrab = horasTrabForaSobreaviso.getHours()
+        if(!hTrab==null) hTrab=0
+        mTrab = horasTrabForaSobreaviso.getMinutes()
+        if(!mTrab==null) mTrab=0
+        def floatTempoTrabForaSobreaviso = hTrab + mTrab/60
+        println "floatTempoTrabForaSobreaviso: " + floatTempoTrabForaSobreaviso
+
+        List<TimeDuration> horasTrab = new ArrayList<TimeDuration>()
+        horasTrab.add(floatTempoTrabDentroSobreaviso)
+        horasTrab.add(floatTempoTrabForaSobreaviso)
+        return horasTrab
+    }
+
+//    //////////MÉTODO PARA HORAS TRABALHADAS QUE NÃO HÁ SOBREAVISO
+//    static def calculaDiaSemEscala (def dataOcorrenciaInicio, def dataOcorrenciaFim) {
+//        println "METODO SEM SOBREAVISO ******************"
+////        def dataF = data + " " + horaInicio
+////        Date dataOcorrenciaInicio = Date.parse("dd-MM-yyyy HH:mm", dataF)
+////        println "dataOcorrenciaInicio: " + dataOcorrenciaInicio
+////        dataF = data + " " + horaFim
+////        Date dataOcorrenciaFim = Date.parse("dd-MM-yyyy HH:mm", dataF)
+////        println "dataOcorrenciaFim: " + dataOcorrenciaFim
+////        if (dataOcorrenciaFim < dataOcorrenciaInicio) {  //se passar da meia noite considere como o dia seguinte
+////            Calendar calOcorrenciaFim = Calendar.getInstance();
+////            calOcorrenciaFim.setTime(dataOcorrenciaFim)
+////            calOcorrenciaFim.add(calOcorrenciaFim.DATE, 1)
+////            dataOcorrenciaFim = calOcorrenciaFim.getTime()
+////
+////        }
+//        if(dataOcorrenciaFim>dataInicioEscala & dataInicioEscala>dataOcorrenciaInicio) {              //                |--------------------------|     Escala
+//            horasTrabForaSobreaviso = TimeCategory.minus(dataInicioEscala,dataOcorrenciaInicio)       //            |-------|                            Ocorrencia
+//            horasTrabDentroSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataInicioEscala)
+//            println "5 ******************"
+//        }
+//        TimeDuration horasTrabForaSobreaviso
+//        horasTrabForaSobreaviso = TimeCategory.minus(dataOcorrenciaFim, dataOcorrenciaInicio)
+//        println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+//        def hTrab = horasTrabForaSobreaviso.getHours()
+//        def mTrab = horasTrabForaSobreaviso.getMinutes()
+//        def floatTempoTrabForaSobreaviso = hTrab + mTrab/60
+////        println "floatTempoTrabForaSobreaviso: " + floatTempoTrabForaSobreaviso
+//        return floatTempoTrabForaSobreaviso
+////        println "horasTrabForaSobreaviso: " + horasTrabForaSobreaviso
+//    }
 
 }
