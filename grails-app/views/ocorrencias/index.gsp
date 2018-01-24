@@ -8,6 +8,12 @@
     %{--<asset:stylesheet src="grails-app/assets/stylesheets/rudsom.css"/>--}%
     <asset:javascript src="datepicker/js/bootstrap-datepicker.min.js"/>
     <asset:javascript src="datepicker/locales/bootstrap-datepicker.pt-BR.min.js"/>
+
+    %{--<asset:stylesheet src="grails-datatables.css"/>--}%
+    %{--<asset:stylesheet src="grails-datatables-plain.css"/>--}%
+    %{--<asset:javascript src="grails-datatables.js"/>--}%
+
+
     <style>
     input[id=datepicker] {
         font-size: 14px;
@@ -24,14 +30,19 @@
     #celOcorrencia{
         width: 72%;
     }
-
+    #dataOcorrencia{
+        width: 7%;
+    }
 
     </style>
 
     <script type="text/javascript">
         $(document).ready(function() {
-//            alert("funcionou")
-        });
+//            $('#tabelaRelatorio').dataTable( {
+//                "language": {
+//                     "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+//                }
+//            });
 
             function alterarOcorrencia(id){
             $.ajax({
@@ -51,6 +62,7 @@
                 }
             })
         }
+     });
 
     </script>
 
@@ -105,29 +117,34 @@
 
         <div>
             %{--<g:if test="${horasTotal > 0}">--}%
+
                 <table align="center" id="tabelaRelatorio" class="table table-condensed" style="width:100%">
+                    <thead>
                     <tr>
-                        %{--<th colspan="3"><b>${atendente} - ${formatDate(format: 'dd-MM-yyyy', date: dataInicio)} à ${formatDate(format: 'dd-MM-yyyy', date: dataFim)}</b>--}%
-                        %{--</th>--}%
+                        <th class="col-md-1">Atendente</th>
+                        <th class="col-md-1"id="dataOcorrencia">Data</th>
+                        <th class="col-md-1">Hora Início</th>
+                        <th class="col-md-1">Hora Fim</th>
+                        <th class="col-md-1" id="celOcorrencia">Ocorrência</th>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-1"></th>
                     </tr>
-                    <th class="col-md-1">Atendente</th>
-                    <th class="col-md-1">Data</th>
-                    <th class="col-md-1">Hora Início</th>
-                    <th class="col-md-1">Hora Fim</th>
-                    <th class="col-md-1" id="celOcorrencia">Ocorrência</th>
-                    <th class="col-md-1"><i class="icon-pencil"></i></th>
-                    <th class="col-md-1"><i class="icon-trash"></i></th>
+                    </thead>
+                    <tbody>
                     <g:each var="ocorrencia" status="j" in="${listaOcorrencias}">
-                        <tr align="center">
-                            <td>${ocorrencia.atendentes}</td>
-                            <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
-                            <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
-                            <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
-                            <td>${ocorrencia.resumido}</td>
-                            <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> <i class="icon-pencil"></i> </a> </td>
-                            <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" onclick="return confirm('Quer mesmo excluir o registro?')"><i class="icon-trash"></i></g:link></td>
-                        </tr>
+
+                            <tr align="center">
+                                <td>${ocorrencia.atendentes}</td>
+                                <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
+                                <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
+                                <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
+                                <td>${ocorrencia.resumido}</td>
+                                <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> <i class="icon-pencil"></i> </a> </td>
+                                <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" onclick="return confirm('Quer mesmo excluir o registro?')"><i class="icon-trash"></i></g:link></td>
+                            </tr>
+
                     </g:each>
+                    </tbody>
                 </table>
             %{--</g:if>--}%
         </div>
@@ -147,6 +164,7 @@
 <g:javascript>
 
     $(document).ready(function () {
+
         $('#alertaData').hide()
         $('#gerarBtn').on('click', function (e) {
             alert("O campo data deve ser preenchido!");

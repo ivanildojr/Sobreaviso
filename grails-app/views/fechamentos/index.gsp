@@ -4,6 +4,21 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'fechamentos.label', default: 'Fechamentos')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+
+        <asset:stylesheet src="grails-datatables.css"/>
+        <asset:stylesheet src="grails-datatables-plain.css"/>
+        <asset:javascript src="grails-datatables.js"/>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#tabelaFechamentos').dataTable( {
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                    }
+                });
+            });
+        </script>
+
     </head>
     <body>
 
@@ -25,7 +40,7 @@
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
-                <table class="table table-hover table-responsive">
+                <table id="tabelaFechamentos" class="table table-hover table-responsive">
                     <thead class="table-header">
                     <tr>
                         <th>Código Funcionário</th>
@@ -54,11 +69,7 @@
                     </tbody>
                     <tfoot class="table-footer">
                     <tr>
-                        <td colspan="6">
-                            <div class="pagination">
-                                <g:paginate total="${fechamentosCount ?: 0}" />
-                            </div>
-                        </td>
+
 
                     </tr>
                     </tfoot>

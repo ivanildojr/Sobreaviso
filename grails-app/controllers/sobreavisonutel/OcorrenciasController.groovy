@@ -9,6 +9,7 @@ import java.sql.Time
 @Transactional(readOnly = true)
 @Secured('ROLE_ADMIN')
 
+
 class OcorrenciasController {
 
     static scaffold = Ocorrencias
