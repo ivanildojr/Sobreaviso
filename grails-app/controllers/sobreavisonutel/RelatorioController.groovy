@@ -94,14 +94,14 @@ class RelatorioController {
         /////////////////////////////////TRATANDO AS HORAS TRABALHADAS   /////////////////////////////////////////
         def listDiasTrabalhados
         String diaTrabalhado, diaSemana
-        List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listResumido = [], listfloatTempoTrab = []
-        String stringHoraInicio, stringHoraFim, resumido
+        List listHorasTrabalhadas = [], listHoraInicio = [], listHoraFim = [], listDia = [], listDetalhado = [], listfloatTempoTrab = []
+        String stringHoraInicio, stringHoraFim, detalhado
         Date horaInicio, horaFim
         TimeDuration horasTrab
         TimeDuration horasTrabTotal = new TimeDuration(0,0,0,0)
         stringDataFim = dataFim.format("yyyy-MM-dd").toString()
 
-        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, resumido from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and status='Ativo' and data<='$stringDataFim'")
+        listDiasTrabalhados = Ocorrencias.executeQuery("select data, horaInicio, horaFim, detalhado from Ocorrencias where atendentes='$atendente' and data>='$stringDataInicioFixa' and status='Ativo' and data<='$stringDataFim'")
 //        println "diasTrabalhados: " + listDiasTrabalhados
         listDiasTrabalhados.each {i->
             diaTrabalhado = i[0]
@@ -109,8 +109,6 @@ class RelatorioController {
 //            println "diaTrabalhado: " + diaTrabalhado
             listDia << diaTrabalhado
             println "listDia: " + listDia
-
-
 
             stringHoraInicio = i[1]
             println "stringHoraInicio: " + stringHoraInicio
@@ -121,8 +119,8 @@ class RelatorioController {
             horaFim = Date.parse('yyyy-MM-dd HH:mm:ss', stringHoraFim)
             stringHoraFim = horaFim.format("HH:mm")
             listHoraFim << stringHoraFim
-            resumido = i[3]
-            listResumido << resumido
+            detalhado = i[3]
+            listDetalhado << detalhado
 
             horasTrab = TimeCategory.minus(horaFim, horaInicio)
 //            println "horasTrab: " + horasTrab
@@ -161,8 +159,8 @@ class RelatorioController {
             relatorioOcorrencia.horaFim = listHoraFim.getAt(index)
             relatorioOcorrencia.duracao = listHorasTrabalhadas.getAt(index)
             relatorioOcorrencia.floatDuracao = listfloatTempoTrab.getAt(index)
-            relatorioOcorrencia.relato = listResumido.getAt(index)
-//            relatorioOcorrencia.acionamentoExtra = listResumido.getAt(index)
+            relatorioOcorrencia.relato = listDetalhado.getAt(index)
+//            relatorioOcorrencia.acionamentoExtra = listDetalhado.getAt(index)
             ocorrenciaList.add(relatorioOcorrencia)
         }
 
@@ -416,35 +414,29 @@ class RelatorioController {
 
             def buscaDiaSeguinte = Historico.executeQuery("select dataEscala, hora from Historico where dataEscala='$dataOcorrenciaFimSeguinte' and atendentes_id='$atendenteId' and dataModificacao>='$dataMaisRecenteStringDiaSeguinte' ) order by dataEscala")
             println "buscaDiaSeguinte: " + buscaDiaSeguinte
-            def horaEscalaInicio, horaEscalaFim
 
-            if(!buscaDiaSeguinte.empty) {   //se tiver escala no dia seguinte
-                horaEscalaInicio = buscaDiaSeguinte[0].getAt(1)
+                def horaEscalaInicio = buscaDiaSeguinte[0].getAt(1)
                 println "horaEscalaInicio: " + horaEscalaInicio
-                horaEscalaFim = buscaDiaSeguinte[buscaDiaSeguinte.lastIndexOf()].getAt(1)
+                def horaEscalaFim = buscaDiaSeguinte[buscaDiaSeguinte.lastIndexOf()].getAt(1)
                 println "horaEscalaFim: " + horaEscalaFim
-            }
-//            else{          //se nao tiver escala no dia seguinte
-//                def diaF = dataInicioEscala
-//                println "diaF: " + diaF
-//                Calendar calInicioEscala = Calendar.getInstance();
-//                calInicioEscala.setTime(diaF)
-//                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
-//                dataInicioEscala = calInicioEscala.getTime()
-//                println "dataInicioEscala: " + dataInicioEscala
-//
-//                Calendar calFimEscala = Calendar.getInstance();
-//                calFimEscala.setTime(diaF)
-//                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
-//                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
-//                    calFimEscala.add(calFimEscala.DATE,1)
-//                }
-//                dataFimEscala = calFimEscala.getTime()
-//                println "dataFimEscala: " + dataFimEscala
-//            }
 
+                def diaF = buscaDiaSeguinte[0].getAt(0)
+//                def diaF = Date.parse("dd-MM-yyyy", dia)
 
+                Calendar calInicioEscala = Calendar.getInstance();
+                calInicioEscala.setTime(diaF)
+                calInicioEscala.set(Calendar.HOUR, horaEscalaInicio as Integer)
+                dataInicioEscala = calInicioEscala.getTime()
+                println "dataInicioEscala: " + dataInicioEscala
 
+                Calendar calFimEscala = Calendar.getInstance();
+                calFimEscala.setTime(diaF)
+                calFimEscala.set(Calendar.HOUR, (horaEscalaFim as Integer) + 1)  //+1 para considerar escala ate as 00h
+                if(calFimEscala<calInicioEscala) {  //se passar da meia noite considere como o dia seguinte
+                    calFimEscala.add(calFimEscala.DATE,1)
+                }
+                dataFimEscala = calFimEscala.getTime()
+                println "dataFimEscala: " + dataFimEscala
             }
         }
 

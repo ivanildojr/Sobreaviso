@@ -12,6 +12,10 @@
     %{--<asset:stylesheet src="grails-datatables.css"/>--}%
     %{--<asset:stylesheet src="grails-datatables-plain.css"/>--}%
     %{--<asset:javascript src="grails-datatables.js"/>--}%
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
 
 
     <style>
@@ -38,11 +42,11 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-//            $('#tabelaRelatorio').dataTable( {
-//                "language": {
-//                     "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
-//                }
-//            });
+            $('#tabelaRelatorio').dataTable( {
+                "language": {
+                     "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                }
+            });
 
             function alterarOcorrencia(id){
             $.ajax({
@@ -135,10 +139,10 @@
 
                             <tr align="center">
                                 <td>${ocorrencia.atendentes}</td>
-                                <td>${formatDate(format: 'dd-MM-yyyy', date: ocorrencia.data)}</td>
+                                <td>${ocorrencia.data}</td>
                                 <td> ${formatDate(format: 'HH:mm', date: ocorrencia.horaInicio)}</td>
                                 <td>${formatDate(format: 'HH:mm', date: ocorrencia.horaFim)}</td>
-                                <td>${ocorrencia.resumido}</td>
+                                <td>${ocorrencia.detalhado}</td>
                                 <td> <a href="javascript: alterarOcorrencia(${ocorrencia.id})"> <i class="icon-pencil"></i> </a> </td>
                                 <td><g:link action="excluirOcorrencia" id="${ocorrencia.id}" onclick="return confirm('Quer mesmo excluir o registro?')"><i class="icon-trash"></i></g:link></td>
                             </tr>

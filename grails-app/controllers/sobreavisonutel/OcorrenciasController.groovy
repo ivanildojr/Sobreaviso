@@ -27,7 +27,7 @@ class OcorrenciasController {
         def dataF = ocorrencia.data.getAt(0)
         def horaInicioF = ocorrencia.horaInicio.get(0)
         def horaFimF = ocorrencia.horaFim.get(0)
-        def relato = ocorrencia.resumido.get(0)
+        def relato = ocorrencia.detalhado.get(0)
         dataF = dataF.format("dd/MM/yyyy")
         horaInicioF = horaInicioF.format("HH:mm")
         horaFimF = horaFimF.format("HH:mm")
@@ -37,7 +37,7 @@ class OcorrenciasController {
         mapRetorno << [diaF: dataF]
         mapRetorno << [horaInicioF: horaInicioF]
         mapRetorno << [horaFimF: horaFimF]
-        mapRetorno << [detalhado: relato]
+        mapRetorno << [resumido: relato]
 //        render data as JSON
         println mapRetorno as JSON
         render mapRetorno as JSON
@@ -108,7 +108,6 @@ class OcorrenciasController {
             ocorrencia.data = data
             ocorrencia.horaInicio = calenInicio.getTime()
             ocorrencia.horaFim = calenFim.getTime()
-            ocorrencia.resumido = relato
             ocorrencia.detalhado = relato
             ocorrencia.login = springSecurityService.currentUser
             ocorrencia.validate()
@@ -130,7 +129,6 @@ class OcorrenciasController {
             ocorrencia.data = data
             ocorrencia.horaInicio = calenInicio.getTime()
             ocorrencia.horaFim = calenFim.getTime()
-            ocorrencia.resumido = relato
             ocorrencia.detalhado = relato
             ocorrencia.login = springSecurityService.currentUser
             ocorrencia.validate()

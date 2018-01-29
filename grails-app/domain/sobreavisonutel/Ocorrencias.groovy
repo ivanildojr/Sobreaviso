@@ -10,7 +10,6 @@ class Ocorrencias {
     Date horaFim
     Date dataModificacao //data da modificação para fins de log
     String atendentes //atendente no dia
-    String resumido
     String detalhado
     String login //Login de quem alterou a escala
 
@@ -28,7 +27,6 @@ class Ocorrencias {
         horaInicio nullable: false
         horaFim nullable: false
         dataModificacao nullable: false
-        resumido (nullable: false, maxSize: 100000)
         detalhado (nullable: true, maxSize: 100000)
         login nullable: false
     }
