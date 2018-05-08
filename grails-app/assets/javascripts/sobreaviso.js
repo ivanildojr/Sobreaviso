@@ -18,5 +18,4 @@ $(document).ready(function(event) {
             $("input[value|="+pessoa+'-'+dia+']').prop('checked', false)
         }
     });
-
 });

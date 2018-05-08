@@ -140,9 +140,9 @@
                                             <td align="center">${hora}:00</td>
                                             <g:each var="dia" status="i" in="${diasListNum}">
                                                 <td align="center">
-                                                    I: <g:checkBox name="checkList" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
-                                                    T: <g:checkBox name="checkList" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
-                                                    R: <g:checkBox name="checkList" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
+                                                    I: <g:checkBox name="checkList" class="chkbox" id="I-${dia}-${hora}" value="I-${dia}-${hora}" checked="${escalaLista.contains('I-'+dia+'-'+hora)}"/>
+                                                    T: <g:checkBox name="checkList" class="chkbox" id="T-${dia}-${hora}" value="T-${dia}-${hora}" checked="${escalaLista.contains('T-'+dia+'-'+hora)}"/>
+                                                    R: <g:checkBox name="checkList" class="chkbox" id="R-${dia}-${hora}" value="R-${dia}-${hora}" checked="${escalaLista.contains('R-'+dia+'-'+hora)}"/>
                                                 </td>
                                             </g:each>
                                         </tr>
@@ -208,6 +208,23 @@
        dataHistorico.dispatchEvent(new Event('change'))
         */
        $('#alertaData').hide()
+
+       ////////// Uso da seleção do checkbox com shift
+        var $chkboxes = $('.chkbox');
+        var lastChecked = null;
+
+        $chkboxes.click(function(e) {
+            if(!lastChecked) {
+                lastChecked = this;
+                return;
+            }
+            if(e.shiftKey) {
+                var start = $chkboxes.index(this);
+                var end = $chkboxes.index(lastChecked);
+                $chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+            }
+            lastChecked = this;
+        });
 
 
        $('#copiarSemanaAnt').on('click',function (e) {
