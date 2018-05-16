@@ -14,12 +14,25 @@
                 $('#tabelaFechamentos').dataTable( {
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
-                    }
+                    },
+                    "order": [[ 1, "desc" ]]
                 });
+
             });
         </script>
 
+        <style>
+        .table th, .table td {
+            /*text-align: center;*/
+            /*align-items: center;*/
+            text-align: center;
+            vertical-align: middle;
+            horiz-align: center;
+        }
+        </style>
+
     </head>
+
     <body>
 
 
@@ -39,12 +52,18 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-
-                <table id="tabelaFechamentos" class="table table-hover table-responsive">
+            <g:form>
+                <div align="center" name="recarregarBtn">
+                    %{--<button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>--}%
+                    <g:actionSubmit value="Recarregar" action="recarregar"/>
+                </div>
+            </g:form>
+                <table id="tabelaFechamentos" class="table table-hover" style="width:30%">
                     <thead class="table-header">
                     <tr>
-                        <th>Código Funcionário</th>
+                        <th>Funcionário</th>
                         <th>Data Lançamentos</th>
+                        %{--<th>Carga Horária Lançada</th>--}%
                         <th>Carga Horária Lançada</th>
                     </tr>
                     </thead>
@@ -56,14 +75,11 @@
                                         <g:if test="${item.codFunc == 3}">Torres</g:if>
                                         <g:if test="${item.codFunc == 31}">Ivanildo</g:if>
                                         <g:if test="${item.codFunc == 64}">Rudsom</g:if>
-
                                 </g:link>
                             </td>
-                            <td>
-                                <g:link action="edit" id="${item.id}"><g:formatDate format="yyyy-MM-dd" date="${item.dataLancamento}"/></g:link>
-
-                            </td>
-                            <td><g:link action="edit" id="${item.id}">${item.cargaHorariaD?.encodeAsHTML()}</g:link></td>
+                            <td>${formatDate(format: 'yyyy-MM-dd', date: item.dataLancamento)}</td>
+                            %{--<td>${item.cargaHorariaD}</td>--}%
+                            <td>${item.cargaHorariaS}</td>
                         </tr>
                     </g:each>
                     </tbody>

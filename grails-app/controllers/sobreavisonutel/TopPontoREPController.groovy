@@ -114,11 +114,14 @@ class TopPontoREPController {
 
                         println "Data Lancamento: " + fch.dataLancamento + "  Data Debito - Hora debito: " + fch.cargaHorariaDebito + ' ' + fch.cargaHorarioDebitoTime + " Data Credito - Hora Credito: " + fch.cargaHorariaCredito + ' ' + fch.cargaHorariaCreditoTime + " Duracao: " + cargaHoraria
 
-
                         Double cargaHoras = cargaHoraria.toMilliseconds() / 1000
                         cargaHoras = cargaHoras / 60 / 60
-
                         fch.cargaHorariaD = cargaHoras
+
+                        String cargaHorariaS = resultado(cargaHoras)
+                        println "cargaHorariaS: " + cargaHorariaS
+                        fch.cargaHorariaS = cargaHorariaS
+
 
 
 //                        cargaHoraria = TimeCategory.minus(Date.parse("HH:mm", "00:00"), Date.parse("HH:mm", "00:00"))
@@ -132,7 +135,15 @@ class TopPontoREPController {
 //
 //                        fch.cargaHorariaCreditoD = (-1) * cargaHoras
 
-                        fch.save flush: true
+//                        fch.save flush: true
+                        if(!fch.hasErrors()) {
+                            fch.save flush:true
+                            println "Salvou com sucesso"
+                        }
+                        else {
+                            println fch.errors
+                            println "Não salvou"
+                        }
 
                 }
             }
@@ -797,6 +808,40 @@ class TopPontoREPController {
 
     }
 
+    //////////MÉTODO PARA CONVERTER FLOAT EM HORAS E MINUTOS
+    static def resultado(def numero) {
+        //numero = Math.round(numero)
+        //println "numero: " + numero
+        String resultado
+        def sinal
+        if(numero>=0) sinal=1  //sinal positivo, credito em horas
+        else {
+            sinal=0            //sinal negativo, débito de horas
+            numero = numero * -1
+        }
+        Integer hNumero = numero
+        Integer mNumero = Math.round((numero - hNumero)*60) //transformar decimal para minutos
+        if(mNumero==60) {
+            hNumero += 1
+            mNumero = 0
+        }
+//      println "hNumero: " + hNumero
+//      println "mNumero: " + mNumero
+        if(hNumero==0) resultado = mNumero + " minutos"
+        if(hNumero==1) resultado = mNumero + " minuto"
+        if(mNumero==0) resultado = hNumero + " horas"
+        if(mNumero==1) resultado = hNumero + " hora"
+        if(hNumero>0 & mNumero>0) resultado = hNumero + " horas, " + mNumero + " minutos"
+        if(hNumero>0 & mNumero==1) resultado = hNumero + " horas, " + mNumero + " minuto"
+        if(hNumero==1 & mNumero>0) resultado = hNumero + " hora, " + mNumero + " minutos"
+        if(hNumero==1 & mNumero==0) resultado = hNumero + " hora"
+        if(hNumero==0 & mNumero==1) resultado = mNumero + " minuto"
+        if(hNumero==0 & mNumero==0) resultado = "0"
+//      println "resultado: " + resultado
+        if(sinal==0) resultado = "- " + resultado
+        println "resultado: " + resultado
+        return resultado
+    }
 
     private void ajusteAbonoBH(String nomeFuncioario, Date dataPartida, TopPontoREP registro) {
         /*Quando há marcação no ponto juntamente com compensação de horas, o sistema está descontando duas vezes
