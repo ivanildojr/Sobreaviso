@@ -58,16 +58,16 @@ class FechamentosController {
                 fch.cargaHorariaD = cargaHoras
 
                 String cargaHorariaS = resultado(cargaHoras)
-                println "cargaHorariaS: " + cargaHorariaS
+//                println "cargaHorariaS: " + cargaHorariaS
                 fch.cargaHorariaS = cargaHorariaS
 
                 if(!fch.hasErrors()) {
                     fch.save flush:true
-                    println "Salvou com sucesso"
+//                    println "Salvou com sucesso"
                 }
                 else {
                     println fch.errors
-                    println "Não salvou"
+//                    println "Não salvou"
                 }
 
             }
@@ -107,7 +107,7 @@ class FechamentosController {
         if(hNumero==0 & mNumero==0) resultado = "0"
 //      println "resultado: " + resultado
         if(sinal==0) resultado = "- " + resultado
-        println "resultado: " + resultado
+//        println "resultado: " + resultado
         return resultado
     }
 

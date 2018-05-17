@@ -55,7 +55,7 @@
             <g:form>
                 <div align="center" name="recarregarBtn">
                     %{--<button id="teste" class="btn btn-large btn-primary" type="button">Teste</button>--}%
-                    <g:actionSubmit value="Recarregar" action="recarregar"/>
+                    <g:actionSubmit class="btn btn-danger" value="Recarregar" action="recarregar"/>
                 </div>
             </g:form>
                 <table id="tabelaFechamentos" class="table table-hover" style="width:30%">
@@ -71,11 +71,9 @@
                     <g:each status="i" in="${fechamentosList}" var="item">
                         <tr>
                             <td>
-                                <g:link action="edit" id="${item.id}">
-                                        <g:if test="${item.codFunc == 3}">Torres</g:if>
-                                        <g:if test="${item.codFunc == 31}">Ivanildo</g:if>
-                                        <g:if test="${item.codFunc == 64}">Rudsom</g:if>
-                                </g:link>
+                                <g:if test="${item.codFunc == 3}">Torres</g:if>
+                                <g:if test="${item.codFunc == 31}">Ivanildo</g:if>
+                                <g:if test="${item.codFunc == 64}">Rudsom</g:if>
                             </td>
                             <td>${formatDate(format: 'yyyy-MM-dd', date: item.dataLancamento)}</td>
                             %{--<td>${item.cargaHorariaD}</td>--}%
